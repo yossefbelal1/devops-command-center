@@ -55,6 +55,7 @@ const DIFFICULTY_ALIASES = {
 };
 
 export const BASELINE_VELOCITY = 1.0;
+export const DEFAULT_WEEKLY_HOURS = 7.5;
 export const RATIO_MIN = 0.35;
 export const RATIO_MAX = 2.5;
 export const EMA_WEIGHT = 0.3;
@@ -337,7 +338,7 @@ export function computeRollingWeeklyHours(studySessions = [], referenceNow = new
 
 function addHoursToDateIso(hours, weeklyPace, referenceNow = new Date()) {
   const baseDate = referenceNow instanceof Date ? new Date(referenceNow) : new Date(referenceNow);
-  const safePace = Math.max(1, Number(weeklyPace) || 12);
+  const safePace = Math.max(1, Number(weeklyPace) || DEFAULT_WEEKLY_HOURS);
   const days = Math.ceil((Math.max(0, hours) / safePace) * 7);
   baseDate.setDate(baseDate.getDate() + days);
   return baseDate.toISOString().split('T')[0];
@@ -384,10 +385,10 @@ export function formatArabicMonthRange(dateMinIso, dateMaxIso) {
 export function computeHiveboxRemainingForecast({
   phases = [],
   hiveboxState = {},
-  weeklyHours = 12,
+  weeklyHours = DEFAULT_WEEKLY_HOURS,
   now = new Date()
 } = {}) {
-  const safePace = Math.max(1, Number(weeklyHours) || 12);
+  const safePace = Math.max(1, Number(weeklyHours) || DEFAULT_WEEKLY_HOURS);
   let totalHours = 0;
   let remainingHours = 0;
   let completedHours = 0;
@@ -406,9 +407,12 @@ export function computeHiveboxRemainingForecast({
     }
   }
 
-  const roundedRemaining = Number(remainingHours.toFixed(1));
-  const remainingMonths = Number((roundedRemaining / (safePace * 4.33)).toFixed(1));
-  const remainingWeeks = Number((roundedRemaining / safePace).toFixed(1));
+  const roundedRemaining = Math.max(0, Number(remainingHours.toFixed(1)));
+  const remainingMonths = Math.max(
+    0,
+    Number((roundedRemaining / (safePace * 4.33)).toFixed(1))
+  );
+  const remainingWeeks = Math.max(0, Number((roundedRemaining / safePace).toFixed(1)));
   const expectedDate = addHoursToDateIso(roundedRemaining, safePace, now);
 
   return {
@@ -450,7 +454,12 @@ export function computeAdaptiveForecast({
 
   const safeTargetWeeklyHours = Math.max(
     1,
-    Number(targetWeeklyHours ?? weeklyStudyHours ?? progress?.targetWeeklyHours ?? progress?.weeklyStudyHours) || 12
+    Number(
+      targetWeeklyHours ??
+        weeklyStudyHours ??
+        progress?.targetWeeklyHours ??
+        progress?.weeklyStudyHours
+    ) || DEFAULT_WEEKLY_HOURS
   );
   const rollingWeeklyHours = computeRollingWeeklyHours(sessionsList, now);
   const effectiveWeeklyPace = rollingWeeklyHours >= 2 ? rollingWeeklyHours : safeTargetWeeklyHours;
@@ -548,16 +557,19 @@ export function computeAdaptiveForecast({
       }
     }
 
-    const roundedModHours = Number(modAdjustedRemHours.toFixed(1));
+    const roundedModHours = Math.max(0, Number(modAdjustedRemHours.toFixed(1)));
     moduleBreakdown.push({
       id: mod.id,
       number: mod.number,
       title: mod.title,
-      baselineRemainingHours: Number(modBaselineRemHours.toFixed(1)),
+      baselineRemainingHours: Math.max(0, Number(modBaselineRemHours.toFixed(1))),
       adaptiveExpectedHours: roundedModHours,
       remainingHours: roundedModHours,
-      remainingWeeks: Number((roundedModHours / effectiveWeeklyPace).toFixed(1)),
-      remainingMonths: Number((roundedModHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
+      remainingWeeks: Math.max(0, Number((roundedModHours / effectiveWeeklyPace).toFixed(1))),
+      remainingMonths: Math.max(
+        0,
+        Number((roundedModHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
+      )
     });
   }
 
@@ -567,20 +579,29 @@ export function computeAdaptiveForecast({
   // Uncertainty band tightens as confidence grows from Low -> Medium -> High
   const spread = confidence === 'High' ? 0.1 : confidence === 'Medium' ? 0.16 : 0.24;
 
-  const baselineRemainingHours = Number((baselineRemainingMinutes / 60).toFixed(1));
-  const adaptiveExpectedHours = Number(adjustedRemainingHours.toFixed(1));
-  const adaptiveMinHours = Number((adaptiveExpectedHours * (1 - spread)).toFixed(1));
-  const adaptiveMaxHours = Number((adaptiveExpectedHours * (1 + spread)).toFixed(1));
+  const baselineRemainingHours = Math.max(0, Number((baselineRemainingMinutes / 60).toFixed(1)));
+  const adaptiveExpectedHours = Math.max(0, Number(adjustedRemainingHours.toFixed(1)));
+  const adaptiveMinHours = Math.max(
+    0,
+    Number((adaptiveExpectedHours * (1 - spread)).toFixed(1))
+  );
+  const adaptiveMaxHours = Math.max(
+    0,
+    Number((adaptiveExpectedHours * (1 + spread)).toFixed(1))
+  );
   const deltaHours = Number((adaptiveExpectedHours - baselineRemainingHours).toFixed(1));
 
-  const remainingMonths = Number(
-    (adaptiveExpectedHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  const remainingMonths = Math.max(
+    0,
+    Number((adaptiveExpectedHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
   );
-  const remainingMonthsMin = Number(
-    (adaptiveMinHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  const remainingMonthsMin = Math.max(
+    0,
+    Number((adaptiveMinHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
   );
-  const remainingMonthsMax = Number(
-    (adaptiveMaxHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  const remainingMonthsMax = Math.max(
+    0,
+    Number((adaptiveMaxHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
   );
 
   // Build per-bucket velocities across all observed + roadmap-active buckets

@@ -125,10 +125,10 @@ export function DashboardPage({
           <div className="bg-white rounded-2xl p-3.5 border border-slate-200/80 min-w-[125px]">
             <div className="text-[11px] font-bold text-slate-500">المدة المتبقية</div>
             <div className="text-2xl font-black font-mono text-slate-900 mt-0.5">
-              ~{forecast.remainingMonths} شهر
+              حوالي {Math.max(0, forecast.remainingMonths)} شهر
             </div>
             <div className="text-[10px] text-slate-500 font-mono">
-              متبقي {forecast.adaptiveExpectedHours} ساعة
+              متبقي {Math.max(0, forecast.adaptiveExpectedHours)} ساعة
             </div>
           </div>
 
@@ -253,20 +253,20 @@ export function DashboardPage({
               <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200/70">
                 <div className="text-[11px] font-bold text-blue-700">الساعات المتبقية</div>
                 <div className="text-xl font-black font-mono text-slate-900 mt-1">
-                  {forecast.adaptiveExpectedHours} ساعة
+                  {Math.max(0, forecast.adaptiveExpectedHours)} ساعة
                 </div>
                 <div className="text-[11px] font-mono text-slate-600 mt-0.5">
-                  النطاق: {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة
+                  النطاق: {Math.max(0, forecast.adaptiveMinHours)}–{Math.max(0, forecast.adaptiveMaxHours)} ساعة
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
                 <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
                 <div className="text-xl font-black font-mono text-slate-900 mt-1">
-                  ~{forecast.remainingMonths} شهر
+                  حوالي {Math.max(0, forecast.remainingMonths)} شهر
                 </div>
                 <div className="text-[11px] font-mono text-slate-600 mt-0.5">
-                  ({forecast.remainingMonthsMin}–{forecast.remainingMonthsMax} شهر)
+                  ({Math.max(0, forecast.remainingMonthsMin)}–{Math.max(0, forecast.remainingMonthsMax)} شهر)
                 </div>
               </div>
 
@@ -293,7 +293,7 @@ export function DashboardPage({
             <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
               <span className="inline-flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
-                الوتيرة المعتمدة: {forecast.effectiveWeeklyHours || forecast.targetWeeklyHours} ساعة/أسبوع
+                الوتيرة المعتمدة: {forecast.effectiveWeeklyHours || forecast.targetWeeklyHours || 7.5} ساعة/أسبوع (1.5 ساعة × 5 أيام = حوالي 32.5 ساعة/شهر)
               </span>
               <Link to="/analytics" className="text-blue-600 font-bold hover:underline">
                 تفاصيل السرعة والساعات ←
@@ -357,17 +357,17 @@ export function DashboardPage({
             <div className="p-4 rounded-2xl bg-white border border-blue-100 space-y-1">
               <div className="text-[11px] font-bold text-slate-500">الساعات المتبقية</div>
               <div className="text-xl font-black font-mono text-blue-700">
-                {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة
+                {Math.max(0, forecast.adaptiveMinHours)}–{Math.max(0, forecast.adaptiveMaxHours)} ساعة
               </div>
               <div className="text-[11px] text-slate-500">
-                المتوقع: <strong className="font-mono text-slate-800">{forecast.adaptiveExpectedHours} ساعة</strong> (الأساس: {forecast.baselineRemainingHours} ساعة)
+                المتوقع: <strong className="font-mono text-slate-800">{Math.max(0, forecast.adaptiveExpectedHours)} ساعة</strong> (الأساس: {Math.max(0, forecast.baselineRemainingHours)} ساعة)
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-white border border-blue-100 space-y-1">
               <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
               <div className="text-xl font-black font-mono text-emerald-700">
-                ~{forecast.remainingMonths} شهر
+                حوالي {Math.max(0, forecast.remainingMonths)} شهر
               </div>
               <div className="text-[11px] text-slate-600">
                 الموعد المتوقع للجاهزية: <strong>{forecast.expectedMonthRangeLabel}</strong>
@@ -456,7 +456,7 @@ export function DashboardPage({
                 <ProgressBar value={mod.executionPct} size="sm" showPercentage />
                 {!isDone && modForecast && (
                   <div className="text-[10.5px] font-mono text-slate-500">
-                    متبقي {modForecast.remainingHours} ساعة (~{modForecast.remainingMonths} شهر)
+                    متبقي {Math.max(0, modForecast.remainingHours)} ساعة (حوالي {Math.max(0, modForecast.remainingMonths)} شهر)
                   </div>
                 )}
               </Link>

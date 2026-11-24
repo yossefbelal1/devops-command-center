@@ -35,8 +35,8 @@ export const DEFAULT_APP_STATE = {
   migratedFrom: null,
   migratedAt: null,
   updatedAt: null,
-  targetWeeklyHours: 12,
-  weeklyStudyHours: 12,
+  targetWeeklyHours: 7.5,
+  weeklyStudyHours: 7.5,
   subtasks: {},
   topicStatus: {},
   topicProgress: {},
@@ -422,7 +422,7 @@ function normalizeStudySession(session = {}) {
 
 export function normalizeAppState(rawData = {}) {
   const data = isPlainObject(rawData) ? rawData : {};
-  const targetWeeklyHours = Number(data.targetWeeklyHours ?? data.weeklyStudyHours) || 12;
+  const targetWeeklyHours = Number(data.targetWeeklyHours ?? data.weeklyStudyHours) || 7.5;
 
   const subtasks = isPlainObject(data.subtasks) ? { ...data.subtasks } : {};
   const topicNotes = isPlainObject(data.topicNotes) ? { ...data.topicNotes } : {};
@@ -681,8 +681,8 @@ function storePayloadsToState(rawStores) {
     migratedFrom: prefs.migratedFrom || null,
     migratedAt: prefs.migratedAt || null,
     updatedAt: prefs.updatedAt || null,
-    targetWeeklyHours: prefs.targetWeeklyHours ?? prefs.weeklyStudyHours ?? 12,
-    weeklyStudyHours: prefs.weeklyStudyHours ?? prefs.targetWeeklyHours ?? 12,
+    targetWeeklyHours: prefs.targetWeeklyHours ?? prefs.weeklyStudyHours ?? 7.5,
+    weeklyStudyHours: prefs.weeklyStudyHours ?? prefs.targetWeeklyHours ?? 7.5,
     activeTimer: prefs.activeTimer || null,
     forecastModel: forecastRec?.value || DEFAULT_APP_STATE.forecastModel,
     subtasks,
@@ -826,7 +826,7 @@ export function isFreshDefaultState(state) {
   const hasMeaningfulAudit = (state.auditLog || []).some(
     (entry) => entry?.action && entry.action !== 'reset'
   );
-  const customWeeklyHours = Number(state.targetWeeklyHours) !== 12;
+  const customWeeklyHours = Number(state.targetWeeklyHours) !== 7.5;
 
   return !(
     hasTopicProgress ||

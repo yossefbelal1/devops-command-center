@@ -283,7 +283,7 @@ export default function App() {
       computeAdaptiveForecast({
         modules: ROADMAP_MODULES,
         progress: appState,
-        targetWeeklyHours: appState.targetWeeklyHours || appState.weeklyStudyHours || 12,
+        targetWeeklyHours: appState.targetWeeklyHours || appState.weeklyStudyHours || 7.5,
         studySessions: appState.studySessions
       }),
     [appState]
@@ -852,7 +852,7 @@ export default function App() {
       },
 
       setTargetWeeklyHours: (hours) => {
-        const clamped = Math.max(1, Math.min(80, Number(hours) || 12));
+        const clamped = Math.max(1, Math.min(80, Number(hours) || 7.5));
         setAppState((prev) => ({
           ...prev,
           targetWeeklyHours: clamped,

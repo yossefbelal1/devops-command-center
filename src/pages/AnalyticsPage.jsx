@@ -127,17 +127,17 @@ export function AnalyticsPage({
         <div className="glass-v5 rounded-2xl p-4 space-y-1">
           <div className="text-[11px] font-bold text-slate-500">الساعات المتبقية</div>
           <div className="text-2xl font-black font-mono text-slate-900">
-            {forecast.adaptiveExpectedHours} ساعة
+            {Math.max(0, forecast.adaptiveExpectedHours)} ساعة
           </div>
           <div className="text-[11px] text-slate-500 font-mono">
-            النطاق: {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة (الأساس: {forecast.baselineRemainingHours}h)
+            النطاق: {Math.max(0, forecast.adaptiveMinHours)}–{Math.max(0, forecast.adaptiveMaxHours)} ساعة (الأساس: {Math.max(0, forecast.baselineRemainingHours)}h)
           </div>
         </div>
 
         <div className="glass-v5 rounded-2xl p-4 space-y-1">
           <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
           <div className="text-2xl font-black font-mono text-emerald-700">
-            ~{forecast.remainingMonths} شهر
+            حوالي {Math.max(0, forecast.remainingMonths)} شهر
           </div>
           <div className="text-[11px] text-slate-600">
             {forecast.expectedMonthRangeLabel}
@@ -204,7 +204,7 @@ export function AnalyticsPage({
                       <div className="text-[11px] text-slate-500 font-mono mt-0.5">
                         {mod.doneSubtasks}/{mod.totalSubtasks} مهمة • الإتقان {mod.masteryPct}%
                         {modForecast && modForecast.adaptiveExpectedHours > 0
-                          ? ` • متبقي ${modForecast.remainingHours ?? modForecast.adaptiveExpectedHours} ساعة (~${modForecast.remainingMonths ?? 0} شهر)`
+                          ? ` • متبقي ${Math.max(0, modForecast.remainingHours ?? modForecast.adaptiveExpectedHours)} ساعة (حوالي ${Math.max(0, modForecast.remainingMonths ?? 0)} شهر)`
                           : ''}
                       </div>
                     </div>

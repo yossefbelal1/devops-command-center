@@ -57,14 +57,17 @@ export function Navbar({
   onOpenSearch
 }) {
   const overallPct = metrics?.overallPct ?? 0;
-  const remainingHours =
+  const rawRemainingHours =
     forecast?.adaptiveExpectedHours ??
     forecast?.expectedHours ??
     forecast?.baselineRemainingHours ??
     Math.max(0, (metrics?.totalHours || 320) - (metrics?.doneHours || 0));
-  const remainingMonths =
+  const remainingHours = Math.max(0, Number(rawRemainingHours) || 0);
+  const weeklyTarget = Math.max(1, Number(forecast?.targetWeeklyHours) || 7.5);
+  const rawRemainingMonths =
     forecast?.remainingMonths ??
-    Number((Number(remainingHours) / ((forecast?.targetWeeklyHours || 12) * 4.33)).toFixed(1));
+    Number((remainingHours / (weeklyTarget * 4.33)).toFixed(1));
+  const remainingMonths = Math.max(0, Number(rawRemainingMonths) || 0);
 
   const syncMeta = SYNC_STATUS_META[syncStatus] || SYNC_STATUS_META.synced;
   const SyncIcon = syncMeta.Icon;
@@ -144,8 +147,8 @@ export function Navbar({
             data-testid="navbar-forecast-badge"
             title={
               metrics?.masteryPct !== undefined
-                ? `التنفيذ ${overallPct}% • الإتقان ${metrics.masteryPct}% • متبقي ${remainingHours} ساعة (~${remainingMonths} شهر)`
-                : `التنفيذ ${overallPct}% • متبقي ${remainingHours} ساعة (~${remainingMonths} شهر)`
+                ? `التنفيذ ${overallPct}% • الإتقان ${metrics.masteryPct}% • متبقي ${remainingHours} ساعة (حوالي ${remainingMonths} شهر)`
+                : `التنفيذ ${overallPct}% • متبقي ${remainingHours} ساعة (حوالي ${remainingMonths} شهر)`
             }
             className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 text-[11px] sm:text-xs font-bold whitespace-nowrap"
           >
@@ -154,7 +157,7 @@ export function Navbar({
               <span className="font-mono">{overallPct}%</span>
               <span className="mx-1 text-emerald-700/60">|</span>
               <span>
-                متبقي <span className="font-mono">{remainingHours}</span> ساعة (~
+                متبقي <span className="font-mono">{remainingHours}</span> ساعة (حوالي{' '}
                 <span className="font-mono">{remainingMonths}</span> شهر)
               </span>
             </span>

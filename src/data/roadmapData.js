@@ -19,8 +19,8 @@ export const ROADMAP_META = {
   ],
   currentModuleId: 'module-2',
   currentTopicId: 'm2-5',
-  pace: '10 – 15 ساعة أسبوعياً (~40 ساعة شهرياً)',
-  timelineRange: 'ديسمبر 2026 – منتصف 2027 (6–8 شهور)',
+  pace: '7.5 ساعة أسبوعياً (1.5 ساعة × 5 أيام = ~32.5 ساعة شهرياً)',
+  timelineRange: 'ديسمبر 2026 – يوليو 2027 (~7.9 شهور)',
   totalEstimatedHours: 320,
   constraints: [
     'Dynamic DevOps Roadmap (https://devopsroadmap.io/) هو المسار الأساسي.',
@@ -55,6 +55,7 @@ export const ROADMAP_MODULES = [
         category: 'Video / Reading',
         difficulty: 'Easy',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 45, labPct: 20, codingPct: 15, troubleshootingPct: 20 },
         tags: ['SDLC', 'Agile', 'DevSecOps', '12-Factor'],
         objectives: [
           'استيعاب مراحل SDLC السبع: Plan, Code, Build, Test, Deploy, Operate, Monitor.',
@@ -71,6 +72,10 @@ export const ROADMAP_MODULES = [
 Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
   -> Test (Lint + pytest + Security Scan) -> Deploy (CD / GitOps)
   -> Operate & Monitor (Prometheus + Grafana + Loki)`,
+        commonFailures: [
+          'اعتبار DevOps مجرد فريق أدوات منفصل بدلاً من ثقافة تعاون وأتمتة شاملة.',
+          'تأجيل فحوصات الأمان لما بعد مرحلة البناء والنشر.'
+        ],
         masteryCriteria: 'القدرة على رسم وشرح تدفق SDLC الكامل وتوضيح موقع الأتمتة والأمان في كل خطوة.',
         whatYouDo: 'دراسة المفاهيم الأساسية من Dynamic DevOps Roadmap و KodeKloud DevOps Pre-Requisite.',
         deliverable: 'خريطة ذهنية لمراحل SDLC ومسؤولية مهندس الـ DevOps في كل مرحلة.',
@@ -88,6 +93,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-1-s1',
             text: 'فهم دورة حياة البرمجيات SDLC (Plan → Code → Build → Test → Deploy → Operate → Monitor)',
             details: 'تحديد مدخلات ومخرجات كل مرحلة ومكان تدخل الأتمتة لتقليل الأخطاء اليدوية',
+            hint: 'ارسم المراحل السبع وحدد عند كل مرحلة أداة واحدة تمثلها في مشروع HiveBox.',
             estimatedHours: 2,
             done: true
           },
@@ -95,6 +101,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-1-s2',
             text: 'استيعاب الفروق بين Agile و DevOps و DevSecOps ومبدأ Shift-Left Security',
             details: 'مقارنة دورة التطوير في Agile مع التسليم المستمر والأمان المبكر في DevSecOps',
+            hint: 'تذكّر: Agile يربط المطور بالمنتج، بينما DevOps يربط التطوير بالتشغيل، وDevSecOps يقدّم الأمان لمرحلة الكود.',
             estimatedHours: 2,
             done: true
           },
@@ -102,6 +109,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-1-s3',
             text: 'فهم المحاور الأساسية (Culture, Automation, Measurement) ومقدمة 12-Factor App',
             details: 'مراجعة مبادئ فصل الإعدادات عن الكود (Config) وبناء خدمات Stateless',
+            hint: 'ركز على العامل 3 (Store config in the environment) والعامل 6 (Stateless processes).',
             estimatedHours: 2,
             done: true
           },
@@ -109,6 +117,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-1-s4',
             text: 'ربط مقاييس DORA Metrics الأربعة بجودة التسليم الإنتاجي',
             details: 'توثيق Deployment Frequency و Lead Time for Changes و Change Failure Rate و MTTR',
+            hint: 'اربط كل مقياس DORA بتحسين عملي في Pipeline مثل تقليل وقت الاختبار أو التراجع السريع.',
             estimatedHours: 2,
             done: true
           }
@@ -123,6 +132,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
         category: 'Quiz',
         difficulty: 'Easy',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 20, labPct: 20, codingPct: 20, troubleshootingPct: 40 },
         tags: ['Interview Quiz', 'Foundations'],
         objectives: ['اختبار استيعاب المفاهيم النظرية للموديول الأول عبر أسئلة المقابلات.'],
         bestPractices: [
@@ -134,6 +144,10 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
 - الفرق بين CI و Continuous Delivery و Continuous Deployment؟
 - لماذا نفصل الإعدادات عن الكود في 12-Factor App؟
 - كيف يقلل Shift-Left تكلفة إصلاح الثغرات؟`,
+        commonFailures: [
+          'الخلط بين Continuous Delivery (نشر بموافقة يدوية) و Continuous Deployment (نشر تلقائي كامل).',
+          'الاعتماد على حفظ التعريفات بدون ربطها بمثال عملي.'
+        ],
         masteryCriteria: 'اجتياز كافة أسئلة الموديول الأول بثقة.',
         whatYouDo: 'مراجعة أسئلة المقابلات النظرية الخاصة بثقافة DevOps والـ SDLC والـ Shift-Left.',
         deliverable: 'اجتياز كويز الموديول الأول بنجاح.',
@@ -143,6 +157,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-2-s1',
             text: 'اجتياز كويز الإنترفيو الخاص بالموديول الأول بنجاح',
             details: 'حل جميع أسئلة الفهم والتطبيق الخاصة بمفاهيم SDLC و DevOps',
+            hint: 'استهدف 15/15 في صفحة الكويزات بدون الاعتماد على Reveal Answer.',
             estimatedHours: 1,
             done: true
           },
@@ -150,6 +165,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-2-s2',
             text: 'تلخيص إجابات الفروق بين CI / Continuous Delivery / Continuous Deployment',
             details: 'كتابة إجابات مركزة بصيغة مقابلات العمل التقنية',
+            hint: 'اذكر أين تنتهي الأتمتة في كل نوع ومتى نحتاج موافقة بشرية.',
             estimatedHours: 1,
             done: true
           },
@@ -157,6 +173,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-2-s3',
             text: 'مراجعة سيناريوهات Shift-Left Security وأهمية الأتمتة في تقليل MTTR',
             details: 'ربط الفحوصات المبكرة بسرعة الاستعادة وتقليل الأعطال',
+            hint: 'احسب أثر اكتشاف ثغرة في الـ PR مقابل اكتشافها بعد النشر في الإنتاج.',
             estimatedHours: 1,
             done: true
           },
@@ -164,6 +181,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
             id: 'm1-2-s4',
             text: 'التحقق من تطبيق مبادئ 12-Factor على خطة مشروع HiveBox',
             details: 'تجهيز قائمة تحقق لمواءمة الخدمة القادمة مع العوامل الـ 12',
+            hint: 'تحقق من التوافق بين Dev و Prod في HiveBox منذ البداية.',
             estimatedHours: 1,
             done: true
           }
@@ -178,6 +196,7 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
         category: 'Project Delivery',
         difficulty: 'Easy',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 15, labPct: 35, codingPct: 25, troubleshootingPct: 25 },
         tags: ['HiveBox', 'GitHub', 'Kanban'],
         objectives: [
           'تجهيز المستودع العام yossefbelal1/Hivebox.',
@@ -192,6 +211,10 @@ Plan (Kanban) -> Code (Feature Branch + PR) -> Build (Docker)
 cd Hivebox
 git remote -v
 # تجهيز README + Kanban (Todo / In Progress / Done)`,
+        commonFailures: [
+          'الدفع المباشر إلى main بدون فتح Pull Request.',
+          'ترك المستودع بدون ملف .gitignore أو README منظم.'
+        ],
         masteryCriteria: 'مستودع عام نظيف بـ README، لوحة Kanban نشطة، وكارت Phase 1 في Done.',
         whatYouDo: 'إنشاء مستودع Hivebox وتجهيز README ولوحة GitHub Project Kanban وتحديد 3 senseBox IDs.',
         deliverable: 'مستودع HiveBox جاهز ومربوط بلوحة Kanban ونظام Pull Requests.',
@@ -204,6 +227,7 @@ git remote -v
             id: 'm1-3-s1',
             text: 'إنشاء مستودع عام باسم Hivebox على GitHub (yossefbelal1/Hivebox)',
             details: 'تهيئة المستودع العام وإضافة ملف الترخيص و .gitignore مناسب لبايثون',
+            hint: 'تأكد عبر git remote -v أن المستودع مربوط بحسابك yossefbelal1.',
             estimatedHours: 2,
             done: true
           },
@@ -211,6 +235,7 @@ git remote -v
             id: 'm1-3-s2',
             text: 'كتابة README.md يوضح فكرة المشروع وخارطة المراحل',
             details: 'شرح هدف الخدمة التراكمي وأقسام المشروع الستة',
+            hint: 'أضف رابط المواصفات الرسمية لمشروع HiveBox في أعلى README.',
             estimatedHours: 2,
             done: true
           },
@@ -218,6 +243,7 @@ git remote -v
             id: 'm1-3-s3',
             text: 'إنشاء لوحة GitHub Project (Kanban: Todo, In Progress, Done) وإتمام Phase 1',
             details: 'إعداد الأعمدة وربط مهام المشروع ببطاقات واضحة',
+            hint: 'اجعل كل Phase بطاقة مستقلة مع قائمة مهام واضحة بداخلها.',
             estimatedHours: 2,
             done: true
           },
@@ -225,6 +251,7 @@ git remote -v
             id: 'm1-3-s4',
             text: 'اعتماد سياسة العمل عبر Pull Requests فقط وحماية فرع main',
             details: 'توثيق قواعد المساهمة وعدم الدفع المباشر على الفرع الرئيسي',
+            hint: 'تعود على git checkout -b feat/... في كل تعديل حتى لو كنت تعمل بمفردك.',
             estimatedHours: 2,
             done: true
           }
@@ -240,7 +267,7 @@ git remote -v
     title: 'Basics — DevOps Core',
     subtitle: 'Linux & Git & Docker Core منتهية — التركيز الحالي على أدوات Python الـ 6 + لابات KodeKloud + Bash + HiveBox Phase 2.',
     monthRange: 'ديسمبر 2026 (الشهر 1)',
-    estimatedHours: 50,
+    estimatedHours: 70,
     cardTheme: 'from-[#1D4ED8] via-[#1E40AF] to-[#172554]',
     techIcons: ['python', 'bash', 'linux', 'docker'],
     sections: [
@@ -252,11 +279,12 @@ git remote -v
         id: 'm2-1',
         code: '2.1',
         title: 'Linux & Networking (RH124/RH134 + CCNA Troubleshooting)',
-        hours: 12,
-        estimatedMinutes: 720,
+        hours: 16,
+        estimatedMinutes: 960,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 25, labPct: 35, codingPct: 10, troubleshootingPct: 30 },
         tags: ['Linux', 'RHEL', 'Networking'],
         objectives: [
           'إتقان إدارة أنظمة Red Hat (RH124/RH134): الصلاحيات، Systemd، journalctl، وإدارة التخزين.',
@@ -273,6 +301,10 @@ sudo systemctl status docker --no-pager
 journalctl -u docker -n 50 --no-pager
 ss -tulpn | grep 8080
 dig +short opensensemap.org && curl -I https://api.opensensemap.org/boxes`,
+        commonFailures: [
+          'تعطيل firewalld أو SELinux لحل مشكلة اتصال بدلاً من فتح المنفذ أو ضبط السياق.',
+          'نسيان التحقق من DNS أو حالة الخدمة قبل افتراض عطل في الشبكة.'
+        ],
         masteryCriteria: 'القدرة على تشخيص أعطال الشبكة والخدمات على RHEL VM بدون الاعتماد على الواجهة الرسومية.',
         whatYouDo: 'إدارة أنظمة لينكس والشبكات مع تقوية مستمرة في عقلية الـ Troubleshooting العملي.',
         deliverable: 'سيرفر RHEL VM (yossef@RedHatLap) مهيأ وجاهز للعمل.',
@@ -288,28 +320,32 @@ dig +short opensensemap.org && curl -I https://api.opensensemap.org/boxes`,
             id: 'm2-1-s1',
             text: 'إدارة أنظمة لينكس بمستوى RH124 / RH134 (Alaa Mohamed & KodeKloud Labs)',
             details: 'إتقان الصلاحيات chmod/chown وإدارة الخدمات systemd والسجلات والتخزين',
-            estimatedHours: 3,
+            hint: 'استخدم journalctl -xeu <service> لقراءة آخر سبب لفشل أي خدمة systemd.',
+            estimatedHours: 4,
             done: true
           },
           {
             id: 'm2-1-s2',
             text: 'أساسيات الشبكات (CCNA: IP, Subnetting, Routing, DNS, Firewall, Ports)',
             details: 'فهم CIDR و NAT و DNS Resolution وحل مشاكل الاتصال عبر ss و dig',
-            estimatedHours: 3,
+            hint: 'للتأكد أن المنفذ يستمع على كل الواجهات استخدم ss -tulpn وليس netstat القديم.',
+            estimatedHours: 4,
             done: true
           },
           {
             id: 'm2-1-s3',
             text: 'تجهيز RHEL VM (yossef@RedHatLap) بمستخدم غير root و Python 3.9.25',
             details: 'تهيئة بيئة التطوير على RedHatLap مع SSH ومفاتيح GitHub',
-            estimatedHours: 3,
+            hint: 'تحقق من الإصدار عبر python3 --version && whoami && id.',
+            estimatedHours: 4,
             done: true
           },
           {
             id: 'm2-1-s4',
             text: 'تدريب تشخيص الأعطال العملي عبر KodeKloud Linux Playgrounds',
             details: 'إصلاح سيناريوهات تعطل خدمات ومنافذ وأذونات ملفات بدون واجهة رسومية',
-            estimatedHours: 3,
+            hint: 'ابدأ دائماً بفحص: هل العملية تعمل؟ هل المنفذ مفتوح؟ هل الجدار الناري يسمح؟',
+            estimatedHours: 4,
             done: true
           }
         ]
@@ -318,11 +354,12 @@ dig +short opensensemap.org && curl -I https://api.opensensemap.org/boxes`,
         id: 'm2-2',
         code: '2.2',
         title: 'Git & GitHub Workflow',
-        hours: 5,
-        estimatedMinutes: 300,
+        hours: 7,
+        estimatedMinutes: 420,
         category: 'Hands-on Lab',
         difficulty: 'Easy',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Git', 'GitHub', 'Conventional Commits'],
         objectives: [
           'إتقان الفروع (Branching) والـ Pull Requests وحل التعارضات.',
@@ -337,6 +374,10 @@ dig +short opensensemap.org && curl -I https://api.opensensemap.org/boxes`,
 git add src/app.py
 git commit -m "feat(api): add v0.0.1 version printer"
 git push -u origin feat/hivebox-version`,
+        commonFailures: [
+          'رفع ملفات .env أو __pycache__ أو .venv عن طريق الخطأ قبل إضافة .gitignore.',
+          'تراكم تعديلات ضخمة في commit واحد يصعب مراجعته أو التراجع عنه.'
+        ],
         masteryCriteria: 'عدم الدفع المباشر إلى main أبداً واستخدام PRs نظيفة.',
         whatYouDo: 'إتقان دورة العمل الأساسية (clone, config, add, commit, branch, push, pull) على VS Code و GitHub.',
         deliverable: 'حساب GitHub مربوط مع VS Code وسير عمل نظيف.',
@@ -348,28 +389,32 @@ git push -u origin feat/hivebox-version`,
             id: 'm2-2-s1',
             text: 'إتقان clone, config, add, commit, branch, push, pull',
             details: 'ضبط user.name و user.email و SSH authentication مع GitHub',
-            estimatedHours: 1.5,
+            hint: 'اختبر اتصال SSH بـ ssh -T git@github.com للتأكد من إعداد المفتاح.',
+            estimatedHours: 2,
             done: true
           },
           {
             id: 'm2-2-s2',
             text: 'إتقان Branching, PRs و Conventional Commits',
             details: 'إنشاء فروع مخصصة ودمجها عبر Pull Requests نظيفة',
-            estimatedHours: 1.5,
+            hint: 'اجعل العنوان بصيغة feat(scope): description لسهولة توليد سجل الإصدارات لاحقاً.',
+            estimatedHours: 2,
             done: true
           },
           {
             id: 'm2-2-s3',
             text: 'حل تعارضات الدمج (Merge Conflicts) و Rebase الأساسي',
             details: 'التعامل الآمن مع التعديلات المتعارضة داخل VS Code والطرفية',
-            estimatedHours: 1,
+            hint: 'قبل فتح PR، حدّث فرعك عبر git pull --rebase origin main لتفادي تعارضات متأخرة.',
+            estimatedHours: 1.5,
             done: true
           },
           {
             id: 'm2-2-s4',
             text: 'استخدام .gitignore و git diff لمراجعة التغييرات قبل الـ Commit',
             details: 'منع تسرب الملفات المؤقتة وبيئات venv والأسرار للمستودع',
-            estimatedHours: 1,
+            hint: 'شغّل git status && git diff --staged قبل أي git commit.',
+            estimatedHours: 1.5,
             done: true
           }
         ]
@@ -378,11 +423,12 @@ git push -u origin feat/hivebox-version`,
         id: 'm2-3',
         code: '2.3',
         title: 'Docker Core (Completed up to Compose)',
-        hours: 7,
-        estimatedMinutes: 420,
+        hours: 12,
+        estimatedMinutes: 720,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 25, labPct: 35, codingPct: 20, troubleshootingPct: 20 },
         tags: ['Docker 29.9.3', 'Containers'],
         objectives: [
           'بناء Docker Images وتشغيل الحاويات مع Ports و Env Vars.',
@@ -396,6 +442,10 @@ git push -u origin feat/hivebox-version`,
         exampleCode: `docker build -t myapp:v1 .
 docker run -d --name myapp -p 8000:8000 -e APP_ENV=dev myapp:v1
 docker logs -f myapp`,
+        commonFailures: [
+          'ربط المنفذ بطريقة معكوسة في -p host:container أو نسيان الاستماع على 0.0.0.0 داخل التطبيق.',
+          'فقدان البيانات عند حذف الحاوية لعدم استخدام Volumes.'
+        ],
         masteryCriteria: 'القدرة على كتابة Dockerfile أساسي وتشغيل واختبار حاوية محلياً.',
         whatYouDo: 'فهم الصور والحاويات، كتابة Dockerfile مبدئي، وإدارة المنافذ ومتغيرات البيئة.',
         deliverable: 'Docker 29.9.3 يعمل بسلاسة بصلاحيات المستخدم على RHEL VM.',
@@ -411,28 +461,32 @@ docker logs -f myapp`,
             id: 'm2-3-s1',
             text: 'فهم Images & Containers وكتابة Dockerfile مبدئي',
             details: 'استيعاب الطبقات (Layers) وأوامر FROM و WORKDIR و COPY و RUN و CMD',
-            estimatedHours: 2,
+            hint: 'تذكّر: Image قالب للقراءة فقط، وContainer نسخة قيد التشغيل فوقها طبقة كتابة.',
+            estimatedHours: 3,
             done: true
           },
           {
             id: 'm2-3-s2',
             text: 'إدارة Ports و Env Vars وتشغيل Docker 29.9.3 بدون sudo على RHEL',
             details: 'ربط المنافذ -p وتمرير المتغيرات -e وتشغيل الحاويات بمستخدم yossef',
-            estimatedHours: 2,
+            hint: 'تحقق أن التابع للمستخدم يعمل عبر docker ps بدون sudo بعد تسجيل الخروج والدخول.',
+            estimatedHours: 3,
             done: true
           },
           {
             id: 'm2-3-s3',
             text: 'إدارة Volumes و Networks وتشغيل خدمات متعددة بـ Docker Compose',
             details: 'ربط حاويات التطبيق وقاعدة البيانات عبر شبكات Compose المعزولة',
-            estimatedHours: 1.5,
+            hint: 'داخل Compose تتواصل الحاويات باسم الخدمة في YAML وليس عبر localhost.',
+            estimatedHours: 3,
             done: true
           },
           {
             id: 'm2-3-s4',
             text: 'فحص وتشخيص الحاويات باستخدام docker logs و docker exec و docker inspect',
             details: 'متابعة السجلات والدخول للطرفية داخل الحاوية لتشخيص الأعطال',
-            estimatedHours: 1.5,
+            hint: 'استخدم docker exec -it <container> sh لفحص المتغيرات والشبكة من الداخل.',
+            estimatedHours: 3,
             done: true
           }
         ]
@@ -441,11 +495,12 @@ docker logs -f myapp`,
         id: 'm2-4',
         code: '2.4',
         title: 'Python Fundamentals Theory (CS50P Arabic — Completed)',
-        hours: 8,
-        estimatedMinutes: 480,
+        hours: 10,
+        estimatedMinutes: 600,
         category: 'Video / Reading',
         difficulty: 'Easy',
         defaultStatus: 'done',
+        effortBreakdown: { videoPct: 40, labPct: 20, codingPct: 25, troubleshootingPct: 15 },
         tags: ['Python', 'CS50P', 'Theory Done'],
         objectives: ['إتقان أساسيات بايثون النظرية قبل التطبيق العملي للأتمتة والـ APIs.'],
         bestPractices: [
@@ -456,6 +511,10 @@ docker logs -f myapp`,
         exampleCode: `def parse_temps(items: list[dict]) -> float:
     values = [float(x["value"]) for x in items if "value" in x]
     return round(sum(values) / len(values), 2) if values else 0.0`,
+        commonFailures: [
+          'استخدام except: عارية بدون تحديد نوع الخطأ مما يخفي أخطاء البرمجة.',
+          'تعديل قائمة أثناء التكرار عليها بدلاً من إنشاء قائمة جديدة.'
+        ],
         masteryCriteria: 'فهم Functions, Loops, Dicts, Exceptions, File I/O, Unit Tests.',
         whatYouDo: 'إنهاء الجانب النظري للغة من بلاي ليست CS50P بالعربي (Super Salman).',
         deliverable: 'قاعدة برمجية صلبة جاهزة للتطبيق على أدوات DevOps.',
@@ -468,28 +527,32 @@ docker logs -f myapp`,
             id: 'm2-4-s1',
             text: 'إنهاء الجانب النظري من CS50P بالعربي (Variables..Unit Tests باستثناء RegEx و OOP عمداً)',
             details: 'تغطية المتغيرات والشروط والحلقات والدوال والقواميس والملفات والاختبارات',
-            estimatedHours: 2,
+            hint: 'لا تعد لمشاهدة الفيديوهات النظرية هنا؛ ركّز الآن على تطبيقها في 2.5.',
+            estimatedHours: 2.5,
             done: true
           },
           {
             id: 'm2-4-s2',
             text: 'إتقان هياكل البيانات (Lists, Dicts, Sets) و List Comprehensions',
             details: 'تحويل بيانات JSON المعقدة إلى مخرجات نظيفة لسكربتات الـ DevOps',
-            estimatedHours: 2,
+            hint: 'استخدم dict.get("key", default) لتجنب KeyError عند معالجة استجابات APIs.',
+            estimatedHours: 2.5,
             done: true
           },
           {
             id: 'm2-4-s3',
             text: 'التعامل مع Exceptions (try/except/finally) و File I/O (with open)',
             details: 'ضمان عدم توقف السكربتات المفاجئ وإغلاق الملفات تلقائياً',
-            estimatedHours: 2,
+            hint: 'استعمل دائماً with open(..., encoding="utf-8") لتجنب اختلافات الترميز.',
+            estimatedHours: 2.5,
             done: true
           },
           {
             id: 'm2-4-s4',
             text: 'تطبيق كتابة اختبارات الوحدات الأساسية (Unit Tests & assertions)',
             details: 'اختبار الدوال المستقلة قبل الانتقال إلى مكتبات DevOps العملية',
-            estimatedHours: 2,
+            hint: 'افصل حساب المنطق في دوال pure تعيد قيمة ليسهل اختبارها مباشرة.',
+            estimatedHours: 2.5,
             done: true
           }
         ]
@@ -498,11 +561,12 @@ docker logs -f myapp`,
         id: 'm2-5',
         code: '2.5',
         title: 'Python DevOps Libraries & FastAPI (التركيز الحالي الآن)',
-        hours: 10,
-        estimatedMinutes: 600,
+        hours: 12,
+        estimatedMinutes: 720,
         category: 'Coding',
         difficulty: 'Medium',
         defaultStatus: 'in_progress',
+        effortBreakdown: { videoPct: 25, labPct: 30, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Current Focus', 'Corey Schafer', 'KodeKloud', 'FastAPI'],
         objectives: [
           'إتقان مكتبات DevOps الست بالترتيب: venv → pip → json → requests → os → subprocess.',
@@ -523,6 +587,10 @@ import os, requests, subprocess
 res = requests.get("https://api.opensensemap.org/boxes/5eba5fbad46fb8001b799786", timeout=5)
 res.raise_for_status()
 subprocess.run(["docker", "ps"], check=True)`,
+        commonFailures: [
+          'تثبيت الحزم بالـ pip العالمي للنظام بدلاً من تفعيل .venv أولاً.',
+          'نسيان timeout في requests مما يعلق الخدمة إذا بطؤ المصدر الخارجي.'
+        ],
         masteryCriteria: 'تشغيل سكريبتات بايثون معزولة بـ venv تتصل بـ openSenseMap API وتنفذ أوامر النظام عبر subprocess.',
         whatYouDo: 'تطبيق فيديوهات Corey Schafer الـ 6 عملياً على RHEL VM + حل لابات KodeKloud + FastAPI.',
         deliverable: 'سكربتات أتمتة نظيفة + إغلاق لابات Python Basics على KodeKloud.',
@@ -543,34 +611,39 @@ subprocess.run(["docker", "ps"], check=True)`,
             id: 'm2-5-s1',
             text: 'تطبيق 1 & 2: venv + pip (عزل بيئة العمل وتوليد requirements.txt)',
             details: 'إنشاء .venv على RHEL VM وتثبيت الحزم وحفظها بـ pip freeze',
-            estimatedHours: 2,
+            hint: 'تأكد من تفعيل البيئة بـ which python3 -> يجب أن يشير إلى .venv/bin/python3 قبل تشغيل pip.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-5-s2',
             text: 'تطبيق 3 & 4: json + requests (استدعاء APIs ومعالجة JSON)',
             details: 'جلب بيانات senseBox من openSenseMap وتحليل قراءات الحرارة مع timeout',
-            estimatedHours: 2,
+            hint: 'استخدم res = requests.get(url, timeout=5); res.raise_for_status(); data = res.json().',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-5-s3',
             text: 'تطبيق 5 & 6: os + subprocess (تشغيل أوامر لينكس بأمان من بايثون)',
             details: 'قراءة متغيرات البيئة os.environ وتشغيل أوامر النظام بـ subprocess.run بدون shell=True',
-            estimatedHours: 2,
+            hint: 'استعمل subprocess.run(["cmd", "arg"], capture_output=True, text=True, check=True).',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-5-s4',
             text: 'حل اللابات المتبقية في Python Basics على KodeKloud (بدءاً من Literals)',
             details: 'إغلاق كافة تمارين KodeKloud العملية لتثبيت سرعة الكتابة البرمجية',
-            estimatedHours: 2,
+            hint: 'افتح لاب Literals مباشرة وتجاوز الفيديوهات التي درستها في CS50P لتوفير الوقت.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-5-s5',
             text: 'دراسة أساسيات FastAPI (Sanjeev T.) لبناء HiveBox Endpoints',
             details: 'بناء نقاط GET و Pydantic schemas وتشغيل الخادم بـ uvicorn',
+            hint: 'جرّب تشغيل الخادم عبر uvicorn main:app --reload واختبر التوثيق التلقائي على /docs.',
             estimatedHours: 2,
             done: false
           }
@@ -580,11 +653,12 @@ subprocess.run(["docker", "ps"], check=True)`,
         id: 'm2-6',
         code: '2.6',
         title: 'Bash Scripting Practical Labs & RHEL Health Check',
-        hours: 5,
-        estimatedMinutes: 300,
+        hours: 8,
+        estimatedMinutes: 480,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'in_progress',
+        effortBreakdown: { videoPct: 15, labPct: 40, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Bash', 'Shell', 'KodeKloud Labs', 'Mostafa Magdy'],
         objectives: [
           'تحويل المعرفة النظرية في Bash إلى سكربتات إنتاجية صارمة (set -euo pipefail).',
@@ -603,6 +677,10 @@ IMAGE="hivebox:v0.0.1"
 docker build -t "$IMAGE" .
 OUTPUT="$(docker run --rm "$IMAGE")"
 echo "$OUTPUT" | grep -q "v0.0.1" && echo "OK: $OUTPUT"`,
+        commonFailures: [
+          'نسيان الاقتباس حول المتغيرات مما يكسر السكربت إذا احتوى المسار على مسافات.',
+          'عدم إيقاف السكربت عند فشل خطوة في منتصف Pipeline لغياب set -o pipefail.'
+        ],
         masteryCriteria: 'حل لابات Shell Scripts for Beginners وتشغيل سكريبت Health Check يختبر الاستجابة.',
         whatYouDo: 'حل اللابات فقط من Shell Scripts for Beginners + مشاريع Mostafa Magdy + سكريبت RHEL VM.',
         deliverable: 'سكريبت Health Check عملي مرفوع ومجرب على RHEL VM.',
@@ -615,28 +693,32 @@ echo "$OUTPUT" | grep -q "v0.0.1" && echo "OK: $OUTPUT"`,
             id: 'm2-6-s1',
             text: 'مراجعة المفاهيم النظرية (Shebang, Args, Conditions, Loops, $?, Signals & Trap)',
             details: 'ترسيخ رموز الخروج exit codes ومعالجة الإشارات',
-            estimatedHours: 1,
+            hint: 'تذكّر: $? يحمل رمز خروج آخر أمر منفذ؛ 0 يعني نجاح وغير ذلك يعني فشلاً.',
+            estimatedHours: 0.5,
             done: true
           },
           {
             id: 'm2-6-s2',
             text: 'حل لابات فقط من كورس Shell Scripts for Beginners على KodeKloud',
             details: 'تطبيق اللابات العملية دون إعادة مشاهدة المحاضرات النظرية',
-            estimatedHours: 1.5,
+            hint: 'استعمل bash -x script.sh لتتبع تنفيذ كل سطر أثناء حل اللاب.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-6-s3',
             text: 'تطبيق Mostafa Magdy Bash Crash Course + كتابة Health Check على RHEL VM',
             details: 'بناء سكربت فحص حالة Docker والخدمات وتنظيف الموارد',
-            estimatedHours: 1.5,
+            hint: 'اجعل السكربت يفحص استجابة curl ومساحة القرص df -h وحالة systemctl.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm2-6-s4',
             text: 'تفعيل set -euo pipefail وفحص السكربتات بـ ShellCheck',
             details: 'ضمان خلو السكربت من أخطاء المتغيرات غير المعرفة والمسافات',
-            estimatedHours: 1,
+            hint: 'ثبّت إضافة ShellCheck في VS Code أو شغّل shellcheck scripts/*.sh.',
+            estimatedHours: 2.5,
             done: false
           }
         ]
@@ -645,11 +727,12 @@ echo "$OUTPUT" | grep -q "v0.0.1" && echo "OK: $OUTPUT"`,
         id: 'm2-7',
         code: '2.7',
         title: 'تسليم HiveBox Phase 2 + كويز Module 2',
-        hours: 3,
-        estimatedMinutes: 180,
+        hours: 5,
+        estimatedMinutes: 300,
         category: 'Project Delivery',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 35, troubleshootingPct: 25 },
         tags: ['HiveBox Phase 2', 'v0.0.1', 'Docker'],
         objectives: [
           'كتابة النسخة v0.0.1 من HiveBox (تطبع الإصدار وتخرج).',
@@ -663,6 +746,10 @@ echo "$OUTPUT" | grep -q "v0.0.1" && echo "OK: $OUTPUT"`,
         exampleCode: `git checkout -b feat/phase-2-basic-api
 docker build -t hivebox:v0.0.1 .
 docker run --rm hivebox:v0.0.1`,
+        commonFailures: [
+          'إضافة endpoints ويب في Phase 2 بدلاً من تأجيلها لـ Phase 3.',
+          'رفع الكود على main مباشرة بدون PR.'
+        ],
         masteryCriteria: 'حاوية v0.0.1 تعمل وتطبع الإصدار بدقة + اجتياز كويز Module 2.',
         whatYouDo: 'إنهاء متطلبات HiveBox Phase 2 وتوثيق خطوات الاختبار وتحديث لوحة Kanban.',
         deliverable: 'إغلاق Module 2 بالكامل والاستعداد للموديول الثالث.',
@@ -675,28 +762,32 @@ docker run --rm hivebox:v0.0.1`,
             id: 'm2-7-s1',
             text: 'تنفيذ دالة HiveBox v0.0.1 وبناء Dockerfile وتشغيله على RHEL VM',
             details: 'طباعة HiveBox version: v0.0.1 والخروج برمز نجاح 0 من داخل الحاوية',
-            estimatedHours: 1,
+            hint: 'اختبر: docker run --rm hivebox:v0.0.1 && echo "Exit OK".',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm2-7-s2',
             text: 'توثيق خطوات الاختبار ورفع PR إلى yossefbelal1/Hivebox وتحديث Kanban',
             details: 'إرفاق سكربت التحقق وتحديث README ودمج الـ Pull Request',
-            estimatedHours: 0.75,
+            hint: 'أضف ناتج التشغيل في وصف الـ PR ليظهر بوضوح أمام أي مراجع.',
+            estimatedHours: 1.25,
             done: false
           },
           {
             id: 'm2-7-s3',
             text: 'اجتياز كويز Module 2 بنجاح',
             details: 'تحقيق 15/15 في كويز Module 2 (Linux, Networking, Git, Docker, Python, Bash)',
-            estimatedHours: 0.75,
+            hint: 'استعمل وضع Retry Incorrect Questions Only حتى إتقان كل الـ 15 سؤالاً.',
+            estimatedHours: 1.25,
             done: false
           },
           {
             id: 'm2-7-s4',
             text: 'مراجعة إغلاق كافة مهام المرحلة الثانية قبل الانتقال إلى Module 3',
             details: 'التحقق من جاهزية المستودع ووسم الإصدار v0.0.1',
-            estimatedHours: 0.5,
+            hint: 'لا تبدأ FastAPI/CI قبل التأكد أن Phase 2 مدمج بالكامل في main.',
+            estimatedHours: 1,
             done: false
           }
         ]
@@ -728,6 +819,7 @@ docker run --rm hivebox:v0.0.1`,
         category: 'Coding',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 20, codingPct: 40, troubleshootingPct: 20 },
         tags: ['Python', 'Pylint', 'Modularity'],
         objectives: ['فصل منطق التطبيق عن الإعدادات وتطبيق Pylint والالتزام بـ Conventional Commits.'],
         bestPractices: [
@@ -743,6 +835,10 @@ def get_version():
 def get_temperature():
     # استبعاد أي قراءة أقدم من 60 دقيقة
     return {"average_temperature": compute_recent_avg()}`,
+        commonFailures: [
+          'حشر كل الكود في ملف main.py واحد مما يصعّب عمل Mocking في الاختبارات.',
+          'تجاهل تحذيرات Pylint حتى تتراكم وتكسر الـ CI لاحقاً.'
+        ],
         masteryCriteria: 'صفر تحذيرات Pylint وهيكلية مجلدات نظيفة.',
         whatYouDo: 'تنظيم هيكل كود HiveBox وإضافة نقاط /version و /temperature المتصلة بـ openSenseMap.',
         deliverable: 'REST API نظيف ومتوافق مع معايير Pylint.',
@@ -752,6 +848,7 @@ def get_temperature():
             id: 'm3-1-s1',
             text: 'فصل المنطق البرمجي عن الإعدادات وتثبيت إضافة Pylint في VS Code',
             details: 'تقسيم src/ إلى وحدات للخدمات والإعدادات ونقاط الـ API',
+            hint: 'أنشئ src/__init__.py و src/sensors.py و src/main.py وشغّل pylint src/.',
             estimatedHours: 1.5,
             done: false
           },
@@ -759,6 +856,7 @@ def get_temperature():
             id: 'm3-1-s2',
             text: 'تطبيق Conventional Commits وبناء /version و /temperature',
             details: 'تنفيذ النقطتين وحساب متوسط الحرارة من الحساسات الثلاثة',
+            hint: 'اختبر النقطتين محلياً بـ curl http://localhost:8000/temperature | jq.',
             estimatedHours: 1.5,
             done: false
           },
@@ -766,6 +864,7 @@ def get_temperature():
             id: 'm3-1-s3',
             text: 'إضافة فلتر استبعاد القراءات الأقدم من ساعة واحدة في /temperature',
             details: 'التحقق من الطابع الزمني لكل قراءة مقارنة بالوقت الحالي UTC',
+            hint: 'استعمل datetime.fromisoformat(ts.replace("Z", "+00:00")) للتوافق مع Python 3.9.',
             estimatedHours: 1.5,
             done: false
           },
@@ -773,6 +872,7 @@ def get_temperature():
             id: 'm3-1-s4',
             text: 'معالجة حالات فشل openSenseMap API وإرجاع أخطاء HTTP واضحة',
             details: 'استخدام Timeout ومعالجة أخطاء الشبكة بدون إسقاط الخادم',
+            hint: 'إذا فشلت جميع الحساسات أو خلت القراءات الحديثة أعد 503 أو رسالة واضحة.',
             estimatedHours: 1.5,
             done: false
           }
@@ -787,6 +887,7 @@ def get_temperature():
         category: 'Coding',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 15, labPct: 25, codingPct: 40, troubleshootingPct: 20 },
         tags: ['pytest', 'Unit Tests', 'QA'],
         objectives: ['كتابة Unit Tests معزولة لجميع Endpoints باستخدام pytest و mocking.'],
         bestPractices: [
@@ -799,6 +900,10 @@ def get_temperature():
     res = client.get("/temperature")
     assert res.status_code == 200
     assert res.json()["average_temperature"] == 25.0`,
+        commonFailures: [
+          'اختبار /temperature ببيانات حية من الإنترنت مما يجعل الـ CI هشاً وبطيئاً.',
+          'عدم اختبار حالة عدم وجود قراءات صالحة خلال آخر ساعة.'
+        ],
         masteryCriteria: 'نجاح جميع اختبارات /version و /temperature بما يشمل استبعاد البيانات الأقدم من ساعة.',
         whatYouDo: 'كتابة اختبارات وحدات أوتوماتيكية لكود بايثون.',
         deliverable: 'مجموعة اختبارات pytest سريعة وموثوقة.',
@@ -808,6 +913,7 @@ def get_temperature():
             id: 'm3-2-s1',
             text: 'كتابة Unit Tests لنقطة /version وحساب متوسط الحرارة',
             details: 'التحقق من صيغة JSON والـ status code 200 عبر TestClient',
+            hint: 'ضع client fixture في tests/conftest.py لإعادة استخدامه عبر جميع الملفات.',
             estimatedHours: 2.5,
             done: false
           },
@@ -815,6 +921,7 @@ def get_temperature():
             id: 'm3-2-s2',
             text: 'اختبار حالة البيانات الأقدم من ساعة باستخدام Mock لـ openSenseMap',
             details: 'محاكاة قراءات حديثة وأخرى قديمة والتأكد من استبعاد القديمة',
+            hint: 'مرر قراءة بعمر 30 دقيقة وأخرى بعمر 65 دقيقة وتأكد أن المتوسط يساوي الأولى فقط.',
             estimatedHours: 2.5,
             done: false
           },
@@ -822,6 +929,7 @@ def get_temperature():
             id: 'm3-2-s3',
             text: 'اختبار حالات الفشل (Timeout / 5xx من openSenseMap)',
             details: 'التأكد من التعامل السليم مع تعطل المصدر الخارجي',
+            hint: 'استخدم side_effect=requests.Timeout لمحاكاة انقطاع الاتصال.',
             estimatedHours: 2.5,
             done: false
           },
@@ -829,6 +937,7 @@ def get_temperature():
             id: 'm3-2-s4',
             text: 'قياس تغطية الاختبارات بـ pytest-cov والوصول لتغطية عالية للمنطق الأساسي',
             details: 'توليد تقرير التغطية والتأكد من سرعة تنفيذ الاختبارات',
+            hint: 'شغّل pytest --cov=src --cov-report=term-missing لملاحظة الأسطر غير المختبرة.',
             estimatedHours: 2.5,
             done: false
           }
@@ -843,6 +952,7 @@ def get_temperature():
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Docker', 'Hadolint', 'Non-root'],
         objectives: [
           'تطبيق Multi-stage builds وتقليص حجم الصورة.',
@@ -865,6 +975,10 @@ COPY --from=builder /install /usr/local
 COPY --chown=10001:10001 src/ ./src/
 USER 10001
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
+        commonFailures: [
+          'نسخ كل المجلد قبل pip install مما يكسر طبقة الكاش مع كل تعديل بالكود.',
+          'نسيان منح صلاحيات القراءة للمستخدم 10001 على الملفات المنسوخة.'
+        ],
         masteryCriteria: 'صورة إنتاجية خفيفة تمر من Hadolint نظيفة 100%.',
         whatYouDo: 'تحسين Dockerfile HiveBox وفق 15 قاعدة Container Best Practices.',
         deliverable: 'Multi-stage Dockerfile آمن وصغير الحجم.',
@@ -874,6 +988,7 @@ CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
             id: 'm3-3-s1',
             text: 'تطبيق Multi-stage Build و Base Image مصغرة + .dockerignore',
             details: 'فصل مرحلة بناء التبعيات عن صورة التشغيل النهائية وتقليص الحجم',
+            hint: 'أضف .git و .venv و __pycache__ و tests داخل .dockerignore.',
             estimatedHours: 2.5,
             done: false
           },
@@ -881,6 +996,7 @@ CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
             id: 'm3-3-s2',
             text: 'التشغيل بمستخدم Non-root واجتياز فحص Hadolint',
             details: 'تعيين USER غير root ومعالجة كافة تحذيرات hadolint Dockerfile',
+            hint: 'اختبر هوية المستخدم داخل الحاوية عبر docker run --rm <img_id> id.',
             estimatedHours: 2.5,
             done: false
           },
@@ -888,6 +1004,7 @@ CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
             id: 'm3-3-s3',
             text: 'تثبيت إصدار الصورة الأساسية وتفعيل Exec Form في CMD',
             details: 'ضمان وصول إشارة SIGTERM مباشرة للعملية الرئيسية PID 1',
+            hint: 'استعمل مصفوفة JSON ["uvicorn", ...] وتجنب CMD uvicorn ... النصية.',
             estimatedHours: 2,
             done: false
           },
@@ -895,6 +1012,7 @@ CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
             id: 'm3-3-s4',
             text: 'مراجعة ومقارنة حجم الصورة قبل وبعد التحسين',
             details: 'التحقق عبر docker images وتجربة التشغيل المحلي بصلاحيات مقيدة',
+            hint: 'قارن الحجم عبر docker images hivebox واذكر النتيجة في وصف الـ PR.',
             estimatedHours: 2,
             done: false
           }
@@ -909,6 +1027,7 @@ CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]`,
         category: 'Hands-on Lab',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 25, labPct: 30, codingPct: 25, troubleshootingPct: 20 },
         tags: ['GitHub Actions', 'CI', 'OpenSSF Scorecard'],
         objectives: [
           'بناء CI Pipeline تلقائي يجمع Pylint + Hadolint + pytest + Docker Build.',
@@ -929,6 +1048,10 @@ jobs:
       - run: pylint src/ && pytest -v
       - run: docker build -t hivebox:ci . && docker run -d -p 8000:8000 hivebox:ci
       - run: sleep 3 && curl -f http://localhost:8000/version`,
+        commonFailures: [
+          'الاستعجال بعمل curl فور docker run دون انتظار جاهزية الخادم (عدم استخدام retry/sleep).',
+          'ترك صلاحيات GITHUB_TOKEN مفتوحة على write-all مما يخفض تقييم OpenSSF.'
+        ],
         masteryCriteria: 'CI أخضر على كل PR يختبر نقطة /version حياً داخل الحاوية.',
         whatYouDo: 'دراسة كورس GitHub Actions Certification وتطبيق ci.yml في HiveBox.',
         deliverable: 'Workflow CI متكامل في .github/workflows/ci.yml.',
@@ -942,6 +1065,7 @@ jobs:
             id: 'm3-4-s1',
             text: 'بناء ci.yml لتشغيل Pylint, Hadolint, pytest وبناء الصورة',
             details: 'إعداد مهام متوازية أو متسلسلة تفشل فوراً عند أي خطأ جودة',
+            hint: 'استعمل actions/setup-python مع cache: pip لتسريع تشغيل الـ workflow.',
             estimatedHours: 3,
             done: false
           },
@@ -949,6 +1073,7 @@ jobs:
             id: 'm3-4-s2',
             text: 'تشغيل الحاوية في الـ CI واختبار نقطة /version',
             details: 'التحقق الفعلي من عمل الصورة المبنية عبر curl داخل الـ runner',
+            hint: 'استخدم curl --retry 5 --retry-connrefused -f http://localhost:8000/version.',
             estimatedHours: 3,
             done: false
           },
@@ -956,6 +1081,7 @@ jobs:
             id: 'm3-4-s3',
             text: 'إضافة OpenSSF Scorecard Action ومعالجة النتائج',
             details: 'تفعيل فحص سلسلة التوريد وصلاحيات الـ Token وتثبيت الـ Actions بـ SHA',
+            hint: 'استعمل القالب الرسمي لـ ossf/scorecard-action مع تقييد Token-Permissions.',
             estimatedHours: 3,
             done: false
           },
@@ -963,6 +1089,7 @@ jobs:
             id: 'm3-4-s4',
             text: 'فهم آلية OIDC Authentication و Self-hosted Runners (ARC)',
             details: 'متابعة سلسلة glich.stream لاستبدال المفاتيح الثابتة بـ OIDC tokens',
+            hint: 'ركّز في الحلقات السبع على id-token: write وكيفية ربط AWS/Cloud بدون Secrets طويلة العمر.',
             estimatedHours: 3,
             done: false
           }
@@ -977,6 +1104,7 @@ jobs:
         category: 'Project Delivery',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 35, troubleshootingPct: 25 },
         tags: ['HiveBox Phase 3', 'Release'],
         objectives: ['دمج مخرجات Phase 3 كاملة عبر PR نظيف وتحديث Kanban.'],
         bestPractices: [
@@ -986,6 +1114,10 @@ jobs:
         requiredTools: ['GitHub PR', 'GitHub Actions', 'Kanban', 'HiveBox Repo'],
         exampleCode: `git tag -a v0.1.0 -m "release: HiveBox Phase 3 MVP API & CI"
 git push origin v0.1.0`,
+        commonFailures: [
+          'نسيان تحديث APP_VERSION إلى v0.1.0 قبل إصدار الوسم.',
+          'ترك تحذيرات في Pylint أو Hadolint متجاوزة بـ continue-on-error.'
+        ],
         masteryCriteria: 'نجاح كافة اختبارات CI و OpenSSF على المستودع.',
         whatYouDo: 'مراجعة كل متطلبات Phase 3 وتسليمها.',
         deliverable: 'إغلاق HiveBox Phase 3 بالكامل.',
@@ -995,6 +1127,7 @@ git push origin v0.1.0`,
             id: 'm3-5-s1',
             text: 'إتمام PR Phase 3 ونقل الكارت إلى Done في Kanban',
             details: 'فتح Pull Request نظيف بجميع ملفات الكود والاختبارات والـ CI',
+            hint: 'تأكد من اخضرار جميع status checks قبل الضغط على Merge Pull Request.',
             estimatedHours: 2,
             done: false
           },
@@ -1002,6 +1135,7 @@ git push origin v0.1.0`,
             id: 'm3-5-s2',
             text: 'توثيق نقاط /version و /temperature وأوامر الاختبار في README',
             details: 'تحديث توثيق الـ API ومتطلبات التشغيل المحلي',
+            hint: 'أضف أمثلة طلب واستجابة JSON لكل Endpoint.',
             estimatedHours: 2,
             done: false
           },
@@ -1009,6 +1143,7 @@ git push origin v0.1.0`,
             id: 'm3-5-s3',
             text: 'اجتياز كويز Module 3 (15/15) ومراجعة ملاحظات OpenSSF',
             details: 'التحقق من استيعاب كل مفاهيم CI و Container Best Practices',
+            hint: 'راجع أي سؤال أخطأت فيه في الكويز قبل الانتقال إلى Kubernetes.',
             estimatedHours: 2,
             done: false
           },
@@ -1016,6 +1151,7 @@ git push origin v0.1.0`,
             id: 'm3-5-s4',
             text: 'إصدار Tag v0.1.0 بعد دمج المرحلة الثالثة بنجاح',
             details: 'ربط الإصدار بسجل تغييرات واضح على GitHub',
+            hint: 'استعمل git tag -a v0.1.0 لتحضير الإصدار التالي للـ CD.',
             estimatedHours: 2,
             done: false
           }
@@ -1049,6 +1185,7 @@ git push origin v0.1.0`,
         category: 'Coding',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 25, codingPct: 35, troubleshootingPct: 20 },
         tags: ['12-Factor', 'Env Vars', 'REST API'],
         objectives: ['جعل senseBox IDs قابلة للتهيئة عبر Env Vars وإضافة حقل status لقراءة الحرارة.'],
         bestPractices: [
@@ -1058,6 +1195,10 @@ git push origin v0.1.0`,
         requiredTools: ['12-Factor App', 'os.environ', 'FastAPI', 'pytest'],
         exampleCode: `SENSEBOX_IDS = os.getenv("SENSEBOX_IDS", "").split(",")
 status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
+        commonFailures: [
+          'ترك senseBox IDs ثابتة داخل الكود مما يمنع إعادة استخدام الصورة بين البيئات.',
+          'عدم تغطية القيم الحدية (مثل 10 أو 36 أو 37) في اختبارات status.'
+        ],
         masteryCriteria: 'نفس الصورة تعمل بأي senseBox IDs عبر متغيرات البيئة فقط.',
         whatYouDo: 'تطبيق مبادئ Twelve-Factor App وتحديث /temperature.',
         deliverable: 'تطبيق Stateless يقرأ الإعدادات من Env Vars.',
@@ -1070,6 +1211,7 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
             id: 'm4-1-s1',
             text: 'قراءة senseBox IDs من Environment Variables',
             details: 'إلغاء المعرفات الثابتة في الكود وقراءتها من SENSEBOX_IDS',
+            hint: 'نظّف المسافات حول المعرفات عبر [x.strip() for x in raw.split(",") if x.strip()].',
             estimatedHours: 2,
             done: false
           },
@@ -1077,6 +1219,7 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
             id: 'm4-1-s2',
             text: 'إضافة تصنيف status (<10 Too Cold, 11–36 Good, >37 Too Hot)',
             details: 'إرجاع الحقل status في استجابة /temperature مع اختبارات الحالات الحدية',
+            hint: 'اكتب test_temperature_status_thresholds عبر @pytest.mark.parametrize.',
             estimatedHours: 2,
             done: false
           },
@@ -1084,6 +1227,7 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
             id: 'm4-1-s3',
             text: 'تطبيق مبدأ Logs as Event Streams (الإخراج إلى stdout)',
             details: 'تجهيز سجلات مهيكلة جاهزة للالتقاط في Kubernetes',
+            hint: 'استعمل Python logging موجهاً إلى sys.stdout وليس إلى ملفات نصية داخل الحاوية.',
             estimatedHours: 2,
             done: false
           },
@@ -1091,6 +1235,7 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
             id: 'm4-1-s4',
             text: 'تطبيق مبدأ Disposability عبر الإغلاق النظيف (Graceful Shutdown)',
             details: 'التحقق من سرعة بدء التشغيل وإغلاق الاتصالات عند SIGTERM',
+            hint: 'تأكد من إنهاء المهام الخلفية خلال مهلة terminationGracePeriodSeconds.',
             estimatedHours: 2,
             done: false
           }
@@ -1105,6 +1250,7 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
         category: 'Hands-on Lab',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 25, labPct: 35, codingPct: 15, troubleshootingPct: 25 },
         tags: ['Kubernetes', 'Kind', 'CKA', 'Troubleshooting'],
         objectives: [
           'إتقان معمارية Kubernetes وكائناته الأساسية (Pods, Deployments, Services, Ingress, ConfigMaps, Secrets, Probes, HPA).',
@@ -1119,6 +1265,10 @@ status = "Too Cold" if avg < 10 else ("Good" if avg <= 36 else "Too Hot")`,
 kubectl apply -f k8s/
 kubectl get pods,svc,ingress -A
 kubectl describe pod -l app=hivebox`,
+        commonFailures: [
+          'عدم تطابق label selector بين Service و Deployment مما يترك Endpoints فارغة.',
+          'تحميل صورة محلية دون استيرادها إلى Kind عبر kind load docker-image.'
+        ],
         masteryCriteria: 'نشر التطبيق داخل Kind والوصول إليه عبر Ingress مع عمل Probes و HPA.',
         whatYouDo: 'إنهاء كورسات K8s و CKA و Troubleshooting على KodeKloud + تطبيق Kind.',
         deliverable: 'ملفات Deployment, Service, Ingress شغالة على Kind.',
@@ -1135,6 +1285,7 @@ kubectl describe pod -l app=hivebox`,
             id: 'm4-2-s1',
             text: 'إتقان Architecture (API Server, etcd, Scheduler, Kubelet) وتشغيل Kind',
             details: 'فهم Control Plane و Worker Nodes وتشغيل كلاستر Kind محلياً',
+            hint: 'تحقق من جاهزية العقد عبر kubectl get nodes -o wide بعد إنشاء الكلاستر.',
             estimatedHours: 6,
             done: false
           },
@@ -1142,6 +1293,7 @@ kubectl describe pod -l app=hivebox`,
             id: 'm4-2-s2',
             text: 'كتابة Manifests: Deployment, Service, ConfigMap, Secret, Ingress-Nginx',
             details: 'توجيه الطلبات من Ingress-Nginx إلى Service وتمرير الإعدادات بـ ConfigMap',
+            hint: 'افحص kubectl get endpoints <svc-name> للتأكد أن الخدمة ترى الـ Pods.',
             estimatedHours: 6,
             done: false
           },
@@ -1149,6 +1301,7 @@ kubectl describe pod -l app=hivebox`,
             id: 'm4-2-s3',
             text: 'تطبيق Probes و Resource Limits و HPA + كورس K8s Troubleshooting',
             details: 'ضبط التوسع التلقائي والتشخيص العملي لأعطال CrashLoopBackOff و ImagePullBackOff',
+            hint: 'استخدم kubectl logs --previous عند انهيار حاوية في CrashLoopBackOff.',
             estimatedHours: 6,
             done: false
           },
@@ -1156,6 +1309,7 @@ kubectl describe pod -l app=hivebox`,
             id: 'm4-2-s4',
             text: 'إتمام لابات CKA الأساسية (Networking, Storage, RBAC, Scheduling)',
             details: 'حل تمارين الإدارة العملية في بيئة Kubernetes',
+            hint: 'تدرّب على توليد القوالب بسرعة عبر kubectl create ... --dry-run=client -o yaml.',
             estimatedHours: 6,
             done: false
           }
@@ -1170,6 +1324,7 @@ kubectl describe pod -l app=hivebox`,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 25, labPct: 35, codingPct: 20, troubleshootingPct: 20 },
         tags: ['Prometheus', 'PCA', 'Grafana'],
         objectives: ['تصدير مقاييس Prometheus على /metrics وربط Grafana لقراءتها.'],
         bestPractices: [
@@ -1180,6 +1335,10 @@ kubectl describe pod -l app=hivebox`,
         exampleCode: `# استعلام PromQL لمعدل الأخطاء وزمن الاستجابة:
 rate(http_requests_total{status=~"5.."}[5m])
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
+        commonFailures: [
+          'إضافة user_id أو timestamp داخل Labels مما يفجّر عدد السلاسل الزمنية.',
+          'استخدام rate() على مقياس Gauge بدلاً من Counter.'
+        ],
         masteryCriteria: 'نقطة /metrics تعيد مقاييس HTTP والعملية وتظهر في Prometheus.',
         whatYouDo: 'دراسة Prep Course - Prometheus Certified Associate (PCA) وتطبيق /metrics.',
         deliverable: 'مراقبة حية لـ HiveBox عبر Prometheus و Grafana.',
@@ -1191,6 +1350,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
             id: 'm4-3-s1',
             text: 'إضافة Endpoint /metrics وتصدير Default Prometheus Metrics',
             details: 'دمج مكتبة prometheus_client أو prometheus-fastapi-instrumentator',
+            hint: 'اختبر curl http://localhost:8000/metrics وتأكد من ظهور # TYPE http_requests...',
             estimatedHours: 2.5,
             done: false
           },
@@ -1198,6 +1358,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
             id: 'm4-3-s2',
             text: 'ربط Prometheus & Grafana وعرض المقاييس',
             details: 'ضبط Scrape Configs وإنشاء لوحة Grafana لمراقبة HTTP requests و latency',
+            hint: 'تحقق من صفحة Status -> Targets في Prometheus للتأكد أن حالة الـ endpoint هي UP.',
             estimatedHours: 2.5,
             done: false
           },
@@ -1205,6 +1366,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
             id: 'm4-3-s3',
             text: 'إتقان استعلامات PromQL الأساسية (rate, sum by, histogram_quantile)',
             details: 'حل لابات كورس PCA على KodeKloud',
+            hint: 'استعمل rate() مع Counter واختر نافذة زمنية >= 4x scrape_interval.',
             estimatedHours: 2.5,
             done: false
           },
@@ -1212,6 +1374,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
             id: 'm4-3-s4',
             text: 'إعداد Alerting Rules أولية لحالات التوقف أو ارتفاع الأخطاء',
             details: 'تحديد تنبيهات واضحة عند غياب الـ target أو زيادة 5xx',
+            hint: 'اختبر up{job="hivebox"} == 0 للتنبيه الفوري عند سقوط الخدمة.',
             estimatedHours: 2.5,
             done: false
           }
@@ -1226,6 +1389,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 30, labPct: 35, codingPct: 15, troubleshootingPct: 20 },
         tags: ['AWS', 'EC2', 'VPC', 'IAM', 'S3', 'ECR'],
         objectives: ['فهم وإتقان خدمات AWS الأساسية: EC2, VPC, Subnets, Security Groups, IAM, S3, ECR.'],
         bestPractices: [
@@ -1236,6 +1400,10 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`,
         exampleCode: `# بناء ورفع صورة إلى Amazon ECR:
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <acct>.dkr.ecr.us-east-1.amazonaws.com
 docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
+        commonFailures: [
+          'فتح المنفذ 22 على 0.0.0.0/0 أو ترك S3 Bucket عاماً للجميع.',
+          'نسيان Internet Gateway أو Route Table في Public Subnet.'
+        ],
         masteryCriteria: 'إعداد شبكة VPC معزولة وصلاحيات IAM آمنة وحفظ صور في ECR.',
         whatYouDo: 'دراسة كورسات AWS على KodeKloud و AWS SAA-C03 بالعربي.',
         deliverable: 'بنية AWS أساسية جاهزة للمرحلة التالية.',
@@ -1250,6 +1418,7 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
             id: 'm4-4-s1',
             text: 'IAM (Users, Roles, Policies) + S3 + ECR',
             details: 'ضبط الصلاحيات والتخزين الكائني ومستودع صور الحاويات',
+            hint: 'ميّز بين Identity-based Policies و Resource-based Policies في S3 و ECR.',
             estimatedHours: 3,
             done: false
           },
@@ -1257,6 +1426,7 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
             id: 'm4-4-s2',
             text: 'VPC (Subnets, Route Tables, Security Groups) + EC2',
             details: 'تصميم شبكة Public/Private Subnets وربط Internet Gateway و NAT',
+            hint: 'تذكّر: Security Groups هي Stateful، بينما NACLs هي Stateless.',
             estimatedHours: 3,
             done: false
           },
@@ -1264,6 +1434,7 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
             id: 'm4-4-s3',
             text: 'فهم موازنات الأحمال (ALB/NLB) و Auto Scaling Groups',
             details: 'توزيع الترافيك وتحقيق التوفر العالي عبر أكثر من Availability Zone',
+            hint: 'استخدم ALB للتوجيه على Layer 7 (HTTP paths/headers) و NLB للأداء العالي Layer 4.',
             estimatedHours: 3,
             done: false
           },
@@ -1271,6 +1442,7 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
             id: 'm4-4-s4',
             text: 'إتمام اللابات التطبيقية لـ AWS For Beginners / SAA',
             details: 'تطبيق نشر خدمة بسيطة خلف Load Balancer على AWS',
+            hint: 'احرص على حذف الموارد المؤقتة (Cleanup) فور إنهاء اللاب لتفادي أي تكاليف.',
             estimatedHours: 3,
             done: false
           }
@@ -1285,6 +1457,7 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
         category: 'Video / Reading',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 35, labPct: 35, codingPct: 10, troubleshootingPct: 20 },
         tags: ['System Design', 'Caching', 'Queues', 'Replication'],
         objectives: ['استكمال Modules 2–5 واللابات الـ 7 المتبقية (بعد إتمام Module 1 مسبقاً).'],
         bestPractices: [
@@ -1295,6 +1468,10 @@ docker push <acct>.dkr.ecr.us-east-1.amazonaws.com/hivebox:v0.2.0`,
         exampleCode: `# قرار معماري في HiveBox:
 Client -> Ingress -> FastAPI -> Valkey Cache (TTL 5m)
                              -> MinIO S3 (Snapshot Archive)`,
+        commonFailures: [
+          'تطبيق Caching بدون استراتيجية إبطال أو TTL واضح.',
+          'إنشاء نقطة فشل واحدة (SPOF) في طبقة التخزين أو الموازنة.'
+        ],
         masteryCriteria: 'استيعاب أنماط Caching, Queues, Replication و Self-Healing.',
         whatYouDo: 'إكمال كورس System Design For Beginners على KodeKloud.',
         deliverable: 'إغلاق كورس System Design كاملاً.',
@@ -1307,27 +1484,31 @@ Client -> Ingress -> FastAPI -> Valkey Cache (TTL 5m)
             id: 'm4-5-s1',
             text: 'إنهاء Module 1 (مكتمل مسبقاً)',
             details: 'الأساسيات الأولى لمعمارية الأنظمة الموزعة',
-            estimatedHours: 2,
+            hint: 'لا تعد لدراسة Module 1؛ ابدأ مباشرة من Module 2.',
+            estimatedHours: 1,
             done: true
           },
           {
             id: 'm4-5-s2',
             text: 'استكمال Modules 2–5 + 7 Labs (Caching, Queues, Replication, Self-Healing)',
             details: 'دراسة أنماط التوسع والتخزين المؤقت والموثوقية وتطبيقها',
-            estimatedHours: 2,
+            hint: 'قارن متى تختار Read Replicas مقابل Sharding مقابل Caching.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm4-5-s3',
             text: 'حل الـ 7 Labs العملية داخل الكورس على KodeKloud',
             details: 'تطبيق سيناريوهات موازنة الأحمال والكاش والتكرار',
-            estimatedHours: 2,
+            hint: 'ارسم المعمارية لكل سيناريو قبل اختيار الإجابة في اللاب.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm4-5-s4',
             text: 'مواءمة مفاهيم Caching و Storage مع خطة HiveBox Phase 5',
             details: 'رسم تدفق الكاش والتخزين الكائني قبل البدء بالترميز',
+            hint: 'حدّد من الآن كيف سيتعامل /temperature مع Valkey عند Cache Hit vs Cache Miss.',
             estimatedHours: 2,
             done: false
           }
@@ -1342,6 +1523,7 @@ Client -> Ingress -> FastAPI -> Valkey Cache (TTL 5m)
         category: 'Project Delivery',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 35, troubleshootingPct: 25 },
         tags: ['SonarQube', 'Terrascan', 'GHCR', 'CD'],
         objectives: ['ربط اختبارات التكامل + SonarQube/Semgrep + Terrascan + رفع صورة GHCR عبر CD.'],
         bestPractices: [
@@ -1352,6 +1534,10 @@ Client -> Ingress -> FastAPI -> Valkey Cache (TTL 5m)
         exampleCode: `# في CD Workflow بعد الدمج في main:
 docker build -t ghcr.io/yossefbelal1/hivebox:v0.2.0 .
 docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
+        commonFailures: [
+          'ترك وسم :latest في ملفات Deployment أو CD.',
+          'تعطل Terrascan بسبب غياب SecurityContext أو Resource Limits في manifests.'
+        ],
         masteryCriteria: 'الـ CI يفحص الكود والمانيفستس والـ CD ينشر الصورة برقم إصدار على GHCR.',
         whatYouDo: 'تنفيذ متطلبات Phase 4 الكاملة ورفعها كـ PR.',
         deliverable: 'إغلاق HiveBox Phase 4 على GitHub.',
@@ -1361,6 +1547,7 @@ docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
             id: 'm4-6-s1',
             text: 'تشغيل Integration Tests + SonarQube/Semgrep + Terrascan في CI',
             details: 'التحقق من تكامل التطبيق وفحص جودة الكود وملفات Kubernetes',
+            hint: 'شغّل terracan محلياً أولاً لتصحيح أي تحذيرات عالية الخطورة في YAML.',
             estimatedHours: 2,
             done: false
           },
@@ -1368,6 +1555,7 @@ docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
             id: 'm4-6-s2',
             text: 'بناء CD Workflow لرفع الصورة الموسومة بالإصدار إلى GHCR',
             details: 'نشر Image مرقمة باستخدام GITHUB_TOKEN تلقائياً',
+            hint: 'تأكد من ضبط صلاحيات Package visibility في GHCR لتكون قابلة للسحب في Kind.',
             estimatedHours: 2,
             done: false
           },
@@ -1375,6 +1563,7 @@ docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
             id: 'm4-6-s3',
             text: 'تشغيل HiveBox على Kind + Ingress-Nginx والتحقق من /temperature و /metrics',
             details: 'اختبار الوصول عبر Ingress وتصدير المقاييس',
+            hint: 'تحقق من استجابة curl -i http://localhost/metrics بعد تثبيت Ingress-Nginx.',
             estimatedHours: 2,
             done: false
           },
@@ -1382,6 +1571,7 @@ docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
             id: 'm4-6-s4',
             text: 'دمج PR المرحلة الرابعة وتحديث لوحة Kanban واجتياز كويز Module 4',
             details: 'إغلاق Phase 4 نظيفاً قبل الانتقال إلى Module 5',
+            hint: 'راجع كويز Module 4 بالكامل لتثبيت مفاهيم Kubernetes و AWS و Prometheus.',
             estimatedHours: 2,
             done: false
           }
@@ -1414,6 +1604,7 @@ docker push ghcr.io/yossefbelal1/hivebox:v0.2.0`,
         category: 'Coding',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 15, labPct: 25, codingPct: 40, troubleshootingPct: 20 },
         tags: ['Valkey', 'MinIO', '/readyz', 'Integration'],
         objectives: [
           'إضافة Valkey (دورة 5 دقائق) + /cache و MinIO S3-compatible (دورة 5 دقائق) + /store.',
@@ -1430,6 +1621,10 @@ if unavailable_boxes > total_boxes / 2:
 if cache_age_sec > 600 or minio_age_sec > 600:
     raise HTTPException(503, "Stale cache/storage (>2 cycles)")
 return {"status": "ready"}`,
+        commonFailures: [
+          'تشغيل /readyz على انه يعيد 200 دائماً دون فحص عمر بيانات الكاش و MinIO.',
+          'تخزين الأسرار أو كلمات مرور MinIO في values.yaml غير المشفرة.'
+        ],
         masteryCriteria: 'تحقق /readyz من توفر 50%+1 من الحساسات وحداثة بيانات Valkey و MinIO (< دورتين).',
         whatYouDo: 'دمج Valkey و MinIO في HiveBox وتحديث /temperature ليقرأ من الكاش.',
         deliverable: 'نقاط /cache, /store, /readyz ومقاييس مخصصة شغالة.',
@@ -1439,6 +1634,7 @@ return {"status": "ready"}`,
             id: 'm5-1-s1',
             text: 'دمج Valkey Cache بدورة 5 دقائق + Endpoint /cache',
             details: 'تخزين قراءات الحساسات مؤقتاً وتحديثها من المهام الخلفية',
+            hint: 'استعمل مكتبة redis-py المتوافقة مع Valkey مع TTL أو طابع زمني للتحقق من العمر.',
             estimatedHours: 3,
             done: false
           },
@@ -1446,6 +1642,7 @@ return {"status": "ready"}`,
             id: 'm5-1-s2',
             text: 'دمج MinIO S3-compatible Storage + Endpoint /store',
             details: 'حفظ اللقطات الدورية في Bucket عبر S3 SDK',
+            hint: 'اختبر الاتصال بـ boto3 مع endpoint_url="http://minio:9000" وتأكد من إنشاء الـ Bucket.',
             estimatedHours: 3,
             done: false
           },
@@ -1453,6 +1650,7 @@ return {"status": "ready"}`,
             id: 'm5-1-s3',
             text: 'تطوير /readyz Probe وتوسيع /metrics بمقاييس مخصصة',
             details: 'فحص صحة الاتصال وحداثة البيانات وتصدير مقاييس الكاش والتخزين',
+            hint: 'أضف مقاييس مثل hivebox_cache_hits_total و hivebox_sensor_availability_ratio.',
             estimatedHours: 3,
             done: false
           },
@@ -1460,6 +1658,7 @@ return {"status": "ready"}`,
             id: 'm5-1-s4',
             text: 'كتابة اختبارات التكامل لنقاط /cache و /store و /readyz',
             details: 'اختبار سيناريوهات تعطل Valkey أو تقادم البيانات',
+            hint: 'اختبر إرجاع HTTP 503 من /readyz عندما يتجاوز عمر الكاش 10 دقائق.',
             estimatedHours: 3,
             done: false
           }
@@ -1474,6 +1673,7 @@ return {"status": "ready"}`,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Helm', 'Kustomize', 'Security'],
         objectives: ['تغليف التطبيق بـ Helm وإدارة Valkey و MinIO عبر Kustomize + K8s Security.'],
         bestPractices: [
@@ -1484,6 +1684,10 @@ return {"status": "ready"}`,
         exampleCode: `helm lint ./charts/hivebox
 helm template hivebox ./charts/hivebox -f values.yaml
 kubectl apply -k k8s/infra/overlays/dev`,
+        commonFailures: [
+          'كسر المسافات البادئة في قوالب Helm بسبب نسيان nindent.',
+          'عدم ضبط readinessProbe على /readyz مما يوجه الترافيك لـ Pod غير جاهز.'
+        ],
         masteryCriteria: 'نشر كامل المنظومة بـ Helm و Kustomize مع ضبط /readyz كـ Readiness Probe.',
         whatYouDo: 'دراسة كورسات Helm و Kustomize على KodeKloud وتطبيقها على HiveBox.',
         deliverable: 'Helm Chart + Kustomize Manifests متكاملة.',
@@ -1497,6 +1701,7 @@ kubectl apply -k k8s/infra/overlays/dev`,
             id: 'm5-2-s1',
             text: 'إنشاء Helm Chart لتطبيق HiveBox وتفعيل /readyz probe',
             details: 'بناء Chart.yaml و values.yaml و templates/ وتمرير helm lint',
+            hint: 'استعمل helm template --debug للتحقق من الـ YAML الناتج قبل النشر.',
             estimatedHours: 3,
             done: false
           },
@@ -1504,6 +1709,7 @@ kubectl apply -k k8s/infra/overlays/dev`,
             id: 'm5-2-s2',
             text: 'إنشاء Kustomize manifests للبنية التحتية (Valkey, MinIO) ومراجعة K8s Security',
             details: 'تجهيز base/ و overlays/ وضبط Secrets و SecurityContext',
+            hint: 'عاين النتيجة بـ kubectl kustomize k8s/infra/overlays/dev قبل التطبيق.',
             estimatedHours: 3,
             done: false
           },
@@ -1511,6 +1717,7 @@ kubectl apply -k k8s/infra/overlays/dev`,
             id: 'm5-2-s3',
             text: 'اختبار نشر التطبيق + Valkey + MinIO داخل Kind عبر Helm & Kustomize',
             details: 'التحقق من ارتباط الخدمات ونجاح /readyz في Kubernetes',
+            hint: 'تأكد من أسماء الـ DNS الداخلية (مثل valkey.default.svc.cluster.local).',
             estimatedHours: 2.5,
             done: false
           },
@@ -1518,6 +1725,7 @@ kubectl apply -k k8s/infra/overlays/dev`,
             id: 'm5-2-s4',
             text: 'تطبيق قواعد NetworkPolicy وحدود الموارد لكل مكون',
             details: 'تقييد التواصل الداخلي لحماية Valkey و MinIO',
+            hint: 'اسمح بالوصول إلى منفذ Valkey 6379 من Pods تطبيق HiveBox فقط.',
             estimatedHours: 2.5,
             done: false
           }
@@ -1532,6 +1740,7 @@ kubectl apply -k k8s/infra/overlays/dev`,
         category: 'Hands-on Lab',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 25, troubleshootingPct: 20 },
         tags: ['Terraform', 'IaC', 'Grafana Agent'],
         objectives: ['بناء كلاستر Kubernetes بالكود عبر Terraform ونشر Grafana Agent للـ Logs/Metrics.'],
         bestPractices: [
@@ -1543,6 +1752,10 @@ kubectl apply -k k8s/infra/overlays/dev`,
 terraform fmt -check
 terraform validate
 terraform plan -out=tfplan && terraform apply tfplan`,
+        commonFailures: [
+          'رفع terraform.tfstate إلى GitHub مما يكشف مفاتيح وأسرار البنية التحتية.',
+          'تعديل الموارد يدوياً من Console وإحداث State Drift.'
+        ],
         masteryCriteria: 'إنشاء الكلاستر كاملاً عبر Terraform IaC بدون خطوات يدوية.',
         whatYouDo: 'إتمام كورس Terraform Basics (Vijin Palazhi) وبناء بنية Phase 5.',
         deliverable: 'كود Terraform منظم بالـ Modules والـ State الآمن.',
@@ -1555,6 +1768,7 @@ terraform plan -out=tfplan && terraform apply tfplan`,
             id: 'm5-3-s1',
             text: 'إتقان Providers, Resources, State, Variables, Outputs, Modules',
             details: 'حل كافة لابات Terraform Basics Training على KodeKloud',
+            hint: 'احرص على فهم lifecycle rules و count vs for_each لتجنب إعادة إنشاء الموارد.',
             estimatedHours: 3.5,
             done: false
           },
@@ -1562,6 +1776,7 @@ terraform plan -out=tfplan && terraform apply tfplan`,
             id: 'm5-3-s2',
             text: 'إنشاء Kubernetes Cluster بـ Terraform + نشر Grafana Agent (Loki/Grafana)',
             details: 'تعريف الكلاستر و Ingress ووكلاء الرصد بالكود البرمجي',
+            hint: 'أضف *.tfstate و .terraform/ إلى .gitignore قبل أول commit.',
             estimatedHours: 3.5,
             done: false
           },
@@ -1569,6 +1784,7 @@ terraform plan -out=tfplan && terraform apply tfplan`,
             id: 'm5-3-s3',
             text: 'إعداد Remote State آمن وفحص الكود بأدوات terraform fmt و validate',
             details: 'حماية الحالة ومنع التضارب عند التشغيل الآلي',
+            hint: 'أضف خطوة terraform fmt -check -recursive && terraform validate في الـ CI.',
             estimatedHours: 3.5,
             done: false
           },
@@ -1576,6 +1792,7 @@ terraform plan -out=tfplan && terraform apply tfplan`,
             id: 'm5-3-s4',
             text: 'ربط فحص Terrascan على ملفات Terraform في خط الـ CI',
             details: 'منع الإعدادات غير الآمنة قبل تطبيق البنية التحتية',
+            hint: 'شغّل terrascan scan -t aws -d infra/ لمراجعة أي ثغرات في الإعدادات.',
             estimatedHours: 3.5,
             done: false
           }
@@ -1590,6 +1807,7 @@ terraform plan -out=tfplan && terraform apply tfplan`,
         category: 'Project Delivery',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 35, troubleshootingPct: 25 },
         tags: ['Venom', 'E2E', 'HiveBox Phase 5'],
         objectives: ['كتابة اختبارات End-to-End باستخدام Venom على كلاستر Kind الحي.'],
         bestPractices: [
@@ -1606,6 +1824,10 @@ testcases:
         url: http://localhost/readyz
         assertions:
           - result.statuscode ShouldEqual 200`,
+        commonFailures: [
+          'بدء اختبارات Venom قبل جاهزية Pods في Kubernetes.',
+          'نسيان التحقق من وجود بيانات فعلية في Valkey و MinIO بعد استدعاء /cache و /store.'
+        ],
         masteryCriteria: 'الـ Pipeline ينشئ Kind ويشغل البنية ويجتاز اختبارات Venom.',
         whatYouDo: 'إنشاء Venom Test Suite وإتمام Phase 5.',
         deliverable: 'إغلاق HiveBox Phase 5 بالكامل.',
@@ -1615,6 +1837,7 @@ testcases:
             id: 'm5-4-s1',
             text: 'بناء Venom E2E Test Suite وتشغيله على Kind مع البنية الكاملة',
             details: 'تغطية نقاط /version و /temperature و /cache و /store و /readyz و /metrics',
+            hint: 'استعمل kubectl wait --for=condition=ready pod -l app=hivebox --timeout=120s قبل Venom.',
             estimatedHours: 2,
             done: false
           },
@@ -1622,6 +1845,7 @@ testcases:
             id: 'm5-4-s2',
             text: 'دمج Venom Test Job تلقائياً في GitHub Actions Workflow',
             details: 'تشغيل الكلاستر ونشر Helm/Kustomize وتنفيذ Venom في الـ CI',
+            hint: 'اطبع kubectl get events و logs في خطوة if: failure() لتسهيل تصحيح أخطاء E2E.',
             estimatedHours: 2,
             done: false
           },
@@ -1629,6 +1853,7 @@ testcases:
             id: 'm5-4-s3',
             text: 'تحديث README بمعمارية Valkey/MinIO/Terraform وإصدار Tag v0.3.0',
             details: 'توثيق خطوات تشغيل المنظومة المتكاملة محلياً',
+            hint: 'أضف مخطط التدفق الجديد من Ingress إلى Valkey و MinIO.',
             estimatedHours: 2,
             done: false
           },
@@ -1636,6 +1861,7 @@ testcases:
             id: 'm5-4-s4',
             text: 'دمج PR المرحلة الخامسة ونقل الكارت إلى Done واجتياز كويز Module 5',
             details: 'تحقيق 15/15 في كويز Module 5 وإغلاق المرحلة',
+            hint: 'راجع أسئلة Terraform State و Helm vs Kustomize و /readyz في الكويز.',
             estimatedHours: 2,
             done: false
           }
@@ -1651,7 +1877,7 @@ testcases:
     title: 'Optimize — Keep Improving',
     subtitle: 'DevSecOps (Trivy, KCSA, Kyverno)، سجلات Grafana Loki، و GitOps عبر Argo CD + ExternalDNS/Cert-Manager + HiveBox Phase 6.',
     monthRange: 'مايو 2027 (الشهر 6)',
-    estimatedHours: 45,
+    estimatedHours: 40,
     cardTheme: 'from-[#0F766E] via-[#115E59] to-[#042F2E]',
     techIcons: ['argocd', 'security', 'grafana', 'prometheus'],
     sections: [
@@ -1663,11 +1889,12 @@ testcases:
         id: 'm6-1',
         code: '6.1',
         title: 'DevSecOps & Supply Chain Security (Trivy, KCSA & Kyverno)',
-        hours: 12,
-        estimatedMinutes: 720,
+        hours: 10,
+        estimatedMinutes: 600,
         category: 'Hands-on Lab',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 20, troubleshootingPct: 25 },
         tags: ['Trivy', 'KCSA', 'DevSecOps', 'Kyverno'],
         objectives: [
           'فحص الصور بـ Trivy ومنع الثغرات الحرجة وتطبيق Least Privilege.',
@@ -1680,6 +1907,10 @@ testcases:
         requiredTools: ['Trivy', 'Dependabot', 'Kyverno', 'KCSA Security Controls'],
         exampleCode: `trivy image --exit-code 1 --severity HIGH,CRITICAL ghcr.io/yossefbelal1/hivebox:v0.3.0
 trivy config ./k8s/`,
+        commonFailures: [
+          'تشغيل Trivy بدون --exit-code 1 مما يسمح بمرور صور مصابة دون إيقاف البناء.',
+          'تطبيق سياسات Kyverno بوضع Enforce فجأة دون اختبارها بوضع Audit أولاً.'
+        ],
         masteryCriteria: 'أتمتة كاملة لأمان الصور والاعتماديات وسياسات الكلاستر.',
         whatYouDo: 'دراسة كورسات DevSecOps و KCSA وتطبيقها في HiveBox.',
         deliverable: 'خط إنتاج مؤمن بالكامل من الكود حتى التشغيل.',
@@ -1694,28 +1925,32 @@ trivy config ./k8s/`,
             id: 'm6-1-s1',
             text: 'تفعيل Trivy Scanner و Dependabot وتطبيق Least Privilege',
             details: 'دمج فحص Trivy للصور وملفات IaC وإضافة .github/dependabot.yml',
-            estimatedHours: 3,
+            hint: 'استعمل --ignore-unfixed فقط عند الضرورة مع توثيق السبب.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm6-1-s2',
             text: 'إعداد سياسات Kyverno أو معايير KCSA الأمنية',
             details: 'تطبيق سياسات منع تشغيل الحاويات بصلاحيات root أو صور بدون tag',
-            estimatedHours: 3,
+            hint: 'ابدأ بـ validationFailureAction: Audit للتأكد من عدم كسر الـ workloads الحالية.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm6-1-s3',
             text: 'تطبيق RBAC وتأمين Kubernetes Secrets و Pod Security Standards',
             details: 'تقييد أذونات ServiceAccounts في الكلاستر',
-            estimatedHours: 3,
+            hint: 'اضبط automountServiceAccountToken: false للـ Pods التي لا تحتاج مخاطبة API Server.',
+            estimatedHours: 2.5,
             done: false
           },
           {
             id: 'm6-1-s4',
             text: 'إنهاء لابات DevSecOps & KCSA على KodeKloud',
             details: 'مراجعة أمن سلسلة التوريد و SBOM وتوقيع الصور',
-            estimatedHours: 3,
+            hint: 'ولّد SBOM تجريبياً عبر trivy image --format spdx-json.',
+            estimatedHours: 2.5,
             done: false
           }
         ]
@@ -1724,11 +1959,12 @@ trivy config ./k8s/`,
         id: 'm6-2',
         code: '6.2',
         title: 'Log Aggregation & Observability (Grafana Loki)',
-        hours: 10,
-        estimatedMinutes: 600,
+        hours: 8,
+        estimatedMinutes: 480,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 20, troubleshootingPct: 25 },
         tags: ['Grafana Loki', 'Logs', 'Self-hosted'],
         objectives: ['تشغيل Grafana Loki واستبدال الخدمات الخارجية ببدائل Open-Source داخل الكلاستر.'],
         bestPractices: [
@@ -1738,6 +1974,10 @@ trivy config ./k8s/`,
         requiredTools: ['Grafana Loki', 'Promtail / Grafana Alloy', 'LogQL', 'Grafana'],
         exampleCode: `# استعلام LogQL لتتبع أخطاء HiveBox:
 {app="hivebox", namespace="default"} |= "ERROR" | json`,
+        commonFailures: [
+          'تحويل حقول متغيرة جداً إلى Loki Labels مما يسبب تضخم الفهرس وتباطؤ البحث.',
+          'عدم إخراج السجلات بصيغة JSON مهيكلة لتسهيل التحليل في LogQL.'
+        ],
         masteryCriteria: 'جمع وتحليل كافة سجلات الحاويات في Grafana Loki بنجاح.',
         whatYouDo: 'دراسة كورس Grafana Loki (Nourhan M.) وتشغيله داخل Kubernetes.',
         deliverable: 'مكدس مراقبة وسجلات Open-Source ذاتي الاستضافة.',
@@ -1749,28 +1989,32 @@ trivy config ./k8s/`,
             id: 'm6-2-s1',
             text: 'تشغيل Grafana Loki & Promtail واستعراض السجلات في Grafana',
             details: 'نشر Loki stack داخل Kubernetes وربطه كـ Data Source في Grafana',
-            estimatedHours: 2.5,
+            hint: 'تحقق من جاهزية Loki عبر kubectl port-forward والوصول إلى Explore في Grafana.',
+            estimatedHours: 2,
             done: false
           },
           {
             id: 'm6-2-s2',
             text: 'إتقان استعلامات LogQL لتصفية أخطاء التطبيق وسجلات Ingress',
             details: 'تحليل أخطاء الـ 5xx وتحديد السبب الجذري من السجلات',
-            estimatedHours: 2.5,
+            hint: 'استعمل | json و |= "status" لتصفية الاستجابات بسرعة.',
+            estimatedHours: 2,
             done: false
           },
           {
             id: 'm6-2-s3',
             text: 'بناء لوحة Observability موحدة تجمع Metrics (Prometheus) + Logs (Loki)',
             details: 'عرض الحالة الصحية الكاملة للخدمة في شاشة واحدة',
-            estimatedHours: 2.5,
+            hint: 'ضع لوحة الأخطاء بجانب رسم HTTP Latency لمقارنة الارتفاعات مع الرسائل.',
+            estimatedHours: 2,
             done: false
           },
           {
             id: 'm6-2-s4',
             text: 'إحلال الأدوات ذاتية الاستضافة محل الخدمات السحابية المدفوعة',
             details: 'التحقق من استقلالية مكدس المراقبة بالكامل داخل الكلاستر',
-            estimatedHours: 2.5,
+            hint: 'تأكد من حفظ إعدادات Dashboards في ConfigMaps كـ Infrastructure as Code.',
+            estimatedHours: 2,
             done: false
           }
         ]
@@ -1779,11 +2023,12 @@ trivy config ./k8s/`,
         id: 'm6-3',
         code: '6.3',
         title: 'GitOps & Continuous Deployment (Argo CD, ExternalDNS & Cert-Manager)',
-        hours: 15,
-        estimatedMinutes: 900,
+        hours: 14,
+        estimatedMinutes: 840,
         category: 'Hands-on Lab',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 35, codingPct: 20, troubleshootingPct: 25 },
         tags: ['Argo CD', 'GitOps', 'ExternalDNS', 'Cert-Manager'],
         objectives: [
           'أتمتة النشر عبر Argo CD بنمط GitOps التصريحي.',
@@ -1803,6 +2048,10 @@ spec:
     automated:
       prune: true
       selfHeal: true`,
+        commonFailures: [
+          'ترك مزامنة Argo CD يدوية أو نسيان تفعيل selfHeal.',
+          'استهلاك حدود Let’s Encrypt Production أثناء التجارب الأولية.'
+        ],
         masteryCriteria: 'أي تحديث في مستودع الـ GitOps ينعكس على الكلاستر تلقائياً مع شهادة HTTPS.',
         whatYouDo: 'دراسة كورس GitOps with ArgoCD وفيديو أحمد الفخراني وتطبيقها.',
         deliverable: 'نظام نشر GitOps متكامل مع TLS و DNS تلقائي.',
@@ -1816,20 +2065,23 @@ spec:
             id: 'm6-3-s1',
             text: 'تثبيت Argo CD وتفعيل Auto-Sync و Self-Heal',
             details: 'ربط Argo CD بمستودع الإعدادات والتحقق من المزامنة التلقائية',
-            estimatedHours: 4,
+            hint: 'اختبر حذف Service يدوياً بـ kubectl delete svc وراقب استعادته تلقائياً عبر Argo CD.',
+            estimatedHours: 3.5,
             done: false
           },
           {
             id: 'm6-3-s2',
             text: 'تجهيز ExternalDNS و Cert-Manager (Let’s Encrypt)',
             details: 'إعداد ClusterIssuer وتجديد شهادات TLS تلقائياً للـ Ingress',
-            estimatedHours: 4,
+            hint: 'تتبع إصدار الشهادة عبر kubectl describe certificate,order,challenge.',
+            estimatedHours: 3.5,
             done: false
           },
           {
             id: 'm6-3-s3',
             text: 'اختبار تحديث إصدار الصورة من Git ورصد النشر التلقائي في Argo CD',
             details: 'التحقق من Rollout آمن بدون تدخل kubectl يدوي',
+            hint: 'حدّث tag الصورة في values.yaml وشاهد Sync Status يتحول إلى Synced/Healthy.',
             estimatedHours: 3.5,
             done: false
           },
@@ -1837,6 +2089,7 @@ spec:
             id: 'm6-3-s4',
             text: 'إنهاء لابات كورس GitOps with ArgoCD وإدارة الحالات المتعددة',
             details: 'فهم App-of-Apps pattern والتراجع التلقائي عند الفشل',
+            hint: 'استعمل argocd app history و argocd app rollback عند تجربة التراجع.',
             estimatedHours: 3.5,
             done: false
           }
@@ -1851,6 +2104,7 @@ spec:
         category: 'Project Delivery',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 30, troubleshootingPct: 30 },
         tags: ['HiveBox Phase 6', 'Upwork'],
         objectives: ['إغلاق HiveBox Phase 6 بالكامل وبدء مهام Upwork المصغرة.'],
         bestPractices: [
@@ -1861,6 +2115,10 @@ spec:
         exampleCode: `argocd app get hivebox
 kubectl get certificate -A
 # تحديث حالة Kanban وإطلاق عروض Upwork المصغرة`,
+        commonFailures: [
+          'تأخير تسليم Phase 6 بسبب التوسع في المهام الاختيارية.',
+          'التقديم على مشاريع عامة بدون إرفاق عينات GitHub حقيقية.'
+        ],
         masteryCriteria: 'اكتمال HiveBox من Phase 1 إلى Phase 6 بجودة إنتاجية.',
         whatYouDo: 'إنهاء التحسينات وتوثيقها وإطلاق عروض Upwork المصغرة.',
         deliverable: 'مشروع HiveBox كامل في البورتفوليو.',
@@ -1870,6 +2128,7 @@ kubectl get certificate -A
             id: 'm6-4-s1',
             text: 'تسليم HiveBox Phase 6 كاملاً على GitHub',
             details: 'دمج PR المرحلة السادسة وإغلاق لوحة Kanban الخاصة بـ HiveBox',
+            hint: 'وسّم الإصدار النهائي v1.0.0 بعد التحقق من كامل المنظومة.',
             estimatedHours: 2,
             done: false
           },
@@ -1877,6 +2136,7 @@ kubectl get certificate -A
             id: 'm6-4-s2',
             text: 'بدء التقديم على تاسكات Upwork المصغرة (Docker, Nginx, Backup, CI)',
             details: 'إعداد ملف شخصي احترافي مع عينات حقيقية من HiveBox و AutoTele',
+            hint: 'قدّم على مهام محددة النطاق مثل Dockerizing Python apps أو GitHub Actions CI fixes.',
             estimatedHours: 2,
             done: false
           },
@@ -1884,6 +2144,7 @@ kubectl get certificate -A
             id: 'm6-4-s3',
             text: 'توثيق معمارية HiveBox النهائية (Phases 1–6) في README احترافي',
             details: 'إضافة رسم معماري وأوامر التشغيل السريع والنتائج القابلة للقياس',
+            hint: 'أضف قسم Architecture Decisions يربط الخيارات الهندسية بأسبابها.',
             estimatedHours: 2,
             done: false
           },
@@ -1891,6 +2152,7 @@ kubectl get certificate -A
             id: 'm6-4-s4',
             text: 'اجتياز كويز Module 6 (15/15) لمراجعة DevSecOps و GitOps',
             details: 'التحقق من الجاهزية التقنية لمقابلات العمل',
+            hint: 'تأكد من فهم Pull vs Push CD و Trivy و Loki بدون تردد.',
             estimatedHours: 2,
             done: false
           }
@@ -1906,7 +2168,7 @@ kubectl get certificate -A
     title: 'Capstone Project & Career Readiness',
     subtitle: 'مشروع Capstone مستقل كامل + SRE & Mock Interviews + الـ CV المتوافق مع ATS + فتح مسار Bonus AI Infra.',
     monthRange: 'يونيو – يوليو 2027 (الشهران 7 و 8)',
-    estimatedHours: 45,
+    estimatedHours: 30,
     cardTheme: 'from-[#7F1D1D] via-[#6B1313] to-[#450A0A]',
     techIcons: ['ai', 'ansible', 'kubernetes', 'career'],
     sections: [
@@ -1918,11 +2180,12 @@ kubectl get certificate -A
         id: 'm7-1',
         code: '7.1',
         title: 'Separate End-to-End Capstone Project (Full SDLC + AI/ML Workload)',
-        hours: 20,
-        estimatedMinutes: 1200,
+        hours: 14,
+        estimatedMinutes: 840,
         category: 'Project Delivery',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 15, labPct: 30, codingPct: 35, troubleshootingPct: 20 },
         tags: ['Capstone', 'AutoTele', 'AI Workload'],
         objectives: [
           'تصميم وتنفيذ مشروع End-to-End مستقل (غير HiveBox) يطبق IaC + CI/CD + K8s + GitOps + Observability.',
@@ -1935,6 +2198,10 @@ kubectl get certificate -A
         requiredTools: ['Terraform', 'GitHub Actions', 'Kubernetes', 'Argo CD', 'Prometheus/Loki', 'AI/ML Inference'],
         exampleCode: `# مستودع مستقل جديد للـ Capstone (بجانب AutoTele):
 terraform apply -> GitHub Actions CI/CD -> GHCR -> Argo CD -> K8s + AI Inference Pod`,
+        commonFailures: [
+          'دمج المشروع داخل مستودع HiveBox بدلاً من فتح مستودع مستقل.',
+          'تشغيل نموذج AI ثقيل بدون تحديد Memory Limits أو Readiness Probes.'
+        ],
         masteryCriteria: 'مشروع أصيل موثق بمعمارية واضحة و CI/CD و Observability كاملة.',
         whatYouDo: 'تطبيق أفكار المشاريع القيّمة من الفيديوهات الاستراتيجية وترقية AutoTele.',
         deliverable: 'مشروع Capstone مستقل + توثيق AutoTele المحدث.',
@@ -1951,28 +2218,32 @@ terraform apply -> GitHub Actions CI/CD -> GHCR -> Argo CD -> K8s + AI Inference
             id: 'm7-1-s1',
             text: 'تطوير Capstone Project مستقل يجمع IaC + CI/CD + K8s + GitOps + Observability',
             details: 'تصميم نظام أصيل في مستودع مستقل مع رسومات C4 وبنية Terraform و Argo CD',
-            estimatedHours: 5,
+            hint: 'ابدأ بكتابة Architecture Decision Record قصيرة في المستودع الجديد.',
+            estimatedHours: 3.5,
             done: false
           },
           {
             id: 'm7-1-s2',
             text: 'نشر خدمة AI/ML Inference API على Kubernetes مع مراقبة الأداء',
             details: 'تغليف نموذج Inference أو LLM Proxy وضبط HPA ومقاييس الاستجابة في Prometheus',
-            estimatedHours: 5,
+            hint: 'استعمل FastAPI كواجهة Inference خفيفة وراقب p95 latency والذاكرة.',
+            estimatedHours: 3.5,
             done: false
           },
           {
             id: 'm7-1-s3',
             text: 'توثيق AutoTele برسومات معمارية و CI/CD محسن',
             details: 'ترقية مستودع AutoTele بملفات Docker واختبارات ورسومات توضيحية',
-            estimatedHours: 5,
+            hint: 'أبرز تعدد الـ Workers في AutoTele واتصاله بـ PostgreSQL في رسم معماري واضح.',
+            estimatedHours: 3.5,
             done: false
           },
           {
             id: 'm7-1-s4',
             text: 'إجراء اختبار ضغط وتحقق أمني شامل (Trivy + K8s Hardening) للـ Capstone',
             details: 'توثيق نتائج الأداء والاستقرار في ملف README النهائي',
-            estimatedHours: 5,
+            hint: 'وثّق نتائج التوسع التلقائي (HPA scaling) ولقطات Grafana في README.',
+            estimatedHours: 3.5,
             done: false
           }
         ]
@@ -1981,11 +2252,12 @@ terraform apply -> GitHub Actions CI/CD -> GHCR -> Argo CD -> K8s + AI Inference
         id: 'm7-2',
         code: '7.2',
         title: 'Fundamentals of SRE & KodeKloud Engineer Practice',
-        hours: 9,
-        estimatedMinutes: 540,
+        hours: 6,
+        estimatedMinutes: 360,
         category: 'Hands-on Lab',
         difficulty: 'Medium',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 40, codingPct: 10, troubleshootingPct: 30 },
         tags: ['SRE', '100 Days', 'KodeKloud Engineer'],
         objectives: ['فهم SLIs/SLOs/Error Budgets وتطبيق تحديات يومية حقيقية على KodeKloud Engineer.'],
         bestPractices: [
@@ -1995,6 +2267,10 @@ terraform apply -> GitHub Actions CI/CD -> GHCR -> Argo CD -> K8s + AI Inference
         requiredTools: ['KodeKloud Engineer', '100 Days of DevOps', 'SRE Metrics (SLI/SLO/SLA)'],
         exampleCode: `# حساب Error Budget لـ SLO = 99.9% شهرياً:
 Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
+        commonFailures: [
+          'الخلط بين SLI (المقياس الفعلي) و SLO (الهدف الداخلي) و SLA (الالتزام التعاقدي).',
+          'القفز إلى الحل قبل قراءة السجلات وتشخيص السبب الجذري للحادثة.'
+        ],
         masteryCriteria: 'حل تحديات عملية واقعية تحت ضغط المشاكل الإنتاجية.',
         whatYouDo: 'دراسة كورس Fundamentals of SRE وحل تحديات KodeKloud Engineer & 100 Days of DevOps.',
         deliverable: 'جاهزية عملية عالية لحل المشاكل اليومية.',
@@ -2008,28 +2284,32 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
             id: 'm7-2-s1',
             text: 'إتمام Fundamentals of SRE (Jake P.)',
             details: 'استيعاب SLIs/SLOs/SLAs و Error Budgets وإدارة الحوادث',
-            estimatedHours: 2.5,
+            hint: 'تذكّر معادلة Error Budget = 100% - SLO.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-2-s2',
             text: 'حل تحديات يومية على KodeKloud Engineer و 100 Days of DevOps',
             details: 'تنفيذ مهام Linux و Docker و Kubernetes و Git العملية تحت مؤقت',
-            estimatedHours: 2.5,
+            hint: 'خصّص 20 دقيقة يومياً لحل مهمة عملية بدون تلميحات خارجية.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-2-s3',
             text: 'كتابة نموذج Blameless Post-mortem لحادثة إنتاجية محاكاة',
             details: 'توثيق الجدول الزمني للحادثة والسبب الجذري وخطوات المنع المستقبلية',
-            estimatedHours: 2,
+            hint: 'ركز على تحسين الأنظمة والتنبيهات وليس لوم الأشخاص.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-2-s4',
             text: 'تطبيق Runbooks عملية لتشخيص الأعطال المتكررة بسرعة',
             details: 'توثيق خطوات الاستجابة لحالات CPU spike و Disk full و CrashLoopBackOff',
-            estimatedHours: 2,
+            hint: 'اكتب لكل عطل: الأعراض، أوامر الفحص، خطوات المعالجة.',
+            estimatedHours: 1.5,
             done: false
           }
         ]
@@ -2038,11 +2318,12 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
         id: 'm7-3',
         code: '7.3',
         title: 'CV / LinkedIn Optimization (MIS ATS) & Skills Radar',
-        hours: 6,
-        estimatedMinutes: 360,
+        hours: 4,
+        estimatedMinutes: 240,
         category: 'Review',
         difficulty: 'Easy',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 30, codingPct: 20, troubleshootingPct: 30 },
         tags: ['CV', 'ATS', 'LinkedIn'],
         objectives: ['صياغة CV متوافق مع ATS بمسمى MIS Degree وإبراز HiveBox + AutoTele + Capstone.'],
         bestPractices: [
@@ -2053,6 +2334,10 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
         exampleCode: `# مثال صياغة نقطة قوية في CV:
 - Engineered HiveBox REST API & GitOps pipeline (Python, Docker, Kind, Terraform, Argo CD)
   enforcing Hadolint, Trivy, pytest, and Venom E2E gates via GitHub Actions.`,
+        commonFailures: [
+          'استخدام تصميم عمودين أو أيقونات تمنع قراءة ATS للنص.',
+          'سرد أدوات بدون ربطها بمشروع أو أثر عملي.'
+        ],
         masteryCriteria: 'CV صفحة واحدة واضح الأرقام والإنجازات + ملف LinkedIn محسن.',
         whatYouDo: 'صياغة الـ CV والـ Cover Letter وتجهيز Skills Radar.',
         deliverable: 'CV & LinkedIn جاهزان للتقديم الفوري.',
@@ -2062,28 +2347,32 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
             id: 'm7-3-s1',
             text: 'إعداد CV احترافي بمسمى Bachelor’s in MIS ونتائج المشاريع',
             details: 'صياغة السيرة الذاتية بصفحة واحدة متوافقة مع أنظمة ATS',
-            estimatedHours: 1.5,
+            hint: 'حافظ على تنسيق PDF نصي بنسق عمود واحد خالٍ من الجداول.',
+            estimatedHours: 1,
             done: false
           },
           {
             id: 'm7-3-s2',
             text: 'كتابة Cover Letter ورسم Skills Radar وتجهيز LinkedIn',
             details: 'تحديث العنوان والملخص والمشاريع المثبتة على LinkedIn',
-            estimatedHours: 1.5,
+            hint: 'اجعل Headline واضحاً: Junior DevOps / Cloud Engineer | Python, Docker, K8s, Terraform, CI/CD.',
+            estimatedHours: 1,
             done: false
           },
           {
             id: 'm7-3-s3',
             text: 'ترتيب GitHub Profile README وتثبيت HiveBox و AutoTele و Capstone',
             details: 'تحسين الواجهة الأولى التي يراها مسؤول التوظيف التقني',
-            estimatedHours: 1.5,
+            hint: 'أضف وصفاً مختصراً لكل مستودع مثبت مع أهم التقنيات المستخدمة.',
+            estimatedHours: 1,
             done: false
           },
           {
             id: 'm7-3-s4',
             text: 'مراجعة نهائية للكلمات المفتاحية المستهدفة لوظائف Junior DevOps / SRE',
             details: 'التأكد من تطابق المهارات المكتوبة مع التطبيقات الفعلية في المستودعات',
-            estimatedHours: 1.5,
+            hint: 'قارن سيرتك مع 5 إعلانات وظائف فعلية في مصر والخليج وأوروبا.',
+            estimatedHours: 1,
             done: false
           }
         ]
@@ -2092,11 +2381,12 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
         id: 'm7-4',
         code: '7.4',
         title: 'Mock Interviews, System Design Prep & CKA Readiness',
-        hours: 10,
-        estimatedMinutes: 600,
+        hours: 6,
+        estimatedMinutes: 360,
         category: 'Quiz',
         difficulty: 'Hard',
         defaultStatus: 'pending',
+        effortBreakdown: { videoPct: 20, labPct: 30, codingPct: 20, troubleshootingPct: 30 },
         tags: ['Interview Prep', 'CKA', 'Mock Interviews'],
         objectives: ['اجتياز محاكاة الإنترفيوهات التقنية وتجهيز خطة امتحان CKA.'],
         bestPractices: [
@@ -2108,6 +2398,10 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
 1) 3-min HiveBox & AutoTele Architecture Pitch
 2) Linux / Networking / Docker / K8s Troubleshooting Scenarios
 3) CI/CD + Terraform + GitOps Trade-offs`,
+        commonFailures: [
+          'الإجابة بنعم أو لا في المقابلات بدون شرح الأسباب والمفاضلات.',
+          'التردد في أسئلة تشخيص Linux و Kubernetes العملية.'
+        ],
         masteryCriteria: 'ثقة تامة في مقابلات Junior DevOps / Cloud / SRE.',
         whatYouDo: 'إنهاء DevOps Interview Prep و System Design for Interview Prep على KodeKloud.',
         deliverable: 'جاهزية كاملة للتوظيف في منتصف 2027 + خطة CKA.',
@@ -2122,28 +2416,32 @@ Allowed Downtime = 0.1% * 43,200 min ≈ 43.2 minutes / month`,
             id: 'm7-4-s1',
             text: 'إكمال DevOps Interview Prep & System Design for Interview Prep',
             details: 'حل سيناريوهات المقابلات العملية وتصميم الأنظمة الموزعة',
-            estimatedHours: 2.5,
+            hint: 'تدرّب على شرح كيفية تقليل زمن البناء وسبب اختيار Helm vs Kustomize.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-4-s2',
             text: 'بدء التقديم المكثف والتحضير لامتحان CKA الدولي',
             details: 'خطة تقديم منظمة للشركات المحلية والبعيدة مع محاكاة CKA',
-            estimatedHours: 2.5,
+            hint: 'اعتمد على التوثيق الرسمي kubernetes.io/docs فقط أثناء محاكاة امتحان CKA.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-4-s3',
             text: 'إجراء 3 مقابلات تجريبية (Mock Interviews) وتدوين نقاط التحسين',
             details: 'التدرب على شرح HiveBox و AutoTele والرد على أسئلة الأعطال',
-            estimatedHours: 2.5,
+            hint: 'سجّل ملخصاً لكل سؤال صعب واكتب إجابته المثالية في ملاحظاتك.',
+            estimatedHours: 1.5,
             done: false
           },
           {
             id: 'm7-4-s4',
             text: 'اجتياز كويز Module 7 النهائي (15/15) والتحقق من إغلاق المسار الأساسي',
             details: 'إتمام جميع الموديولات 1–7 قبل فتح مسار Bonus Track',
-            estimatedHours: 2.5,
+            hint: 'بعد إغلاق الموديول السابع بالكامل يمكنك استكشاف مسار AI Infra المتقدم بأمان.',
+            estimatedHours: 1.5,
             done: false
           }
         ]

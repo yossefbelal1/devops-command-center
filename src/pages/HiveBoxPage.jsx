@@ -5,7 +5,6 @@ import {
   BookOpen,
   Box,
   CheckCircle2,
-  ChevronDown,
   Code2,
   ExternalLink,
   GitBranch,
@@ -25,6 +24,7 @@ import {
 import { computeHiveboxRemainingForecast } from '../services/adaptiveForecast';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { CompletedItemCard } from '../components/ui/StatusBadge';
+import { TimelineStepList } from '../components/ui/TimelineStepList';
 
 function FiveSectionTimeline({
   purpose,
@@ -33,6 +33,7 @@ function FiveSectionTimeline({
   requiredTools = [],
   optionalEnhancements = [],
   deliverables = [],
+  effortBreakdown,
   checkStateMap = {},
   onToggleItem,
   exampleImplementation,
@@ -75,7 +76,9 @@ function FiveSectionTimeline({
                 ))}
               </ul>
             ) : (
-              <p className="text-slate-600">الالتزام بالتسليم التراكمي عبر Pull Requests واختبار كل مخرج قبل الدمج.</p>
+              <p className="text-slate-600">
+                الالتزام بالتسليم التراكمي عبر Pull Requests واختبار كل مخرج قبل الدمج.
+              </p>
             )}
           </div>
         </div>
@@ -116,99 +119,28 @@ function FiveSectionTimeline({
         )}
       </section>
 
-      {/* Section 3: خطوات التنفيذ التفصيلية (Connected numbered vertical timeline) */}
+      {/* Section 3: خطوات التنفيذ التفصيلية عبر TimelineStepList مع Hints */}
       <section className="space-y-3">
         <div className="flex items-center gap-2 text-xs font-black text-emerald-700">
           <span className="w-6 h-6 rounded-lg bg-emerald-600 text-white font-mono text-[11px] flex items-center justify-center">
             3
           </span>
           <ListChecks className="w-4 h-4" />
-          <span>خطوات التنفيذ التفصيلية (Execution Timeline)</span>
+          <span>خطوات التنفيذ التفصيلية (Execution Timeline + Hints)</span>
         </div>
 
-        <div className="relative pr-8 space-y-3 before:content-[''] before:absolute before:right-3 before:top-4 before:bottom-4 before:w-0.5 before:bg-slate-200">
-          {deliverables.map((del, idx) => {
-            const checked =
-              checkStateMap?.[del.id] !== undefined ? Boolean(checkStateMap[del.id]) : Boolean(del.done);
-
-            return (
-              <div key={del.id} className="relative">
-                <div
-                  className={`absolute -right-8 top-3.5 w-6 h-6 rounded-full font-mono text-[11px] font-bold flex items-center justify-center z-10 border-2 ${
-                    checked
-                      ? 'bg-emerald-600 border-emerald-600 text-white'
-                      : 'bg-white border-blue-500 text-blue-700'
-                  }`}
-                >
-                  {idx + 1}
-                </div>
-
-                <div
-                  role="checkbox"
-                  aria-checked={checked}
-                  tabIndex={0}
-                  onClick={() => onToggleItem?.(del.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onToggleItem?.(del.id);
-                    }
-                  }}
-                  className={`rounded-2xl p-3.5 cursor-pointer transition-colors duration-150 border ${
-                    checked
-                      ? 'bg-emerald-500/10 border-l-4 border-emerald-500 border-emerald-200 text-slate-900'
-                      : 'bg-white border-slate-200 hover:border-blue-300'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-2.5 min-w-0">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => onToggleItem?.(del.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        className="mt-0.5 w-4 h-4 rounded text-blue-600 border-slate-300 cursor-pointer shrink-0"
-                      />
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          {del.optional !== undefined && (
-                            <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                                del.optional
-                                  ? 'bg-indigo-100 text-indigo-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
-                            >
-                              {del.optional ? 'Optional' : 'Required'}
-                            </span>
-                          )}
-                          {del.estimatedHours && (
-                            <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px] font-bold">
-                              ~{del.estimatedHours}h
-                            </span>
-                          )}
-                          {checked && (
-                            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-900 text-[10px] font-bold">
-                              ✅ مكتمل
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs sm:text-sm font-bold text-slate-900">
-                          {del.text}
-                        </div>
-                        {del.details && (
-                          <p className="text-[11px] text-slate-600 leading-relaxed">
-                            {del.details}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <TimelineStepList
+          steps={deliverables}
+          checkedMap={checkStateMap}
+          isStepChecked={(del) =>
+            checkStateMap?.[del.id] !== undefined
+              ? Boolean(checkStateMap[del.id])
+              : Boolean(del.done)
+          }
+          onToggleStep={(del) => onToggleItem?.(del.id)}
+          effortBreakdown={effortBreakdown}
+          showEffortBreakdown={Boolean(effortBreakdown)}
+        />
       </section>
 
       {/* Section 4: أمثلة عملية وأوامر التحقق */}
@@ -254,7 +186,9 @@ function FiveSectionTimeline({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {acceptanceCriteria.length > 0 && (
             <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-1.5">
-              <div className="font-extrabold text-emerald-900">معايير القبول (Acceptance Criteria)</div>
+              <div className="font-extrabold text-emerald-900">
+                معايير القبول (Acceptance Criteria)
+              </div>
               <ul className="list-disc list-inside text-slate-800 space-y-1">
                 {acceptanceCriteria.map((ac) => (
                   <li key={ac}>{ac}</li>
@@ -265,7 +199,9 @@ function FiveSectionTimeline({
 
           {definitionOfDone && (
             <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200/70 space-y-1.5">
-              <div className="font-extrabold text-blue-900">تعريف الإنجاز (Definition of Done)</div>
+              <div className="font-extrabold text-blue-900">
+                تعريف الإنجاز (Definition of Done)
+              </div>
               <p className="text-slate-800 leading-relaxed">{definitionOfDone}</p>
             </div>
           )}
@@ -324,15 +260,22 @@ function FiveSectionTimeline({
   );
 }
 
+const PHASE_NAV_ITEMS = [
+  ...HIVEBOX_DATA.phases.map((p) => ({ id: p.id, label: `Phase ${p.phase}`, tab: 'hivebox' })),
+  { id: 'capstone', label: 'Phase 7: Capstone', tab: 'capstone' }
+];
+
 export function HiveBoxPage({ appState, metrics, forecast, actions }) {
   const [searchParams] = useSearchParams();
   const phaseParam = searchParams.get('phase');
   const [subTab, setSubTab] = useState('hivebox');
+  const [activeNavId, setActiveNavId] = useState(phaseParam || 'hb-1');
   const [openPhases, setOpenPhases] = useState({
     'hb-1': true,
     'hb-2': true,
     ...(phaseParam ? { [phaseParam]: true } : {})
   });
+  const [capstoneOpen, setCapstoneOpen] = useState(true);
   const [kanbanColumns, setKanbanColumns] = useState(
     () => ({ ...(HIVEBOX_DATA.kanbanBoard?.defaultPhaseColumn || {}) })
   );
@@ -340,6 +283,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
   useEffect(() => {
     if (phaseParam) {
       setSubTab('hivebox');
+      setActiveNavId(phaseParam);
       setOpenPhases((prev) => ({ ...prev, [phaseParam]: true }));
     }
   }, [phaseParam]);
@@ -353,7 +297,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
           forecast?.effectiveWeeklyHours ||
           appState.targetWeeklyHours ||
           appState.weeklyStudyHours ||
-          12
+          7.5
       }),
     [appState.hivebox, appState.targetWeeklyHours, appState.weeklyStudyHours, forecast]
   );
@@ -387,7 +331,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
     return {
       doneCount,
       totalCount: deliverables.length,
-      remainingHours,
+      remainingHours: Math.max(0, remainingHours),
       isAllRequiredDone
     };
   };
@@ -404,11 +348,28 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
     actions.setHiveboxColumn?.(phaseId, nextCol);
   };
 
-  const openPhaseCard = (phaseId) => {
-    setOpenPhases((prev) => ({ ...prev, [phaseId]: true }));
-    const el = document.getElementById(`hivebox-phase-${phaseId}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const jumpToNavPhase = (targetId) => {
+    setActiveNavId(targetId);
+    if (targetId === 'capstone') {
+      setSubTab('capstone');
+      setCapstoneOpen(true);
+      window.scrollTo(0, 0);
+      return;
+    }
+    setSubTab('hivebox');
+    setOpenPhases((prev) => ({ ...prev, [targetId]: true }));
+    setTimeout(() => {
+      const el = document.getElementById(`hivebox-phase-${targetId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
   };
+
+  const navIndex = PHASE_NAV_ITEMS.findIndex((i) => i.id === activeNavId);
+  const prevNavPhase = navIndex > 0 ? PHASE_NAV_ITEMS[navIndex - 1] : null;
+  const nextNavPhase =
+    navIndex >= 0 && navIndex < PHASE_NAV_ITEMS.length - 1
+      ? PHASE_NAV_ITEMS[navIndex + 1]
+      : null;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -426,13 +387,17 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
         <div className="inline-flex flex-wrap bg-white p-1.5 rounded-2xl border border-slate-200 self-start gap-1">
           {[
             { id: 'hivebox', label: 'HiveBox (6 Phases)', Icon: Box },
-            { id: 'capstone', label: 'Standalone Capstone (Phase 7)', Icon: Sparkles },
+            { id: 'capstone', label: 'Phase 7: Capstone', Icon: Sparkles },
             { id: 'audit', label: `Container Audit (${auditPct}%)`, Icon: ShieldCheck }
           ].map(({ id, label, Icon }) => (
             <button
               key={id}
               type="button"
-              onClick={() => setSubTab(id)}
+              onClick={() => {
+                setSubTab(id);
+                if (id === 'capstone') setActiveNavId('capstone');
+                else if (id === 'hivebox' && activeNavId === 'capstone') setActiveNavId('hb-1');
+              }}
               className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors duration-150 ${
                 subTab === id
                   ? 'bg-blue-600 text-white shadow-sm'
@@ -445,6 +410,50 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
           ))}
         </div>
       </div>
+
+      {/* Prominent Phase 1..6 + Capstone Quick Pills & Prev/Next Phase Navigation */}
+      {subTab !== 'audit' && (
+        <div className="glass-v5 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {PHASE_NAV_ITEMS.map((item) => {
+              const isSelected = activeNavId === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => jumpToNavPhase(item.id)}
+                  className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold border transition-colors duration-150 ${
+                    isSelected
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              disabled={!prevNavPhase}
+              onClick={() => prevNavPhase && jumpToNavPhase(prevNavPhase.id)}
+              className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-40 text-xs font-bold text-slate-800 transition-colors duration-150"
+            >
+              → المرحلة السابقة
+            </button>
+            <button
+              type="button"
+              disabled={!nextNavPhase}
+              onClick={() => nextNavPhase && jumpToNavPhase(nextNavPhase.id)}
+              className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-blue-700 disabled:opacity-40 text-xs font-bold text-white transition-colors duration-150"
+            >
+              المرحلة التالية ←
+            </button>
+          </div>
+        </div>
+      )}
 
       {subTab === 'hivebox' && (
         <div className="space-y-6">
@@ -487,8 +496,8 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
                   size="md"
                 />
                 <div className="text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-100">
-                  متبقي {hbForecast.remainingHours} ساعة (~{hbForecast.remainingMonths} شهر •{' '}
-                  {hbForecast.expectedMonthLabel})
+                  متبقي {Math.max(0, hbForecast.remainingHours)} ساعة (حوالي{' '}
+                  {Math.max(0, hbForecast.remainingMonths)} شهر • {hbForecast.expectedMonthLabel})
                 </div>
               </div>
             </div>
@@ -562,7 +571,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
                           >
                             <button
                               type="button"
-                              onClick={() => openPhaseCard(phase.id)}
+                              onClick={() => jumpToNavPhase(phase.id)}
                               className="text-right w-full space-y-1 group"
                             >
                               <div className="flex items-center justify-between gap-2">
@@ -605,7 +614,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
             </div>
           </section>
 
-          {/* Expandable Phase Cards 1–6 with 5-Section Vertical Sequence */}
+          {/* Expandable Phase Cards 1–6 with Inline Accordion & 5-Section Vertical Sequence */}
           <div className="space-y-4">
             {HIVEBOX_DATA.phases.map((phase) => {
               const isOpen = !!openPhases[phase.id];
@@ -624,10 +633,21 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
                   }`}
                 >
                   <div
-                    onClick={() =>
-                      setOpenPhases((prev) => ({ ...prev, [phase.id]: !prev[phase.id] }))
-                    }
-                    className="p-5 cursor-pointer hover:bg-slate-50 transition-colors duration-150 flex items-center justify-between gap-4 select-none"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    onClick={() => {
+                      setActiveNavId(phase.id);
+                      setOpenPhases((prev) => ({ ...prev, [phase.id]: !prev[phase.id] }));
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveNavId(phase.id);
+                        setOpenPhases((prev) => ({ ...prev, [phase.id]: !prev[phase.id] }));
+                      }
+                    }}
+                    className="p-5 cursor-pointer hover:bg-slate-50 transition-colors duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none"
                   >
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
@@ -655,32 +675,35 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
                       <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
                         {stats.doneCount}/{stats.totalCount}
                       </span>
-                      <ChevronDown
-                        className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${
-                          isOpen ? 'rotate-180 text-blue-600' : ''
-                        }`}
-                      />
+                      <span className="inline-flex items-center px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold">
+                        {isOpen ? 'إغلاق ▲' : 'عرض التفاصيل ▼'}
+                      </span>
                     </div>
                   </div>
 
-                  {isOpen && (
-                    <FiveSectionTimeline
-                      purpose={phase.purpose}
-                      bestPractices={phase.bestPractices || []}
-                      dependencies={phase.dependencies || []}
-                      requiredTools={phase.requiredTools || []}
-                      optionalEnhancements={phase.optionalEnhancements || []}
-                      deliverables={phase.deliverables || []}
-                      checkStateMap={appState.hivebox}
-                      onToggleItem={actions.toggleHivebox}
-                      exampleImplementation={phase.exampleImplementation}
-                      verificationCommands={phase.verificationCommands || []}
-                      acceptanceCriteria={phase.acceptanceCriteria || []}
-                      definitionOfDone={phase.definitionOfDone}
-                      commonFailures={phase.commonFailures || []}
-                      resources={phase.resources || []}
-                    />
-                  )}
+                  <div className={`accordion-content ${isOpen ? 'open' : ''}`}>
+                    <div className="accordion-inner">
+                      {isOpen && (
+                        <FiveSectionTimeline
+                          purpose={phase.purpose}
+                          bestPractices={phase.bestPractices || []}
+                          dependencies={phase.dependencies || []}
+                          requiredTools={phase.requiredTools || []}
+                          optionalEnhancements={phase.optionalEnhancements || []}
+                          deliverables={phase.deliverables || []}
+                          effortBreakdown={phase.effortBreakdown}
+                          checkStateMap={appState.hivebox}
+                          onToggleItem={actions.toggleHivebox}
+                          exampleImplementation={phase.exampleImplementation}
+                          verificationCommands={phase.verificationCommands || []}
+                          acceptanceCriteria={phase.acceptanceCriteria || []}
+                          definitionOfDone={phase.definitionOfDone}
+                          commonFailures={phase.commonFailures || []}
+                          resources={phase.resources || []}
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -699,7 +722,7 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
               </div>
               <button
                 type="button"
-                onClick={() => setSubTab('capstone')}
+                onClick={() => jumpToNavPhase('capstone')}
                 className="px-4 py-2 rounded-xl bg-white text-slate-900 hover:bg-indigo-100 text-xs font-bold transition-colors duration-150"
               >
                 فتح لوحة Capstone المستقلة
@@ -714,15 +737,28 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
 
       {subTab === 'capstone' && (
         <div className="glass-v5 rounded-3xl overflow-hidden border-2 border-indigo-200">
-          <div className="p-6 sm:p-8 space-y-4 bg-white">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-indigo-600 text-white text-[11px] font-mono font-bold">
-                {CAPSTONE_PROJECT_DATA.badge}
-              </span>
-              <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold">
-                مستقل تماماً عن HiveBox (Dedicated Separate Repo)
+          <div
+            role="button"
+            tabIndex={0}
+            aria-expanded={capstoneOpen}
+            onClick={() => setCapstoneOpen((prev) => !prev)}
+            className="p-6 sm:p-8 space-y-4 bg-white cursor-pointer hover:bg-slate-50/70 transition-colors duration-150"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-indigo-600 text-white text-[11px] font-mono font-bold">
+                  {CAPSTONE_PROJECT_DATA.badge}
+                </span>
+                <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold">
+                  مستقل تماماً عن HiveBox (Dedicated Separate Repo)
+                </span>
+              </div>
+
+              <span className="inline-flex items-center px-3 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">
+                {capstoneOpen ? 'إغلاق ▲' : 'عرض التفاصيل ▼'}
               </span>
             </div>
+
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
               {CAPSTONE_PROJECT_DATA.title}
             </h2>
@@ -733,7 +769,10 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
               {CAPSTONE_PROJECT_DATA.whySeparate}
             </p>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2"
+            >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <strong className="text-sm font-extrabold text-slate-900">
                   {CAPSTONE_PROJECT_DATA.autoteleBase.name}
@@ -756,21 +795,31 @@ export function HiveBoxPage({ appState, metrics, forecast, actions }) {
             </div>
           </div>
 
-          <FiveSectionTimeline
-            purpose={CAPSTONE_PROJECT_DATA.purpose || CAPSTONE_PROJECT_DATA.subtitle}
-            bestPractices={CAPSTONE_PROJECT_DATA.bestPractices || []}
-            dependencies={CAPSTONE_PROJECT_DATA.dependencies || []}
-            requiredTools={CAPSTONE_PROJECT_DATA.requiredTools || CAPSTONE_PROJECT_DATA.autoteleBase.stack}
-            deliverables={CAPSTONE_PROJECT_DATA.deliverables || []}
-            checkStateMap={appState.hivebox}
-            onToggleItem={actions.toggleCapstone}
-            exampleImplementation={CAPSTONE_PROJECT_DATA.exampleImplementation}
-            verificationCommands={CAPSTONE_PROJECT_DATA.verificationCommands || []}
-            acceptanceCriteria={CAPSTONE_PROJECT_DATA.acceptanceCriteria || []}
-            definitionOfDone={CAPSTONE_PROJECT_DATA.definitionOfDone}
-            commonFailures={CAPSTONE_PROJECT_DATA.commonFailures || []}
-            resources={CAPSTONE_PROJECT_DATA.resources || []}
-          />
+          <div className={`accordion-content ${capstoneOpen ? 'open' : ''}`}>
+            <div className="accordion-inner">
+              {capstoneOpen && (
+                <FiveSectionTimeline
+                  purpose={CAPSTONE_PROJECT_DATA.purpose || CAPSTONE_PROJECT_DATA.subtitle}
+                  bestPractices={CAPSTONE_PROJECT_DATA.bestPractices || []}
+                  dependencies={CAPSTONE_PROJECT_DATA.dependencies || []}
+                  requiredTools={
+                    CAPSTONE_PROJECT_DATA.requiredTools ||
+                    CAPSTONE_PROJECT_DATA.autoteleBase.stack
+                  }
+                  deliverables={CAPSTONE_PROJECT_DATA.deliverables || []}
+                  effortBreakdown={CAPSTONE_PROJECT_DATA.effortBreakdown}
+                  checkStateMap={appState.hivebox}
+                  onToggleItem={actions.toggleCapstone}
+                  exampleImplementation={CAPSTONE_PROJECT_DATA.exampleImplementation}
+                  verificationCommands={CAPSTONE_PROJECT_DATA.verificationCommands || []}
+                  acceptanceCriteria={CAPSTONE_PROJECT_DATA.acceptanceCriteria || []}
+                  definitionOfDone={CAPSTONE_PROJECT_DATA.definitionOfDone}
+                  commonFailures={CAPSTONE_PROJECT_DATA.commonFailures || []}
+                  resources={CAPSTONE_PROJECT_DATA.resources || []}
+                />
+              )}
+            </div>
+          </div>
         </div>
       )}
 

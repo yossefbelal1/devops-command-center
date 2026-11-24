@@ -36,6 +36,7 @@ export const HIVEBOX_DATA = {
       moduleRef: 'Module 1: Welcome to the DevOps World',
       title: 'Phase 1: Kickoff & Preparation',
       status: 'in_progress',
+      effortBreakdown: { videoPct: 20, labPct: 30, codingPct: 25, troubleshootingPct: 25 },
       dependencies: ['لا يوجد (نقطة البداية)'],
       purpose:
         'تأسيس أسلوب العمل المنظم (Kanban & Pull Requests) وتجهيز المستودع العام yossefbelal1/Hivebox واختيار 3 حساسات openSenseMap.',
@@ -81,6 +82,7 @@ git checkout -b feat/phase-2-basic-api
           id: 'hb1-1',
           text: 'إنشاء المستودع العام yossefbelal1/Hivebox على GitHub',
           details: 'التحقق من إتاحة المستودع العام وربطه محلياً بـ Git',
+          hint: 'تحقق من الربط عبر git remote -v وتأكد أن المستودع Public وليس Private.',
           estimatedHours: 1,
           done: true,
           optional: false
@@ -89,6 +91,7 @@ git checkout -b feat/phase-2-basic-api
           id: 'hb1-2',
           text: 'كتابة ملف README.md يوضح فكرة المشروع وخارطة المراحل الست',
           details: 'توثيق الهدف وروابط openSenseMap والمراحل',
+          hint: 'اجعل في README قسماً لجدول المراحل وأوامر التشغيل السريع ليقرأه أي مهندس خلال دقيقة.',
           estimatedHours: 1,
           done: true,
           optional: false
@@ -97,6 +100,7 @@ git checkout -b feat/phase-2-basic-api
           id: 'hb1-3',
           text: 'إنشاء لوحة GitHub Project Kanban بأعمدة Todo / In Progress / Done ونقل بطاقة Phase 1',
           details: 'توزيع المهام على أعمدة اللوحة',
+          hint: 'اربط بطاقات Kanban بالـ Issues والـ Pull Requests لتتحرك تلقائياً عند الدمج.',
           estimatedHours: 1,
           done: true,
           optional: false
@@ -105,6 +109,7 @@ git checkout -b feat/phase-2-basic-api
           id: 'hb1-4',
           text: 'اختيار وتوثيق 3 معرفات senseBox IDs متجاورة من openSenseMap (5eba5fbad46fb8001b799786, 5c21ff8f919bf8001adf2488, 5ade1acf223bd80019a1011c) وتجهيز فرع العمل لفتح Pull Request للمرحلة الثانية',
           details: 'توثيق المعرفات الثلاثة في README/Issues وفتح branch مثل feat/phase-2-basic-api',
+          hint: 'جرّب استدعاء curl -s https://api.opensensemap.org/boxes/5eba5fbad46fb8001b799786 | head ثم أنشئ الفرع عبر git checkout -b feat/phase-2-basic-api.',
           estimatedHours: 1,
           done: false,
           optional: false
@@ -117,6 +122,7 @@ git checkout -b feat/phase-2-basic-api
       moduleRef: 'Module 2: Basics - DevOps Core (محطتك القادمة فوراً)',
       title: 'Phase 2: Basic API & Container (v0.0.1)',
       status: 'in_progress',
+      effortBreakdown: { videoPct: 15, labPct: 30, codingPct: 35, troubleshootingPct: 20 },
       dependencies: ['Phase 1 مكتمل', 'إنهاء Python Corey Schafer الـ 6 + لابات Bash'],
       purpose:
         'بناء أصغر نسخة قابلة للتشغيل (MVP v0.0.1) تطبع الإصدار وتخرج، وتغليفها في Docker وتشغيلها محلياً على RHEL VM مع سكريبت Bash للتحقق.',
@@ -172,6 +178,7 @@ CMD ["python", "app.py"]`,
           id: 'hb2-1',
           text: 'تنفيذ دالة تطبع الإصدار الحالي (Semantic Versioning v0.0.1) وتخرج',
           details: 'إنشاء src/app.py يطبع v0.0.1 ويخرج برمز نجاح 0 عند التشغيل المباشر',
+          hint: 'تأكد من عدم بدء خادم FastAPI في هذه المرحلة؛ اختبر عبر python src/app.py && echo $?.',
           estimatedHours: 1.5,
           done: false,
           optional: false
@@ -180,6 +187,7 @@ CMD ["python", "app.py"]`,
           id: 'hb2-2',
           text: 'إنشاء Dockerfile وبناء الصورة وتشغيل الحاوية محلياً على RHEL VM',
           details: 'بناء الصورة بـ docker build والتأكد من تشغيلها بدون صلاحيات sudo',
+          hint: 'استخدم python:3.9-slim و docker run --rm hivebox:v0.0.1 للتنظيف التلقائي بعد الخروج.',
           estimatedHours: 2,
           done: false,
           optional: false
@@ -188,6 +196,7 @@ CMD ["python", "app.py"]`,
           id: 'hb2-3',
           text: 'كتابة سكريبت Bash للتحقق وتوثيق كيفية الاختبار في المستودع',
           details: 'سكربت health_check.sh يبني ويشغل الحاوية ويتحقق من وجود v0.0.1 في المخرجات',
+          hint: 'فعّل set -euo pipefail وتحقق من المخرجات بـ grep -q "v0.0.1" وأعط السكربت chmod +x.',
           estimatedHours: 1.5,
           done: false,
           optional: false
@@ -196,6 +205,7 @@ CMD ["python", "app.py"]`,
           id: 'hb2-4',
           text: 'رفع الكود عبر Pull Request وتحديث لوحة Kanban',
           details: 'مراجعة التغييرات ودمج PR على GitHub ونقل بطاقة Phase 2 إلى Done',
+          hint: 'استخدم رسالة commit واضحة مثل feat(phase-2): add v0.0.1 container and health script.',
           estimatedHours: 1,
           done: false,
           optional: false
@@ -208,6 +218,7 @@ CMD ["python", "app.py"]`,
       moduleRef: 'Module 3: Start - Laying the Foundation',
       title: 'Phase 3: Quality, Endpoints & Continuous Integration',
       status: 'pending',
+      effortBreakdown: { videoPct: 15, labPct: 25, codingPct: 40, troubleshootingPct: 20 },
       dependencies: ['Phase 2 مدمج في main'],
       purpose:
         'تحويل التطبيق إلى FastAPI/Flask REST API حقيقي متصل بـ openSenseMap مع اختبارات pytest وجودة الكود و Multi-stage Docker و CI Pipeline مع OpenSSF Scorecard.',
@@ -269,6 +280,7 @@ GET /temperature  -> {"average_temperature": 24.5}
           id: 'hb3-1',
           text: 'تطبيق Conventional Commits وبناء /version و /temperature عبر openSenseMap API',
           details: 'حساب متوسط الحرارة مع استبعاد أي قراءة يتجاوز عمرها 60 دقيقة',
+          hint: 'حوّل createdAt إلى datetime UTC وقارن الفرق مع datetime.now(timezone.utc) <= 3600s.',
           estimatedHours: 3,
           done: false,
           optional: false
@@ -277,6 +289,7 @@ GET /temperature  -> {"average_temperature": 24.5}
           id: 'hb3-2',
           text: 'كتابة Unit Tests باستخدام pytest + اجتياز Pylint',
           details: 'استخدام unittest.mock لعزل اختبارات API وضبط إعدادات .pylintrc',
+          hint: 'لا تجعل pytest يتصل بالإنترنت الفعلي؛ استعمل monkeypatch لتثبيت الاستجابة والوقت.',
           estimatedHours: 2.5,
           done: false,
           optional: false
@@ -285,6 +298,7 @@ GET /temperature  -> {"average_temperature": 24.5}
           id: 'hb3-3',
           text: 'تطبيق Container Best Practices (Multi-stage + Non-root) واجتياز Hadolint',
           details: 'تحديث Dockerfile بمراحل بناء منفصلة ومستخدم غير root و .dockerignore',
+          hint: 'مرر Dockerfile عبر docker run --rm -i hadolint/hadolint < Dockerfile.',
           estimatedHours: 2,
           done: false,
           optional: false
@@ -293,6 +307,7 @@ GET /temperature  -> {"average_temperature": 24.5}
           id: 'hb3-4',
           text: 'بناء GitHub Actions CI + اختبار /version + إعداد OpenSSF Scorecard',
           details: 'تشغيل الحاوية في الـ CI والتحقق من /version وتفعيل Scorecard Workflow',
+          hint: 'تأكد من ضبط permissions: read-all في أعلى الـ workflow وتثبيت الـ actions بـ SHA ليرتفع تقييم OpenSSF.',
           estimatedHours: 2.5,
           done: false,
           optional: false
@@ -305,6 +320,7 @@ GET /temperature  -> {"average_temperature": 24.5}
       moduleRef: 'Module 4: Expand - Constructing a Shell',
       title: 'Phase 4: Kubernetes (Kind), Metrics & Security Gates',
       status: 'pending',
+      effortBreakdown: { videoPct: 15, labPct: 35, codingPct: 25, troubleshootingPct: 25 },
       dependencies: ['Phase 3 مدمج', 'إنهاء Kubernetes Basics & Kind'],
       purpose:
         'تشغيل HiveBox داخل Kubernetes محلياً (Kind + Ingress-Nginx) وتصدير مقاييس Prometheus على /metrics وإضافة حالة الحرارة وفحوصات SonarQube/Terrascan ورفع الصورة لـ GHCR.',
@@ -364,6 +380,7 @@ else:                  status = "Too Hot"  # > 37
           id: 'hb4-1',
           text: 'تهيئة senseBox IDs عبر Env Vars + إضافة /metrics + حقل status في /temperature',
           details: 'تطبيق تصنيف الحرارة Too Cold / Good / Too Hot وتصدير prometheus_client metrics',
+          hint: 'تأكد من التعامل مع SENSEBOX_IDS الفارغة أو المتعددة المفصولة بفاصلة.',
           estimatedHours: 3,
           done: false,
           optional: false
@@ -372,6 +389,7 @@ else:                  status = "Too Hot"  # > 37
           id: 'hb4-2',
           text: 'كتابة Integration Tests وإعداد Kind + Ingress-Nginx + K8s Manifests',
           details: 'تشغيل Deployment, Service, ConfigMap, Ingress محلياً على Kind cluster',
+          hint: 'في Kind اربط extraPortMappings للمنفذين 80 و 443 في kind-config.yaml قبل تثبيت Ingress-Nginx.',
           estimatedHours: 4,
           done: false,
           optional: false
@@ -380,6 +398,7 @@ else:                  status = "Too Hot"  # > 37
           id: 'hb4-3',
           text: 'تشغيل SonarQube/Semgrep و Terrascan في الـ CI Pipeline',
           details: 'فحص جودة الكود وملفات Kubernetes IaC لمنع الثغرات قبل الدمج',
+          hint: 'شغّل terracan scan -t k8s -d k8s/ محلياً أولاً لإصلاح securityContext و resource limits.',
           estimatedHours: 2.5,
           done: false,
           optional: false
@@ -388,6 +407,7 @@ else:                  status = "Too Hot"  # > 37
           id: 'hb4-4',
           text: 'بناء GitHub Actions CD workflow لنشر صورة موسومة في GHCR',
           details: 'بناء ورفع Image بوسم الإصدار تلقائياً إلى GitHub Container Registry',
+          hint: 'أضف packages: write في الـ CD workflow واستخدم docker/metadata-action لتوليد وسم الإصدار.',
           estimatedHours: 2.5,
           done: false,
           optional: false
@@ -400,6 +420,7 @@ else:                  status = "Too Hot"  # > 37
       moduleRef: 'Module 5: Transform - Finishing the Structure',
       title: 'Phase 5: Valkey Cache, MinIO Storage, Terraform, Helm & Venom E2E',
       status: 'pending',
+      effortBreakdown: { videoPct: 15, labPct: 30, codingPct: 30, troubleshootingPct: 25 },
       dependencies: ['Phase 4 مدمج', 'Terraform + Helm + Kustomize'],
       purpose:
         'إضافة طبقة الكاش Valkey والتخزين MinIO بدورة 5 دقائق، تغليف Helm & Kustomize، بناء البنية بـ Terraform، نشر Grafana Agent، واختبار E2E بأداة Venom.',
@@ -459,6 +480,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb5-1',
           text: 'دمج Valkey (5m cycle) و MinIO (5m cycle) + نقاط /cache و /store و /readyz و /metrics مخصصة',
           details: 'تحديث الخلفية لقراءة الحرارة من الكاش وتخزين اللقطات في MinIO وفحص الجاهزية بدقة',
+          hint: 'احفظ timestamp آخر تحديث في مفتاح مستقل داخل Valkey و metadata في MinIO ليسهل فحص الدورتين في /readyz.',
           estimatedHours: 4,
           done: false,
           optional: false
@@ -467,6 +489,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb5-2',
           text: 'بناء Helm Chart للتطبيق + Kustomize لـ Valkey/MinIO + ربط /readyz كـ Readiness Probe',
           details: 'تغليف القوالب وتفعيل readinessProbe على /readyz وفصل الأسرار في Secrets',
+          hint: 'امنح Pod التطبيق initialDelaySeconds مناسباً في readinessProbe حتى تكتمل أول دورة كاش/تخزين.',
           estimatedHours: 3.5,
           done: false,
           optional: false
@@ -475,6 +498,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb5-3',
           text: 'نشر Grafana Agent (Loki/Grafana) + إنشاء الكلاستر بـ Terraform IaC',
           details: 'تعريف الكلاستر والبنية التحتية بالكود في modules منظمة وإرسال المقاييس والسجلات',
+          hint: 'نفّذ terraform validate و terraform plan داخل CI قبل أي تطبيق فعلي.',
           estimatedHours: 4,
           done: false,
           optional: false
@@ -483,6 +507,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb5-4',
           text: 'كتابة وتشغيل End-to-End Tests بأداة Venom على Kind',
           details: 'التحقق التلقائي من عمل /temperature و /cache و /store و /readyz على الكلاستر الحي',
+          hint: 'استدعِ POST /cache و POST /store في خطوات Venom الأولى لضمان جاهزية /readyz فوراً.',
           estimatedHours: 2.5,
           done: false,
           optional: false
@@ -495,6 +520,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
       moduleRef: 'Module 6: Optimize - Keep Improving',
       title: 'Phase 6: GitOps (Argo CD), Supply Chain Security & Production Hardening',
       status: 'pending',
+      effortBreakdown: { videoPct: 15, labPct: 35, codingPct: 25, troubleshootingPct: 25 },
       dependencies: ['Phase 5 مدمج'],
       purpose:
         'نقل المشروع لمستوى الإنتاج المؤسسي عبر النشر التصريحي بـ Argo CD، وأتمتة الـ DNS/TLS، والأمان الذاتي — مع فصل واضح بين المهام الأساسية الموصى بها والتحسينات الاختيارية.',
@@ -559,6 +585,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb6-1',
           text: '[Required] نشر التطبيق بنمط Declarative GitOps عبر Argo CD',
           details: 'إعداد Application manifest مع تفعيل Automated Sync و Prune و Self-Heal',
+          hint: 'تأكد من مزامنة مسار Helm/Kustomize في Argo CD واختبار تغيير يدوي لملاحظة Self-Heal.',
           estimatedHours: 3.5,
           done: false,
           optional: false
@@ -567,6 +594,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb6-2',
           text: '[Required] إعداد ExternalDNS و Cert-Manager (TLS) + تفعيل Dependabot',
           details: 'إصدار شهادات HTTPS تلقائياً وإدارة سجلات DNS وتحديث الاعتماديات عبر PRs آلية',
+          hint: 'اختبر مع Let’s Encrypt Staging Issuer أولاً لتفادي تجاوز حدود Rate Limits.',
           estimatedHours: 3,
           done: false,
           optional: false
@@ -575,6 +603,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb6-3',
           text: '[Required] استبدال الخدمات الخارجية بـ Open-Source داخل الكلاستر (Loki/Grafana) + Trivy',
           details: 'تشغيل Loki/Grafana/Prometheus محلياً داخل الكلاستر وإلزام CI ببوابة Trivy CVE',
+          hint: 'شغّل trivy image --exit-code 1 --severity HIGH,CRITICAL قبل أي نشر عبر CD.',
           estimatedHours: 3.5,
           done: false,
           optional: false
@@ -583,6 +612,7 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
           id: 'hb6-4',
           text: '[Optional] Kyverno Policy-as-Code / Multi-env Dev-Stage-Prod / TestKube / K8s Operator',
           details: 'تحسينات إضافية اختيارية لا تعطل إغلاق المرحلة الأساسية عند تأجيلها',
+          hint: 'ابدأ بسياسة Kyverno واحدة مثل disallow-root-user بوضع Audit قبل Enforce.',
           estimatedHours: 4,
           done: false,
           optional: true
@@ -597,6 +627,7 @@ export const CAPSTONE_PROJECT_DATA = {
   id: 'capstone-standalone',
   isSeparateProject: true,
   notHiveboxPhase: true,
+  effortBreakdown: { videoPct: 10, labPct: 30, codingPct: 35, troubleshootingPct: 25 },
   badge: 'SEPARATE STANDALONE PROJECT • MODULE 7',
   repoHint: 'مستودع مستقل مخصص (Dedicated Separate Repository — NOT HiveBox)',
   title: 'End-to-End Original Capstone Project (Beyond HiveBox)',
@@ -664,6 +695,7 @@ export const CAPSTONE_PROJECT_DATA = {
       id: 'cap-1',
       text: 'تحديد فكرة ومعمارية الـ Capstone في مستودع مستقل جديد + تصميم C4 Architecture Diagram',
       details: 'إنشاء مستودع جديد منفصل ورسم Context & Container Diagrams للنظام',
+      hint: 'يمكنك بناء مشروع جديد أو ترقية AutoTele بمعمارية واضحة؛ المهم أن يكون في مستودع منفصل عن HiveBox.',
       estimatedHours: 4,
       done: false,
       optional: false
@@ -672,6 +704,7 @@ export const CAPSTONE_PROJECT_DATA = {
       id: 'cap-2',
       text: 'بناء CI/CD Pipeline كامل (Lint + Unit/Integration Tests + Trivy + GHCR)',
       details: 'أتمتة الاختبارات وفحص الصور ودفع الإصدارات تلقائياً إلى GHCR',
+      hint: 'طبّق نفس معايير الجودة التي أثبتت كفاءتها في HiveBox (Pylint/Hadolint/Trivy/OIDC).',
       estimatedHours: 5,
       done: false,
       optional: false
@@ -680,6 +713,7 @@ export const CAPSTONE_PROJECT_DATA = {
       id: 'cap-3',
       text: 'تشغيل الخدمة على Kubernetes + Terraform IaC + Argo CD GitOps + Loki/Grafana',
       details: 'تجهيز البنية بالكود ومزامنة Argo CD مع تجميع السجلات والمقاييس',
+      hint: 'وثّق لقطات شاشة لـ Argo CD و Grafana Dashboards داخل README للمقابلات.',
       estimatedHours: 6,
       done: false,
       optional: false
@@ -688,6 +722,7 @@ export const CAPSTONE_PROJECT_DATA = {
       id: 'cap-4',
       text: 'تضمين Containerized AI/ML Workload (Inference/LLM Proxy) مع HPA ومقاييس الأداء',
       details: 'تغليف خدمة AI/ML Inference وضبط HorizontalPodAutoscaler ومراقبتها في Grafana',
+      hint: 'اعرض مقاييس inference_latency_seconds و requests_per_second في لوحة Prometheus.',
       estimatedHours: 5,
       done: false,
       optional: false

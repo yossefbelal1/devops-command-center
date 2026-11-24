@@ -23,7 +23,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 export function ResourcesPage({ appState, actions }) {
   const [searchParams] = useSearchParams();
   const [weeklyTarget, setWeeklyTarget] = useState(
-    String(appState.targetWeeklyHours || appState.weeklyStudyHours || 12)
+    String(appState.targetWeeklyHours || appState.weeklyStudyHours || 7.5)
   );
   const [targetSavedMsg, setTargetSavedMsg] = useState('');
   const [backupPreview, setBackupPreview] = useState(null);
@@ -315,13 +315,14 @@ export function ResourcesPage({ appState, actions }) {
 
           <form onSubmit={handleSaveWeeklyTarget} className="space-y-3">
             <label className="text-xs font-bold text-slate-700 block">
-              الساعات الأسبوعية المستهدفة (Target Weekly Hours)
+              الساعات الأسبوعية المستهدفة (7.5 ساعة/أسبوع — 1.5 ساعة × 5 أيام = حوالي 32.5 ساعة/شهر)
             </label>
             <div className="flex items-center gap-2">
               <input
                 type="number"
                 min="1"
                 max="80"
+                step="0.5"
                 value={weeklyTarget}
                 onChange={(e) => setWeeklyTarget(e.target.value)}
                 className="w-28 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-500"
