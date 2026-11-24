@@ -3,9 +3,19 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/',
   build: {
     outDir: 'dist',
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-icons': ['lucide-react'],
+          'motion-scroll': ['lenis', 'canvas-confetti', 'gsap'],
+          'quiz-data': ['./src/data/quizData.js']
+        }
+      }
+    }
   }
 });
