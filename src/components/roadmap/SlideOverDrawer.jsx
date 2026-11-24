@@ -1,31 +1,23 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Clock,
   Target,
   Award,
   ExternalLink,
-  Play,
-  Pause,
-  RotateCcw,
   CheckCircle2,
-  PlusCircle,
   Star,
   RefreshCw,
   FileText,
   Save,
   BookOpen,
-  Layers
+  Layers,
+  Wrench,
+  Terminal,
+  ListChecks
 } from 'lucide-react';
-import { StatusBadge, CompletedItemCard } from '../ui/StatusBadge';
+import { StatusBadge } from '../ui/StatusBadge';
 import { ProgressBar } from '../ui/ProgressBar';
-import { SessionLogModal } from '../timer/SessionLogModal';
-import {
-  normalizeCategory,
-  normalizeDifficulty,
-  getTimerDurations,
-  formatDuration
-} from '../timer/timerUtils';
 import {
   normalizeExecutionStatus,
   needsReview,
@@ -38,14 +30,10 @@ export function SlideOverDrawer({
   topic,
   module,
   appState = {},
-  activeTimer = null,
   actions = {}
 }) {
   const [noteDraft, setNoteDraft] = useState('');
   const [noteSavedFeedback, setNoteSavedFeedback] = useState(false);
-  const [manualModalOpen, setManualModalOpen] = useState(false);
-  const [completeModalOpen, setCompleteModalOpen] = useState(false);
-  const [nowMs, setNowMs] = useState(() => Date.now());
 
   const rec = topic ? appState.topicProgress?.[topic.id] : null;
   const savedNote = topic ? rec?.note ?? appState.topicNotes?.[topic.id] ?? '' : '';
@@ -58,28 +46,14 @@ export function SlideOverDrawer({
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e) => {
-      if (e.key === 'Escape' && !manualModalOpen && !completeModalOpen) {
+      if (e.key === 'Escape') {
         e.preventDefault();
         onClose?.();
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isOpen, onClose, manualModalOpen, completeModalOpen]);
-
-  const isThisTopicTimer = Boolean(activeTimer && topic && activeTimer.topicId === topic.id);
-
-  useEffect(() => {
-    if (!isOpen || !isThisTopicTimer) return;
-    setNowMs(Date.now());
-    const id = setInterval(() => setNowMs(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, [isOpen, isThisTopicTimer]);
-
-  const timerInfo = useMemo(
-    () => getTimerDurations(isThisTopicTimer ? activeTimer : null, nowMs),
-    [isThisTopicTimer, activeTimer, nowMs]
-  );
+  }, [isOpen, onClose]);
 
   if (!isOpen || !topic) return null;
 
@@ -98,9 +72,16 @@ export function SlideOverDrawer({
   ).length;
   const subPct = subtasks.length > 0 ? Math.round((doneSubCount / subtasks.length) * 100) : 0;
 
-  const normalizedCat = normalizeCategory(topic.category);
-  const normalizedDiff = normalizeDifficulty(topic.difficulty);
   const estMinutes = Number(topic.estimatedMinutes || (topic.hours || 1) * 60);
+  const requiredTools =
+    topic.requiredTools && topic.requiredTools.length > 0
+      ? topic.requiredTools
+      : topic.tags || [];
+  const bestPracticesList = Array.isArray(topic.bestPractices)
+    ? topic.bestPractices
+    : topic.bestPractices
+    ? [topic.bestPractices]
+    : [];
 
   const handleSaveNote = () => {
     actions.saveTopicNote?.(topic.id, noteDraft);
@@ -108,30 +89,25 @@ export function SlideOverDrawer({
     setTimeout(() => setNoteSavedFeedback(false), 1800);
   };
 
-  const handleStartTopicTimer = () => {
-    actions.startTimer?.({
-      topicId: topic.id,
-      topicTitle: `${topic.code ? `${topic.code} — ` : ''}${topic.title}`,
-      category: normalizedCat,
-      difficulty: normalizedDiff,
-      estimatedMinutes: estMinutes
-    });
+  const handleToggleCompleted = () => {
+    const nextExec = execStatus === 'completed' ? 'in_progress' : 'completed';
+    actions.setTopicExecution?.(topic.id, nextExec);
   };
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex justify-end bg-slate-900/45 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-[90] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="drawer-topic-title"
     >
-      <aside
+      <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-2xl h-full bg-[#F6F6F2] shadow-2xl border-r border-slate-200 flex flex-col overflow-hidden animate-in"
+        className="w-full max-w-3xl max-h-[88vh] flex flex-col rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-200"
       >
-        {/* Sticky Drawer Header */}
-        <div className="bg-white/90 backdrop-blur-xl border-b border-slate-200 px-5 sm:px-6 py-4 flex items-start justify-between gap-4 shrink-0">
+        {/* Sticky Header */}
+        <div className="shrink-0 bg-white border-b border-slate-200 px-4 sm:px-6 py-4 flex items-start justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               {module && (
@@ -148,7 +124,7 @@ export function SlideOverDrawer({
 
             <h2
               id="drawer-topic-title"
-              className="text-lg sm:text-xl font-black text-slate-900 leading-snug"
+              className="text-base sm:text-lg font-black text-slate-900 leading-snug"
             >
               {topic.title}
             </h2>
@@ -173,16 +149,15 @@ export function SlideOverDrawer({
           <button
             type="button"
             onClick={onClose}
-            aria-label="إغلاق اللوحة الجانبية"
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition shrink-0"
+            aria-label="إغلاق النافذة"
+            className="min-h-[44px] min-w-[44px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors duration-150 shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5">
-          {/* 30-day review alert */}
+        {/* Scrollable Body — Strict 5-Section Vertical Sequence */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-6 bg-[#F6F6F2]/60">
           {reviewDue && (
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-3">
               <div className="text-xs text-amber-900 font-bold">
@@ -191,7 +166,7 @@ export function SlideOverDrawer({
               <button
                 type="button"
                 onClick={() => actions.markTopicReviewed?.(topic.id)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition"
+                className="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-colors duration-150"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>تمت المراجعة</span>
@@ -199,9 +174,212 @@ export function SlideOverDrawer({
             </div>
           )}
 
-          {/* Execution, Mastery & Confidence Controls */}
-          <div className="glass-v5 rounded-2xl p-4 space-y-4">
+          {/* SECTION 1 — الشرح والمفاهيم والـ Best Practices */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-extrabold text-blue-700">
+              <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-mono text-[11px] flex items-center justify-center shrink-0">
+                1
+              </span>
+              <Target className="w-4 h-4 shrink-0" />
+              <span>الشرح والمفاهيم والـ Best Practices</span>
+            </div>
+
+            {topic.objectives?.length > 0 && (
+              <div className="space-y-1.5">
+                <div className="text-[11px] font-extrabold text-slate-700">الأهداف التعليمية:</div>
+                <ul className="space-y-1 text-xs text-slate-700 pr-5 list-disc">
+                  {topic.objectives.map((obj, idx) => (
+                    <li key={idx}>{obj}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {topic.whatYouDo && (
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <div className="text-[11px] font-extrabold text-blue-700 flex items-center gap-1">
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>المطلوب تنفيذه</span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">{topic.whatYouDo}</p>
+                </div>
+              )}
+
+              {topic.masteryCriteria && (
+                <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 space-y-1">
+                  <div className="text-[11px] font-extrabold text-blue-900 flex items-center gap-1">
+                    <Award className="w-3.5 h-3.5" />
+                    <span>معيار الإتقان</span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">{topic.masteryCriteria}</p>
+                </div>
+              )}
+            </div>
+
+            {bestPracticesList.length > 0 && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+                <div className="text-[11px] font-extrabold text-emerald-900">
+                  أفضل الممارسات الهندسية (Best Practices):
+                </div>
+                <ul className="space-y-1 text-xs text-emerald-950 pr-4 list-disc">
+                  {bestPracticesList.map((bp, i) => (
+                    <li key={i}>{bp}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+
+          {/* SECTION 2 — الأدوات المطلوبة */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900">
+              <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-mono text-[11px] flex items-center justify-center shrink-0">
+                2
+              </span>
+              <Wrench className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>الأدوات المطلوبة</span>
+            </div>
+
+            {requiredTools.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {requiredTools.map((tool) => (
+                  <span
+                    key={tool}
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-mono text-xs font-semibold"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-500">لا توجد أدوات خاصة مطلوبة لهذا الدرس.</p>
+            )}
+          </section>
+
+          {/* SECTION 3 — خطوات التنفيذ التفصيلية (Connected Vertical Timeline) */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900">
+                <span className="w-6 h-6 rounded-lg bg-emerald-600 text-white font-mono text-[11px] flex items-center justify-center shrink-0">
+                  3
+                </span>
+                <ListChecks className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>خطوات التنفيذ التفصيلية</span>
+              </div>
+              <span className="text-xs font-mono font-bold text-slate-600">
+                {doneSubCount}/{subtasks.length}
+              </span>
+            </div>
+
+            <ProgressBar value={subPct} size="sm" showPercentage={false} />
+
+            <div className="relative space-y-3 pr-2">
+              {subtasks.map((sub, idx) => {
+                const isSubDone =
+                  appState.subtasks?.[sub.id] !== undefined ? appState.subtasks[sub.id] : sub.done;
+                const isLast = idx === subtasks.length - 1;
+
+                return (
+                  <div key={sub.id} className="relative flex items-stretch gap-3">
+                    {/* Vertical timeline connector + numbered node */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <span
+                        className={`w-7 h-7 rounded-full font-mono text-xs font-black flex items-center justify-center border-2 transition-colors duration-150 ${
+                          isSubDone
+                            ? 'bg-emerald-600 border-emerald-600 text-white'
+                            : 'bg-white border-blue-500 text-blue-700'
+                        }`}
+                      >
+                        {idx + 1}
+                      </span>
+                      {!isLast && (
+                        <span
+                          className={`w-0.5 flex-1 my-1 ${
+                            isSubDone ? 'bg-emerald-400' : 'bg-slate-200'
+                          }`}
+                        />
+                      )}
+                    </div>
+
+                    {/* Step Card (no strikethrough) */}
+                    <div
+                      onClick={() => actions.toggleSubtask?.(topic, sub.id)}
+                      className={`flex-1 p-3 rounded-xl border cursor-pointer transition-colors duration-150 ${
+                        isSubDone
+                          ? 'bg-emerald-500/10 border-l-4 border-emerald-500 border-emerald-200 text-slate-900'
+                          : 'bg-slate-50 border-slate-200 hover:border-blue-300 text-slate-900'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2.5 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={isSubDone}
+                            onChange={() => actions.toggleSubtask?.(topic, sub.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-0.5 w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer shrink-0"
+                          />
+                          <div className="min-w-0 space-y-1">
+                            <div className="text-xs sm:text-sm font-bold text-slate-900">
+                              {sub.text}
+                            </div>
+                            {sub.details && (
+                              <p className="text-[11px] text-slate-600 leading-relaxed">
+                                {sub.details}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {sub.estimatedHours && (
+                            <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 font-mono text-[10px] font-bold text-slate-600">
+                              {sub.estimatedHours}h
+                            </span>
+                          )}
+                          {isSubDone && (
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-900 text-[10px] font-bold whitespace-nowrap">
+                              ✅ مكتمل
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* SECTION 4 — أمثلة عملية وأوامر التحقق والتقييم */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-4">
+            <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900">
+              <span className="w-6 h-6 rounded-lg bg-slate-900 text-white font-mono text-[11px] flex items-center justify-center shrink-0">
+                4
+              </span>
+              <Terminal className="w-4 h-4 text-slate-700 shrink-0" />
+              <span>أمثلة عملية وأوامر التحقق والتقييم</span>
+            </div>
+
+            {topic.deliverable && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950">
+                <span className="font-extrabold">المخرج العملي: </span>
+                <span>{topic.deliverable}</span>
+              </div>
+            )}
+
+            {topic.exampleCode && (
+              <pre
+                dir="ltr"
+                className="p-3.5 rounded-xl bg-slate-950 text-emerald-300 font-mono text-[11px] overflow-x-auto leading-relaxed"
+              >
+                {topic.exampleCode}
+              </pre>
+            )}
+
+            {/* Execution, Mastery & Confidence */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-600 block">
                   حالة التنفيذ (Execution)
@@ -216,12 +394,12 @@ export function SlideOverDrawer({
                       key={opt.id}
                       type="button"
                       onClick={() => actions.setTopicExecution?.(topic.id, opt.id)}
-                      className={`py-2 px-2 rounded-xl text-[11px] font-bold transition border ${
+                      className={`min-h-[44px] py-2 px-2 rounded-xl text-[11px] font-bold transition-colors duration-150 border ${
                         execStatus === opt.id
                           ? opt.id === 'completed'
                             ? 'bg-emerald-500/15 border-emerald-500 text-emerald-900'
                             : 'bg-blue-600 border-blue-600 text-white'
-                          : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                       }`}
                     >
                       {opt.label}
@@ -244,12 +422,12 @@ export function SlideOverDrawer({
                       key={opt.id}
                       type="button"
                       onClick={() => actions.setTopicMastery?.(topic.id, opt.id)}
-                      className={`py-2 px-2 rounded-xl text-[11px] font-bold transition border ${
+                      className={`min-h-[44px] py-2 px-2 rounded-xl text-[11px] font-bold transition-colors duration-150 border ${
                         masteryStatus === opt.id
                           ? opt.id === 'mastered'
                             ? 'bg-emerald-600 border-emerald-600 text-white'
                             : 'bg-indigo-600 border-indigo-600 text-white'
-                          : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                       }`}
                     >
                       {opt.label}
@@ -259,8 +437,7 @@ export function SlideOverDrawer({
               </div>
             </div>
 
-            {/* Confidence 1-5 */}
-            <div className="pt-2 border-t border-slate-200/70 flex flex-wrap items-center justify-between gap-3">
+            <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-xs font-bold text-slate-800">مستوى الثقة (1 – 5)</div>
                 <div className="text-[11px] text-slate-500">
@@ -276,12 +453,12 @@ export function SlideOverDrawer({
                       type="button"
                       onClick={() => actions.setTopicConfidence?.(topic.id, lvl)}
                       aria-label={`مستوى الثقة ${lvl} من 5`}
-                      className={`w-9 h-9 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-0.5 transition ${
+                      className={`min-h-[44px] min-w-[44px] px-2.5 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-0.5 transition-colors duration-150 ${
                         confidence === lvl
                           ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
                           : filled
                           ? 'bg-blue-50 border-blue-200 text-blue-700'
-                          : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                          : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
                       }`}
                     >
                       <Star className={`w-3 h-3 ${filled ? 'fill-current' : ''}`} />
@@ -291,196 +468,40 @@ export function SlideOverDrawer({
                 })}
               </div>
             </div>
-          </div>
 
-          {/* Inline Topic Study Timer */}
-          <div className="glass-v5-blue rounded-2xl p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-blue-600" />
-                <span className="text-xs font-extrabold text-slate-900">
-                  مؤقت المذاكرة لهذا الموضوع
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setManualModalOpen(true)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold transition"
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>تسجيل جلسة يدوية</span>
-              </button>
-            </div>
-
-            {isThisTopicTimer ? (
-              <div className="bg-white/90 rounded-xl border border-blue-100 p-3 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`w-2.5 h-2.5 rounded-full ${
-                      timerInfo.isRunning ? 'bg-blue-600 pulse-blue' : 'bg-amber-500'
-                    }`}
-                  />
-                  <div>
-                    <div className="text-lg font-black font-mono text-blue-700 leading-none">
-                      {formatDuration(timerInfo.activeSeconds)}
-                    </div>
-                    <div className="text-[10px] font-mono text-amber-600 mt-1">
-                      توقف: {formatDuration(timerInfo.pausedSeconds)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {timerInfo.isRunning ? (
-                    <button
-                      type="button"
-                      onClick={() => actions.pauseTimer?.()}
-                      className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center gap-1 transition"
-                    >
-                      <Pause className="w-3.5 h-3.5" />
-                      <span>إيقاف مؤقت</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => actions.resumeTimer?.()}
-                      className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1 transition"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      <span>استئناف</span>
-                    </button>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => setCompleteModalOpen(true)}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1 transition"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>إنهاء</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                {activeTimer ? (
-                  <p className="text-[11px] text-amber-800 font-semibold">
-                    يوجد مؤقت نشط لموضوع آخر ({activeTimer.topicTitle}).
-                  </p>
-                ) : (
-                  <p className="text-[11px] text-slate-600">
-                    ابدأ حساب الزمن الفعلي لهذا الموضوع مباشرة مع فصل وقت التوقف.
-                  </p>
-                )}
-
-                {!activeTimer && (
-                  <button
-                    type="button"
-                    onClick={handleStartTopicTimer}
-                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-blue-600/20 transition"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>ابدأ المؤقت لهذا الموضوع</span>
-                  </button>
+            {/* Personal Notes */}
+            <div className="space-y-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-blue-600" />
+                  <span>ملاحظاتك الشخصية لهذا الموضوع</span>
+                </label>
+                {noteSavedFeedback && (
+                  <span className="text-[11px] font-bold text-emerald-700">تم الحفظ ✓</span>
                 )}
               </div>
-            )}
-          </div>
+              <textarea
+                rows={3}
+                value={noteDraft}
+                onChange={(e) => setNoteDraft(e.target.value)}
+                onBlur={() => actions.saveTopicNote?.(topic.id, noteDraft)}
+                placeholder="دوّن الأوامر المهمة، نقاط القوة، أو ما واجهته في اللاب..."
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+            </div>
+          </section>
 
-          {/* Learning Objectives, What You Do, Mastery Criteria */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3">
-            {topic.objectives?.length > 0 && (
-              <div className="space-y-1.5">
-                <div className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-                  <Target className="w-4 h-4 text-blue-600" />
-                  <span>الأهداف التعليمية</span>
-                </div>
-                <ul className="space-y-1 text-xs text-slate-700 pr-4 list-disc">
-                  {topic.objectives.map((obj, idx) => (
-                    <li key={idx}>{obj}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              {topic.whatYouDo && (
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
-                  <div className="text-[11px] font-extrabold text-blue-700 flex items-center gap-1">
-                    <Layers className="w-3.5 h-3.5" />
-                    <span>المطلوب تنفيذه</span>
-                  </div>
-                  <p className="text-xs text-slate-700 leading-relaxed">{topic.whatYouDo}</p>
-                </div>
-              )}
-
-              {topic.masteryCriteria && (
-                <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-200/70 space-y-1">
-                  <div className="text-[11px] font-extrabold text-blue-900 flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5" />
-                    <span>معيار الإتقان</span>
-                  </div>
-                  <p className="text-xs text-slate-700 leading-relaxed">{topic.masteryCriteria}</p>
-                </div>
-              )}
+          {/* SECTION 5 — المصادر والفيديوهات المرتبطة */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900">
+              <span className="w-6 h-6 rounded-lg bg-amber-500 text-white font-mono text-[11px] flex items-center justify-center shrink-0">
+                5
+              </span>
+              <BookOpen className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>المصادر والفيديوهات المرتبطة ({topic.resources?.length || 0})</span>
             </div>
 
-            {topic.deliverable && (
-              <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/70 text-xs text-emerald-950">
-                <span className="font-extrabold">المخرج العملي: </span>
-                <span>{topic.deliverable}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Subtasks Checklist (ZERO strikethrough) */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3">
-            <ProgressBar
-              value={subPct}
-              label="المهام الفرعية"
-              sublabel={`${doneSubCount}/${subtasks.length} مكتمل`}
-              size="sm"
-            />
-            <div className="space-y-2">
-              {subtasks.map((sub, idx) => {
-                const isSubDone =
-                  appState.subtasks?.[sub.id] !== undefined ? appState.subtasks[sub.id] : sub.done;
-
-                return (
-                  <CompletedItemCard
-                    key={sub.id}
-                    completed={isSubDone}
-                    className="p-3 cursor-pointer hover:border-blue-300"
-                    onClick={() => actions.toggleSubtask?.(topic, sub.id)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={isSubDone}
-                        onChange={() => actions.toggleSubtask?.(topic, sub.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer shrink-0"
-                      />
-                      <span className="text-[11px] font-mono text-slate-500 shrink-0">
-                        {topic.code}.{idx + 1}
-                      </span>
-                      <span className="text-xs sm:text-sm font-semibold text-slate-900">
-                        {sub.text}
-                      </span>
-                    </div>
-                  </CompletedItemCard>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Curated Resources */}
-          {topic.resources?.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-2.5">
-              <div className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-blue-600" />
-                <span>المصادر والروابط المعتمدة ({topic.resources.length})</span>
-              </div>
+            {topic.resources?.length > 0 ? (
               <div className="space-y-2">
                 {topic.resources.map((res, idx) => (
                   <a
@@ -488,7 +509,7 @@ export function SlideOverDrawer({
                     href={res.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 hover:border-blue-200 transition group"
+                    className="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 transition-colors duration-150 group"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-mono font-bold text-blue-700 shrink-0">
@@ -502,79 +523,47 @@ export function SlideOverDrawer({
                   </a>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Persistent Personal Notes */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-blue-600" />
-                <span>ملاحظاتك الشخصية لهذا الموضوع</span>
-              </label>
-              {noteSavedFeedback && (
-                <span className="text-[11px] font-bold text-emerald-700">تم الحفظ ✓</span>
-              )}
-            </div>
-            <textarea
-              rows={3}
-              value={noteDraft}
-              onChange={(e) => setNoteDraft(e.target.value)}
-              onBlur={() => actions.saveTopicNote?.(topic.id, noteDraft)}
-              placeholder="دوّن الأوامر المهمة، نقاط القوة، أو ما واجهته في اللاب..."
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
-            />
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleSaveNote}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>حفظ الملاحظة</span>
-              </button>
-            </div>
-          </div>
+            ) : (
+              <p className="text-xs text-slate-500">لا توجد روابط مسجلة لهذا الموضوع.</p>
+            )}
+          </section>
         </div>
-      </aside>
 
-      <SessionLogModal
-        isOpen={manualModalOpen}
-        mode="manual"
-        onClose={() => setManualModalOpen(false)}
-        onSubmit={(payload) => {
-          actions.logManualSession?.(payload);
-          setManualModalOpen(false);
-        }}
-        topics={[topic]}
-        initialData={{
-          topicId: topic.id,
-          topicTitle: `${topic.code ? `${topic.code} — ` : ''}${topic.title}`,
-          category: normalizedCat,
-          difficulty: normalizedDiff,
-          estimatedMinutes: estMinutes
-        }}
-      />
+        {/* Sticky Footer */}
+        <div className="shrink-0 px-4 sm:px-6 py-3.5 border-t border-slate-200 bg-white flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSaveNote}
+              className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors duration-150"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>حفظ</span>
+            </button>
 
-      <SessionLogModal
-        isOpen={completeModalOpen}
-        mode="complete"
-        onClose={() => setCompleteModalOpen(false)}
-        onSubmit={(payload) => {
-          actions.completeTimer?.(payload);
-          setCompleteModalOpen(false);
-        }}
-        topics={[topic]}
-        initialData={{
-          topicId: topic.id,
-          topicTitle: `${topic.code ? `${topic.code} — ` : ''}${topic.title}`,
-          category: normalizedCat,
-          difficulty: normalizedDiff,
-          estimatedMinutes: estMinutes,
-          activeSeconds: timerInfo.activeSeconds,
-          pausedSeconds: timerInfo.pausedSeconds
-        }}
-      />
+            <button
+              type="button"
+              onClick={handleToggleCompleted}
+              className={`min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border transition-colors duration-150 ${
+                execStatus === 'completed'
+                  ? 'bg-emerald-500/15 border-emerald-500 text-emerald-900'
+                  : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600 text-white'
+              }`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>{execStatus === 'completed' ? '✅ مكتمل' : 'تعليم كمكتمل'}</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="min-h-[44px] px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors duration-150"
+          >
+            إغلاق
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

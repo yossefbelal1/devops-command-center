@@ -168,13 +168,17 @@ export function SearchModal({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[100] bg-slate-900/45 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-20 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="بحث سريع"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+        className="w-full max-w-3xl max-h-[88vh] flex flex-col rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-200"
       >
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+        {/* Sticky Header */}
+        <div className="shrink-0 flex items-center gap-3 px-4 sm:px-6 py-4 border-b border-slate-200 bg-white">
           <Search className="w-5 h-5 text-blue-600 shrink-0" />
           <input
             ref={inputRef}
@@ -187,13 +191,15 @@ export function SearchModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
+            aria-label="إغلاق البحث"
+            className="min-h-[44px] min-w-[44px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors duration-150 shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="max-h-[65vh] overflow-y-auto p-4 space-y-5">
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-6">
           {!q && (
             <div className="py-8 text-center text-xs text-slate-400 space-y-2">
               <div>
@@ -230,7 +236,7 @@ export function SearchModal({
                     onNavigateToTopic?.(mod.id, topic.id);
                     goTo(`/roadmap?module=${encodeURIComponent(mod.id)}&topic=${encodeURIComponent(topic.id)}`);
                   }}
-                  className="w-full p-3 rounded-xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition"
+                  className="w-full p-3 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition-colors duration-150"
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-extrabold text-slate-900 truncate">
@@ -258,7 +264,7 @@ export function SearchModal({
                   key={phase.id}
                   type="button"
                   onClick={() => goTo(`/hivebox?phase=${encodeURIComponent(phase.id)}`)}
-                  className="w-full p-3 rounded-xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition"
+                  className="w-full p-3 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition-colors duration-150"
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-extrabold text-slate-900 truncate">{phase.title}</div>
@@ -281,7 +287,7 @@ export function SearchModal({
                   key={decision.step}
                   type="button"
                   onClick={() => goTo(`/playbook?step=${encodeURIComponent(decision.step)}`)}
-                  className="w-full p-3 rounded-xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition"
+                  className="w-full p-3 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition-colors duration-150"
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-extrabold text-slate-900 truncate">
@@ -307,7 +313,7 @@ export function SearchModal({
                   key={res.id}
                   type="button"
                   onClick={() => goTo(`/resources?q=${encodeURIComponent(res.label)}`)}
-                  className="w-full p-3 rounded-xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition"
+                  className="w-full p-3 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition-colors duration-150"
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-slate-900 truncate">{res.label}</div>
@@ -332,7 +338,7 @@ export function SearchModal({
                   key={iq.id}
                   type="button"
                   onClick={() => goTo('/quiz')}
-                  className="w-full p-3 rounded-xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition"
+                  className="w-full p-3 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-100 flex items-center justify-between gap-3 text-right transition-colors duration-150"
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-slate-900 truncate">{iq.question}</div>
@@ -343,6 +349,20 @@ export function SearchModal({
               ))}
             </div>
           )}
+        </div>
+
+        {/* Sticky Footer */}
+        <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+          <span className="text-[11px] text-slate-500 font-semibold">
+            تنقل فوري عبر المسار، HiveBox، Playbook، والكويزات
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="min-h-[44px] px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition-colors duration-150"
+          >
+            إغلاق
+          </button>
         </div>
       </div>
     </div>

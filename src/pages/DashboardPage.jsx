@@ -6,7 +6,8 @@ import {
   CheckCircle2,
   Clock,
   FolderGit2,
-  Play,
+  Gauge,
+  PlusCircle,
   ShieldAlert,
   Sparkles,
   Target,
@@ -19,7 +20,6 @@ import { ROADMAP_META } from '../data/roadmapData';
 import { HIVEBOX_DATA } from '../data/hiveboxData';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatusBadge } from '../components/ui/StatusBadge';
-import { StudyTimerWidget } from '../components/timer/StudyTimerWidget';
 import { SkillRadarChart } from '../components/charts/SkillRadarChart';
 
 const CONFIDENCE_BADGES = {
@@ -29,12 +29,10 @@ const CONFIDENCE_BADGES = {
 };
 
 export function DashboardPage({
-  appState,
   metrics,
   forecast,
   allTopics,
-  topicsDueForReview = [],
-  actions
+  topicsDueForReview = []
 }) {
   const nextTopic = useMemo(
     () =>
@@ -88,7 +86,7 @@ export function DashboardPage({
       {/* Executive Header */}
       <section className="glass-v5-blue rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-blue-200 text-blue-700 text-[11px] font-mono font-bold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>EXECUTIVE OVERVIEW • {ROADMAP_META.targetRole}</span>
           </div>
@@ -96,12 +94,12 @@ export function DashboardPage({
             لوحة القيادة التنفيذية — {ROADMAP_META.studentName}
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            تتبّع الإنجاز والإتقان الفعلي، زمن المذاكرة الصافي (بدون احتساب التوقف)، والتوقع الذكي لإنهاء المسار قبل التقديم في منتصف 2027.
+            تتبّع الإنجاز والإتقان الفعلي، الساعات والشهور المتبقية المحدّثة تلقائياً، والتوقّع الذكي للجاهزية قبل التقديم في منتصف 2027.
           </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0">
-          <div className="bg-white/90 rounded-2xl p-3.5 border border-blue-100 min-w-[125px]">
+          <div className="bg-white rounded-2xl p-3.5 border border-blue-100 min-w-[125px]">
             <div className="text-[11px] font-bold text-slate-500">نسبة التنفيذ</div>
             <div className="text-2xl font-black font-mono text-blue-700 mt-0.5">
               {metrics.overallPct}%
@@ -111,7 +109,7 @@ export function DashboardPage({
             </div>
           </div>
 
-          <div className="bg-white/90 rounded-2xl p-3.5 border border-emerald-200/80 min-w-[125px]">
+          <div className="bg-white rounded-2xl p-3.5 border border-emerald-200/80 min-w-[125px]">
             <div className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
               <Award className="w-3.5 h-3.5 text-emerald-600" />
               <span>نسبة الإتقان</span>
@@ -124,17 +122,17 @@ export function DashboardPage({
             </div>
           </div>
 
-          <div className="bg-white/90 rounded-2xl p-3.5 border border-slate-200/80 min-w-[125px]">
-            <div className="text-[11px] font-bold text-slate-500">ساعات الأسبوع</div>
+          <div className="bg-white rounded-2xl p-3.5 border border-slate-200/80 min-w-[125px]">
+            <div className="text-[11px] font-bold text-slate-500">المدة المتبقية</div>
             <div className="text-2xl font-black font-mono text-slate-900 mt-0.5">
-              {forecast.rollingWeeklyHours}h
+              ~{forecast.remainingMonths} شهر
             </div>
             <div className="text-[10px] text-slate-500 font-mono">
-              الهدف: {forecast.targetWeeklyHours}h/أسبوع
+              متبقي {forecast.adaptiveExpectedHours} ساعة
             </div>
           </div>
 
-          <div className="bg-white/90 rounded-2xl p-3.5 border border-indigo-200/80 min-w-[125px]">
+          <div className="bg-white rounded-2xl p-3.5 border border-indigo-200/80 min-w-[125px]">
             <div className="text-[11px] font-bold text-slate-500">مشروع HiveBox</div>
             <div className="text-2xl font-black font-mono text-indigo-700 mt-0.5">
               {metrics.hbPct}%
@@ -183,7 +181,7 @@ export function DashboardPage({
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/70 space-y-1.5">
+              <div className="p-3.5 rounded-2xl bg-blue-50 border border-blue-200/70 space-y-1.5">
                 <div className="text-[11px] font-bold text-blue-700 flex items-center gap-1">
                   <FolderGit2 className="w-3.5 h-3.5" />
                   <span>تسليم المشروع الموازي</span>
@@ -199,36 +197,17 @@ export function DashboardPage({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 pt-2">
-            {nextTopic && !appState.activeTimer && (
-              <button
-                type="button"
-                onClick={() =>
-                  actions.startTimer({
-                    topicId: nextTopic.id,
-                    topicTitle: nextTopic.title,
-                    category: nextTopic.category,
-                    difficulty: nextTopic.difficulty,
-                    estimatedMinutes: nextTopic.estimatedMinutes || nextTopic.hours * 60
-                  })
-                }
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-600/25 transition"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>ابدأ مؤقت {nextTopic.code} الآن</span>
-              </button>
-            )}
-
             <Link
               to={`/roadmap?module=module-2&topic=${encodeURIComponent(nextTopic?.id || 'm2-5')}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold transition"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors duration-150"
             >
-              <span>فتح Module 2</span>
+              <span>فتح تفاصيل {nextTopic?.code || '2.5'}</span>
               <ArrowLeft className="w-3.5 h-3.5" />
             </Link>
 
             <Link
               to="/hivebox?phase=hb-2"
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold transition"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold transition-colors duration-150"
             >
               <span>فتح HiveBox Phase 2</span>
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -249,7 +228,7 @@ export function DashboardPage({
                     التوقّع الزمني الذكي (Smart Dynamic ETA)
                   </h2>
                   <p className="text-[11px] text-slate-500">
-                    محسوب بمعاملات سرعة مستقلة لكل (تصنيف × صعوبة)
+                    يُخصم فوراً مع كل مهمة تنهيها ويُعاد حساب الشهور تلقائياً
                   </p>
                 </div>
               </div>
@@ -271,33 +250,33 @@ export function DashboardPage({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200/70">
-                <div className="text-[11px] font-bold text-blue-700">المتبقي المتوقع</div>
-                <div className="text-2xl font-black font-mono text-slate-900 mt-1">
-                  {forecast.adaptiveExpectedHours}h
+              <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200/70">
+                <div className="text-[11px] font-bold text-blue-700">الساعات المتبقية</div>
+                <div className="text-xl font-black font-mono text-slate-900 mt-1">
+                  {forecast.adaptiveExpectedHours} ساعة
                 </div>
                 <div className="text-[11px] font-mono text-slate-600 mt-0.5">
-                  النطاق: {forecast.adaptiveMinHours}h – {forecast.adaptiveMaxHours}h
+                  النطاق: {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-                <div className="text-[11px] font-bold text-slate-500">الخطة القياسية</div>
-                <div className="text-2xl font-black font-mono text-slate-700 mt-1">
-                  {forecast.baselineRemainingHours}h
+                <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
+                <div className="text-xl font-black font-mono text-slate-900 mt-1">
+                  ~{forecast.remainingMonths} شهر
                 </div>
-                <div className="text-[11px] font-semibold text-slate-600 mt-0.5">
-                  {deltaLabel}
+                <div className="text-[11px] font-mono text-slate-600 mt-0.5">
+                  ({forecast.remainingMonthsMin}–{forecast.remainingMonthsMax} شهر)
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
-                <div className="text-[11px] font-bold text-emerald-800">نطاق تاريخ الإغلاق</div>
-                <div className="text-sm font-black font-mono text-slate-900 mt-1.5">
-                  {forecast.expectedDateMin}
+                <div className="text-[11px] font-bold text-emerald-800">الموعد المتوقع للجاهزية</div>
+                <div className="text-sm font-black text-slate-900 mt-1.5">
+                  {forecast.expectedMonthRangeLabel || forecast.expectedDateMax}
                 </div>
                 <div className="text-[11px] font-mono text-emerald-800 mt-0.5">
-                  حتى {forecast.expectedDateMax}
+                  {forecast.expectedDateMin} – {forecast.expectedDateMax}
                 </div>
               </div>
             </div>
@@ -308,16 +287,16 @@ export function DashboardPage({
               value={metrics.doneHours}
               max={metrics.totalHours || 1}
               label="تقدم الساعات المقدّرة"
-              sublabel={`${metrics.doneHours}h من ${metrics.totalHours}h`}
+              sublabel={`${metrics.doneHours}h من ${metrics.totalHours}h • ${deltaLabel}`}
               size="md"
             />
-            <div className="flex items-center justify-between text-[11px] text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
               <span className="inline-flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
-                الوتيرة المعتمدة: {forecast.rollingWeeklyHours >= 2 ? `${forecast.rollingWeeklyHours}h فعلي/أسبوع` : `${forecast.targetWeeklyHours}h مستهدف/أسبوع`}
+                الوتيرة المعتمدة: {forecast.effectiveWeeklyHours || forecast.targetWeeklyHours} ساعة/أسبوع
               </span>
               <Link to="/analytics" className="text-blue-600 font-bold hover:underline">
-                تفاصيل معاملات السرعة ←
+                تفاصيل السرعة والساعات ←
               </Link>
             </div>
           </div>
@@ -326,7 +305,7 @@ export function DashboardPage({
 
       {/* Review Alert if any 30-day topics need review */}
       {topicsDueForReview.length > 0 && (
-        <section className="rounded-2xl bg-amber-50/90 border border-amber-200 p-4 flex flex-wrap items-center justify-between gap-3">
+        <section className="rounded-2xl bg-amber-50 border border-amber-200 p-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
             <div className="text-xs">
@@ -340,26 +319,79 @@ export function DashboardPage({
           </div>
           <Link
             to="/roadmap"
-            className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition"
+            className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors duration-150"
           >
             مراجعة المواضيع الآن
           </Link>
         </section>
       )}
 
-      {/* Middle Grid: Active Study Timer + Skill Radar Chart */}
+      {/* Middle Grid: Crisp Smart Dynamic Forecast Action Card + Skill Radar Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-6">
-          <StudyTimerWidget
-            activeTimer={appState.activeTimer}
-            topics={allTopics}
-            onStartTimer={actions.startTimer}
-            onPauseTimer={actions.pauseTimer}
-            onResumeTimer={actions.resumeTimer}
-            onCompleteTimer={actions.completeTimer}
-            onLogManualSession={actions.logManualSession}
-          />
-        </div>
+        <section className="lg:col-span-6 glass-v5-blue rounded-3xl p-6 space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+                <Gauge className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-extrabold text-slate-900">
+                  بطاقة التوقع والتقدم الفوري
+                </h2>
+                <p className="text-[11px] text-slate-600">
+                  ملخص الساعات المتبقية، المدة بالشهور، وتاريخ الجاهزية لسوق العمل
+                </p>
+              </div>
+            </div>
+
+            <Link
+              to="/analytics"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-colors duration-150"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>تسجيل ساعات مذاكرة إضافية</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-4 rounded-2xl bg-white border border-blue-100 space-y-1">
+              <div className="text-[11px] font-bold text-slate-500">الساعات المتبقية</div>
+              <div className="text-xl font-black font-mono text-blue-700">
+                {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة
+              </div>
+              <div className="text-[11px] text-slate-500">
+                المتوقع: <strong className="font-mono text-slate-800">{forecast.adaptiveExpectedHours} ساعة</strong> (الأساس: {forecast.baselineRemainingHours} ساعة)
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white border border-blue-100 space-y-1">
+              <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
+              <div className="text-xl font-black font-mono text-emerald-700">
+                ~{forecast.remainingMonths} شهر
+              </div>
+              <div className="text-[11px] text-slate-600">
+                الموعد المتوقع للجاهزية: <strong>{forecast.expectedMonthRangeLabel}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="space-y-0.5">
+              <div className="font-extrabold text-slate-900">
+                الساعات الأسبوعية المسجلة: {forecast.rollingWeeklyHours}h/أسبوع
+              </div>
+              <div className="text-[11px] text-slate-500">
+                الهدف الأسبوعي المضبوط: {forecast.targetWeeklyHours} ساعة • {deltaLabel}
+              </div>
+            </div>
+            <Link
+              to="/resources"
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors duration-150"
+            >
+              تعديل الوتيرة الأسبوعية
+            </Link>
+          </div>
+        </section>
 
         <div className="lg:col-span-6">
           <SkillRadarChart
@@ -376,7 +408,7 @@ export function DashboardPage({
           <div>
             <h3 className="text-sm font-extrabold text-slate-900">ملخص الموديولات السبعة</h3>
             <p className="text-[11px] text-slate-500">
-              نظرة سريعة على حالة كل موديول دون تشتيت
+              نظرة سريعة على الإنجاز والمتبقي بالساعات والشهور لكل موديول
             </p>
           </div>
           <Link
@@ -391,14 +423,16 @@ export function DashboardPage({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {(metrics.moduleStats || []).map((mod) => {
             const isDone = mod.executionPct >= 100;
+            const modForecast = forecast.moduleBreakdown?.find((m) => m.id === mod.id);
+
             return (
               <Link
                 key={mod.id}
                 to={`/roadmap?module=${encodeURIComponent(mod.id)}`}
-                className={`rounded-2xl p-4 transition-all hover:shadow-md space-y-2.5 ${
+                className={`rounded-2xl p-4 transition-colors duration-150 hover:shadow-md space-y-2.5 ${
                   isDone
                     ? 'bg-emerald-500/10 border-l-4 border-emerald-500 text-slate-900'
-                    : 'bg-white border border-slate-200/80 hover:border-blue-300'
+                    : 'bg-white border border-slate-200 hover:border-blue-300'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
@@ -420,6 +454,11 @@ export function DashboardPage({
                   {mod.title}
                 </div>
                 <ProgressBar value={mod.executionPct} size="sm" showPercentage />
+                {!isDone && modForecast && (
+                  <div className="text-[10.5px] font-mono text-slate-500">
+                    متبقي {modForecast.remainingHours} ساعة (~{modForecast.remainingMonths} شهر)
+                  </div>
+                )}
               </Link>
             );
           })}

@@ -105,10 +105,10 @@ export function AnalyticsPage({
         <button
           type="button"
           onClick={() => setManualModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-600/20 transition"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-colors duration-150"
         >
           <PlusCircle className="w-4 h-4" />
-          <span>إضافة جلسة جديدة</span>
+          <span>تسجيل ساعات مذاكرة إضافية</span>
         </button>
       </div>
 
@@ -125,32 +125,32 @@ export function AnalyticsPage({
         </div>
 
         <div className="glass-v5 rounded-2xl p-4 space-y-1">
-          <div className="text-[11px] font-bold text-slate-500">جلسات صالحة للتوقع</div>
-          <div className="text-2xl font-black font-mono text-emerald-700">
-            {totals.validCount}
-          </div>
-          <div className="text-[11px] text-slate-500 font-mono">
-            متقطعة مستبعدة: {totals.interruptedCount}
-          </div>
-        </div>
-
-        <div className="glass-v5 rounded-2xl p-4 space-y-1">
-          <div className="text-[11px] font-bold text-slate-500">المتبقي التكيفي</div>
+          <div className="text-[11px] font-bold text-slate-500">الساعات المتبقية</div>
           <div className="text-2xl font-black font-mono text-slate-900">
-            {forecast.adaptiveExpectedHours}h
+            {forecast.adaptiveExpectedHours} ساعة
           </div>
           <div className="text-[11px] text-slate-500 font-mono">
-            مقابل {forecast.baselineRemainingHours}h خطة أساسية
+            النطاق: {forecast.adaptiveMinHours}–{forecast.adaptiveMaxHours} ساعة (الأساس: {forecast.baselineRemainingHours}h)
           </div>
         </div>
 
         <div className="glass-v5 rounded-2xl p-4 space-y-1">
-          <div className="text-[11px] font-bold text-slate-500">المعدل الأسبوعي الفعلي</div>
+          <div className="text-[11px] font-bold text-slate-500">المدة المتبقية بالشهور</div>
+          <div className="text-2xl font-black font-mono text-emerald-700">
+            ~{forecast.remainingMonths} شهر
+          </div>
+          <div className="text-[11px] text-slate-600">
+            {forecast.expectedMonthRangeLabel}
+          </div>
+        </div>
+
+        <div className="glass-v5 rounded-2xl p-4 space-y-1">
+          <div className="text-[11px] font-bold text-slate-500">المعدل الأسبوعي والجلسات</div>
           <div className="text-2xl font-black font-mono text-indigo-700">
             {forecast.rollingWeeklyHours}h/w
           </div>
           <div className="text-[11px] text-slate-500 font-mono">
-            الهدف: {forecast.targetWeeklyHours}h/w
+            {totals.validCount} صالحة • {totals.interruptedCount} متقطعة
           </div>
         </div>
       </div>
@@ -204,7 +204,7 @@ export function AnalyticsPage({
                       <div className="text-[11px] text-slate-500 font-mono mt-0.5">
                         {mod.doneSubtasks}/{mod.totalSubtasks} مهمة • الإتقان {mod.masteryPct}%
                         {modForecast && modForecast.adaptiveExpectedHours > 0
-                          ? ` • المتبقي التكيفي ${modForecast.adaptiveExpectedHours}h`
+                          ? ` • متبقي ${modForecast.remainingHours ?? modForecast.adaptiveExpectedHours} ساعة (~${modForecast.remainingMonths ?? 0} شهر)`
                           : ''}
                       </div>
                     </div>

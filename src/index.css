@@ -11,7 +11,7 @@
   }
 
   html {
-    scroll-behavior: auto; /* Handled smoothly by Lenis */
+    scroll-behavior: auto;
   }
 
   body {
@@ -56,28 +56,24 @@
   background: #94A3B8;
 }
 
-/* Glassy Dashboard V5 Light Utilities */
+/* Crisp V5 Light Cards (solid surfaces for maximum scroll/render speed) */
 .glass-v5 {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 10px 35px -10px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 16px -6px rgba(15, 23, 42, 0.05);
 }
 
 .glass-v5-blue {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(239, 246, 255, 0.85) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(191, 219, 254, 0.7);
-  box-shadow: 0 10px 30px -8px rgba(37, 99, 235, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+  background: linear-gradient(135deg, #FFFFFF 0%, #EFF6FF 100%);
+  border: 1px solid #BFDBFE;
+  box-shadow: 0 4px 16px -6px rgba(37, 99, 235, 0.08);
 }
 
 /* Smooth Accordion Grid Transition */
 .accordion-content {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: grid-template-rows 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .accordion-content.open {
   grid-template-rows: 1fr;
@@ -89,10 +85,10 @@
 /* Active pulse ring for current focus */
 @keyframes soft-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0);
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);

@@ -67,6 +67,18 @@ export function SessionLogModal({
     setEvidenceUrl(initialData.evidenceUrl || '');
   }, [isOpen, initialData, topics]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleTopicSelect = (nextId) => {
@@ -114,38 +126,45 @@ export function SessionLogModal({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[100] bg-slate-900/45 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+      role="dialog"
+      aria-modal="true"
+      aria-label={mode === 'complete' ? 'إنهاء وحفظ جلسة المذاكرة' : 'تسجيل ساعات مذاكرة إضافية'}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80"
     >
-      <div
+      <form
+        onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8"
+        className="w-full max-w-3xl max-h-[88vh] flex flex-col rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-200"
       >
-        <div className="px-6 py-4 bg-gradient-to-l from-blue-50/80 to-white border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-600/20">
+        {/* Sticky Header */}
+        <div className="shrink-0 px-4 sm:px-6 py-4 bg-white border-b border-slate-200 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shrink-0">
               <Clock className="w-4 h-4" />
             </div>
-            <div>
-              <h3 className="text-sm font-extrabold text-slate-900">
-                {mode === 'complete' ? 'إنهاء وحفظ جلسة المذاكرة' : 'تسجيل جلسة مذاكرة يدوية'}
+            <div className="min-w-0">
+              <h3 className="text-sm font-extrabold text-slate-900 truncate">
+                {mode === 'complete' ? 'إنهاء وحفظ جلسة المذاكرة' : 'تسجيل ساعات مذاكرة إضافية'}
               </h3>
-              <p className="text-[11px] text-slate-500">
-                الوقت الفعلي يُحسب بدقة مع فصل وقت التوقف لتحديث سرعة التعلّم
+              <p className="text-[11px] text-slate-500 truncate">
+                الوقت الفعلي يُحسب بدقة لتحديث سرعة التعلّم والتوقعات
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition"
+            aria-label="إغلاق"
+            className="min-h-[44px] min-w-[44px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors duration-150 shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-6">
           {mode === 'complete' && (
-            <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-blue-50/70 border border-blue-100">
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-blue-50 border border-blue-100">
               <div>
                 <div className="text-[11px] font-bold text-slate-500">الوقت النشط الفعلي</div>
                 <div className="text-base font-black font-mono text-blue-700">
@@ -167,7 +186,7 @@ export function SessionLogModal({
               <select
                 value={topicId}
                 onChange={(e) => handleTopicSelect(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
               >
                 {topics.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -188,17 +207,17 @@ export function SessionLogModal({
               onChange={(e) => setTopicTitle(e.target.value)}
               placeholder="مثال: Python DevOps Libraries — Requests & JSON"
               required
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-700 block">التصنيف (Category)</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
               >
                 {STUDY_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -213,7 +232,7 @@ export function SessionLogModal({
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
               >
                 {STUDY_DIFFICULTIES.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -224,7 +243,7 @@ export function SessionLogModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1">
               <label className="text-[11px] font-bold text-slate-700 block">المدة النشطة (دقيقة)</label>
               <input
@@ -234,7 +253,7 @@ export function SessionLogModal({
                 value={actualActiveMinutes}
                 onChange={(e) => setActualActiveMinutes(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500"
               />
             </div>
 
@@ -246,7 +265,7 @@ export function SessionLogModal({
                 max="720"
                 value={pausedMinutes}
                 onChange={(e) => setPausedMinutes(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-700 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-700 focus:outline-none focus:bg-white focus:border-blue-500"
               />
             </div>
 
@@ -259,7 +278,7 @@ export function SessionLogModal({
                 value={estimatedMinutes}
                 onChange={(e) => setEstimatedMinutes(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-700 focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-700 focus:outline-none focus:bg-white focus:border-blue-500"
               />
             </div>
           </div>
@@ -276,9 +295,9 @@ export function SessionLogModal({
                     key={lvl}
                     type="button"
                     onClick={() => setConfidence(lvl)}
-                    className={`flex-1 py-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1 transition ${
+                    className={`min-h-[44px] flex-1 py-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1 transition-colors duration-150 ${
                       confidence === lvl
-                        ? 'bg-blue-600 border-blue-600 text-white shadow-sm shadow-blue-600/20'
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
                         : active
                         ? 'bg-blue-50 border-blue-200 text-blue-700'
                         : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
@@ -292,7 +311,7 @@ export function SessionLogModal({
             </div>
           </div>
 
-          <label className="flex items-start gap-2.5 p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80 cursor-pointer">
+          <label className="flex items-start gap-2.5 p-3 rounded-2xl bg-amber-50 border border-amber-200 cursor-pointer">
             <input
               type="checkbox"
               checked={interrupted}
@@ -305,7 +324,7 @@ export function SessionLogModal({
                 <span>جلسة متقطعة (Interrupted)</span>
               </div>
               <p className="text-[11px] text-amber-800/80 mt-0.5">
-                عند التفعيل سيتم استبعادها أو تقليل وزنها في حساب التوقع التكيفي حتى لا تشوّه سرعتك الحقيقية.
+                عند التفعيل سيتم استبعادها من حساب التوقع التكيفي حتى لا تشوّه سرعتك الحقيقية.
               </p>
             </div>
           </label>
@@ -320,7 +339,7 @@ export function SessionLogModal({
               value={evidenceUrl}
               onChange={(e) => setEvidenceUrl(e.target.value)}
               placeholder="https://github.com/yossefbelal1/Hivebox/pull/..."
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
             />
           </div>
 
@@ -331,28 +350,29 @@ export function SessionLogModal({
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="ما العقبات التي واجهتك أو الخطوة القادمة؟"
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500"
             />
           </div>
+        </div>
 
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
-            >
-              إلغاء
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-blue-600/25 transition"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>حفظ الجلسة</span>
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Sticky Footer */}
+        <div className="shrink-0 px-4 sm:px-6 py-3.5 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="min-h-[44px] px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition-colors duration-150"
+          >
+            إلغاء
+          </button>
+          <button
+            type="submit"
+            className="min-h-[44px] px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors duration-150"
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            <span>حفظ الجلسة</span>
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

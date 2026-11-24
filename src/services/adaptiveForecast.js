@@ -343,8 +343,88 @@ function addHoursToDateIso(hours, weeklyPace, referenceNow = new Date()) {
   return baseDate.toISOString().split('T')[0];
 }
 
+const ARABIC_MONTHS = [
+  'يناير',
+  'فبراير',
+  'مارس',
+  'أبريل',
+  'مايو',
+  'يونيو',
+  'يوليو',
+  'أغسطس',
+  'سبتمبر',
+  'أكتوبر',
+  'نوفمبر',
+  'ديسمبر'
+];
+
+/**
+ * Formats an optimistic..conservative ISO date range into a friendly Arabic month-year range.
+ * Example: '2027-02-10'..'2027-03-18' -> 'فبراير – مارس 2027'
+ */
+export function formatArabicMonthRange(dateMinIso, dateMaxIso) {
+  if (!dateMinIso || !dateMaxIso) return '—';
+  const dMin = new Date(dateMinIso);
+  const dMax = new Date(dateMaxIso);
+  if (Number.isNaN(dMin.getTime()) || Number.isNaN(dMax.getTime())) return '—';
+
+  const m1 = ARABIC_MONTHS[dMin.getMonth()];
+  const y1 = dMin.getFullYear();
+  const m2 = ARABIC_MONTHS[dMax.getMonth()];
+  const y2 = dMax.getFullYear();
+
+  if (y1 === y2 && m1 === m2) return `${m1} ${y1}`;
+  if (y1 === y2) return `${m1} – ${m2} ${y1}`;
+  return `${m1} ${y1} – ${m2} ${y2}`;
+}
+
+/**
+ * Computes remaining hours & months for HiveBox deliverables.
+ */
+export function computeHiveboxRemainingForecast({
+  phases = [],
+  hiveboxState = {},
+  weeklyHours = 12,
+  now = new Date()
+} = {}) {
+  const safePace = Math.max(1, Number(weeklyHours) || 12);
+  let totalHours = 0;
+  let remainingHours = 0;
+  let completedHours = 0;
+
+  for (const phase of phases) {
+    for (const del of phase.deliverables || []) {
+      const est = Number(del.estimatedHours) || 2;
+      const isDone =
+        hiveboxState?.[del.id] !== undefined ? Boolean(hiveboxState[del.id]) : Boolean(del.done);
+      totalHours += est;
+      if (isDone) {
+        completedHours += est;
+      } else {
+        remainingHours += est;
+      }
+    }
+  }
+
+  const roundedRemaining = Number(remainingHours.toFixed(1));
+  const remainingMonths = Number((roundedRemaining / (safePace * 4.33)).toFixed(1));
+  const remainingWeeks = Number((roundedRemaining / safePace).toFixed(1));
+  const expectedDate = addHoursToDateIso(roundedRemaining, safePace, now);
+
+  return {
+    totalHours: Number(totalHours.toFixed(1)),
+    completedHours: Number(completedHours.toFixed(1)),
+    remainingHours: roundedRemaining,
+    remainingWeeks,
+    remainingMonths,
+    expectedDate,
+    expectedMonthLabel: formatArabicMonthRange(expectedDate, expectedDate)
+  };
+}
+
 /**
  * Computes comprehensive adaptive forecast metrics across all roadmap modules & topics.
+ * Deducts remaining hours at subtask granularity using subtask `estimatedHours` (or equal split).
  *
  * adjustedRemainingHours = sum((remainingBaselineMinutes / 60) / effectiveVelocity)
  */
@@ -394,50 +474,90 @@ export function computeAdaptiveForecast({
       usedBucketKeys.add(getBucketKey(category, difficulty));
 
       const subtasks = topic.subtasks || [];
-      const totalSubs = subtasks.length;
-      const doneSubs = subtasks.filter((s) =>
-        progress.subtasks?.[s.id] !== undefined ? progress.subtasks[s.id] : s.done
-      ).length;
-
       const explicitExec =
         progress.topicProgress?.[topic.id]?.executionStatus ??
         progress.topicStatus?.[topic.id] ??
         topic.defaultStatus;
       const isCompleted = explicitExec === 'completed' || explicitExec === 'done';
 
-      const completionRatio = isCompleted ? 1 : totalSubs > 0 ? doneSubs / totalSubs : 0;
-      const remainingRatio = Math.max(0, 1 - completionRatio);
+      let completedTopicMins = 0;
+      let remainingTopicMins = 0;
+
+      if (isCompleted) {
+        completedTopicMins = estMins;
+        remainingTopicMins = 0;
+      } else if (subtasks.length > 0) {
+        const rawSubMins = subtasks.map((s) =>
+          Number(s.estimatedMinutes) > 0
+            ? Number(s.estimatedMinutes)
+            : Number(s.estimatedHours) > 0
+            ? Number(s.estimatedHours) * 60
+            : 0
+        );
+        const hasSubEstimates = rawSubMins.some((m) => m > 0);
+        const definedSum = rawSubMins.reduce((a, b) => a + b, 0);
+        const undefinedCount = rawSubMins.filter((m) => m === 0).length;
+        const fallbackPerUndefined =
+          undefinedCount > 0 ? Math.max(0, estMins - definedSum) / undefinedCount : 0;
+
+        const effectiveSubMins = rawSubMins.map((m) =>
+          hasSubEstimates ? (m > 0 ? m : fallbackPerUndefined) : estMins / subtasks.length
+        );
+        const totalEffective = effectiveSubMins.reduce((a, b) => a + b, 0) || estMins;
+        const scale = estMins > 0 && totalEffective > 0 ? estMins / totalEffective : 1;
+
+        subtasks.forEach((s, idx) => {
+          const subMins = effectiveSubMins[idx] * scale;
+          const isSubDone =
+            progress.subtasks?.[s.id] !== undefined
+              ? Boolean(progress.subtasks[s.id])
+              : Boolean(s.done);
+          if (isSubDone) {
+            completedTopicMins += subMins;
+          } else {
+            remainingTopicMins += subMins;
+          }
+        });
+      } else {
+        remainingTopicMins = estMins;
+      }
 
       const telemetry =
         progress.topicProgress?.[topic.id]?.telemetry || progress.taskTelemetry?.[topic.id];
-      if (completionRatio > 0) {
-        completedBaselineMinutes += estMins * completionRatio;
-        completedActualMinutes += telemetry?.actualActiveMinutes || estMins * completionRatio;
+      if (completedTopicMins > 0) {
+        completedBaselineMinutes += completedTopicMins;
+        completedActualMinutes +=
+          telemetry?.actualActiveMinutes && estMins > 0
+            ? telemetry.actualActiveMinutes * (completedTopicMins / estMins)
+            : completedTopicMins;
       }
 
-      if (remainingRatio > 0) {
-        const remainingBaselineMinutes = estMins * remainingRatio;
+      if (remainingTopicMins > 0) {
         const { effectiveVelocity } = getEffectiveBucketVelocity(
           forecastModel,
           category,
           difficulty
         );
-        const topicBaseHours = remainingBaselineMinutes / 60;
+        const topicBaseHours = remainingTopicMins / 60;
         const topicAdjustedHours = topicBaseHours / effectiveVelocity;
 
-        baselineRemainingMinutes += remainingBaselineMinutes;
+        baselineRemainingMinutes += remainingTopicMins;
         adjustedRemainingHours += topicAdjustedHours;
         modBaselineRemHours += topicBaseHours;
         modAdjustedRemHours += topicAdjustedHours;
       }
     }
 
+    const roundedModHours = Number(modAdjustedRemHours.toFixed(1));
     moduleBreakdown.push({
       id: mod.id,
       number: mod.number,
       title: mod.title,
       baselineRemainingHours: Number(modBaselineRemHours.toFixed(1)),
-      adaptiveExpectedHours: Number(modAdjustedRemHours.toFixed(1))
+      adaptiveExpectedHours: roundedModHours,
+      remainingHours: roundedModHours,
+      remainingWeeks: Number((roundedModHours / effectiveWeeklyPace).toFixed(1)),
+      remainingMonths: Number((roundedModHours / (effectiveWeeklyPace * 4.33)).toFixed(1))
     });
   }
 
@@ -452,6 +572,16 @@ export function computeAdaptiveForecast({
   const adaptiveMinHours = Number((adaptiveExpectedHours * (1 - spread)).toFixed(1));
   const adaptiveMaxHours = Number((adaptiveExpectedHours * (1 + spread)).toFixed(1));
   const deltaHours = Number((adaptiveExpectedHours - baselineRemainingHours).toFixed(1));
+
+  const remainingMonths = Number(
+    (adaptiveExpectedHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  );
+  const remainingMonthsMin = Number(
+    (adaptiveMinHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  );
+  const remainingMonthsMax = Number(
+    (adaptiveMaxHours / (effectiveWeeklyPace * 4.33)).toFixed(1)
+  );
 
   // Build per-bucket velocities across all observed + roadmap-active buckets
   const allBucketKeys = new Set([
@@ -485,6 +615,7 @@ export function computeAdaptiveForecast({
   const expectedDateMax = addHoursToDateIso(adaptiveMaxHours, effectiveWeeklyPace, now);
   const expectedDate = addHoursToDateIso(adaptiveExpectedHours, effectiveWeeklyPace, now);
   const baselineDate = addHoursToDateIso(baselineRemainingHours, safeTargetWeeklyHours, now);
+  const expectedMonthRangeLabel = formatArabicMonthRange(expectedDateMin, expectedDateMax);
 
   const interruptedCount = Object.values(bucketVelocities).reduce(
     (sum, b) => sum + (b.interruptedCount || 0),
@@ -496,12 +627,17 @@ export function computeAdaptiveForecast({
     adaptiveMinHours,
     adaptiveMaxHours,
     adaptiveExpectedHours,
+    remainingMonths,
+    remainingMonthsMin,
+    remainingMonthsMax,
+    expectedMonthRangeLabel,
     expectedDateMin,
     expectedDateMax,
     expectedDate,
     baselineDate,
     rollingWeeklyHours,
     targetWeeklyHours: safeTargetWeeklyHours,
+    effectiveWeeklyHours: effectiveWeeklyPace,
     confidence,
     observationCount,
     interruptedCount,

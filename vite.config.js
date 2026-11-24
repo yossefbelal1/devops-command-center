@@ -12,7 +12,7 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-icons': ['lucide-react'],
-          'motion-scroll': ['lenis', 'canvas-confetti', 'gsap'],
+          'effects': ['canvas-confetti'],
           'quiz-data': ['./src/data/quizData.js']
         }
       }

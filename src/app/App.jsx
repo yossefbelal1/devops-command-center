@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Lenis from 'lenis';
+import { useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { ROADMAP_META, ROADMAP_MODULES } from '../data/roadmapData';
 import { HIVEBOX_DATA } from '../data/hiveboxData';
@@ -50,42 +49,14 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState('offline');
   const [lastSyncedAt, setLastSyncedAt] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
-  const lenisRef = useRef(null);
   const isFirstSaveRef = useRef(true);
   const syncTimerRef = useRef(null);
   const latestPendingSyncRef = useRef(DEFAULT_APP_STATE);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  // Initialize Lenis smooth scroll
+  // Scroll to top immediately on route change (native fast scroll)
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.9,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
-    });
-    lenisRef.current = lenis;
-
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
-  }, []);
-
-  // Scroll to top on route change
-  useEffect(() => {
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, { immediate: true });
-    } else {
-      window.scrollTo(0, 0);
-    }
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   // Hydrate from IndexedDB + silent server reconciliation (/api/state)
@@ -974,11 +945,9 @@ export default function App() {
 
       <Navbar
         metrics={metrics}
-        activeTimer={appState.activeTimer}
+        forecast={forecast}
         syncStatus={syncStatus}
-        lastSyncedAt={lastSyncedAt}
         onOpenSearch={() => setSearchOpen(true)}
-        onTimerClick={() => navigate('/')}
       />
 
       <main className="flex-1 relative z-10 pb-20 md:pb-6">
@@ -1043,7 +1012,7 @@ export default function App() {
         </div>
       </footer>
 
-      <MobileNav activeTimer={appState.activeTimer} />
+      <MobileNav />
 
       <SearchModal
         isOpen={searchOpen}

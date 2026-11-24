@@ -21,7 +21,7 @@ export const HIVEBOX_DATA = {
       { id: 'done', title: 'Done', subtitle: 'مكتمل ومدمج عبر PR' }
     ],
     defaultPhaseColumn: {
-      'hb-1': 'done',
+      'hb-1': 'in_progress',
       'hb-2': 'in_progress',
       'hb-3': 'todo',
       'hb-4': 'todo',
@@ -35,16 +35,21 @@ export const HIVEBOX_DATA = {
       phase: 1,
       moduleRef: 'Module 1: Welcome to the DevOps World',
       title: 'Phase 1: Kickoff & Preparation',
-      status: 'done',
+      status: 'in_progress',
       dependencies: ['لا يوجد (نقطة البداية)'],
       purpose:
         'تأسيس أسلوب العمل المنظم (Kanban & Pull Requests) وتجهيز المستودع العام yossefbelal1/Hivebox واختيار 3 حساسات openSenseMap.',
-      requiredTools: ['GitHub Account', 'GitHub Projects (Kanban)', 'openSenseMap'],
+      bestPractices: [
+        'حماية فرع main ومنع git push المباشر — كل تعديل يمر عبر Feature Branch و Pull Request.',
+        'الالتزام بنطاق المرحلة الحالية فقط (No Scope Creep) وتوثيق القرارات في README منذ اليوم الأول.',
+        'اختيار 3 حساسات قريبة جغرافياً ومنتظمة التحديث من openSenseMap لضمان دقة متوسط الحرارة.'
+      ],
+      requiredTools: ['GitHub Account', 'GitHub Projects (Kanban)', 'Git CLI', 'openSenseMap'],
       requiredTasks: [
         'إنشاء/Fork مستودع عام باسم yossefbelal1/Hivebox على GitHub.',
         'كتابة README.md يوضح فكرة المشروع وخارطة المراحل الست.',
         'إنشاء لوحة Kanban بأعمدة Todo / In Progress / Done.',
-        'اختيار وتوثيق 3 senseBox IDs متجاورة من openSenseMap والالتزام بفتح Pull Requests فقط.'
+        'اختيار وتوثيق 3 senseBox IDs متجاورة من openSenseMap وتجهيز فرع PR للمرحلة الثانية.'
       ],
       optionalEnhancements: [],
       exampleImplementation: `# 3 senseBox IDs متجاورة من openSenseMap:
@@ -52,22 +57,58 @@ export const HIVEBOX_DATA = {
 5c21ff8f919f80001adf2488
 5ade1acf223bd80019a1011c
 
+# تجهيز فرع المرحلة الثانية:
+git checkout -b feat/phase-2-basic-api
 # قاعدة صارمة: ممنوع git push مباشر على main — كل Phase عبر Pull Request!`,
       acceptanceCriteria: [
         'وجود مستودع عام باسم yossefbelal1/Hivebox مع README واضح.',
         'وجود لوحة Kanban بأعمدة Todo / In Progress / Done.',
-        'توثيق الـ 3 senseBox IDs والالتزام بعدم Scope Creep.'
+        'توثيق الـ 3 senseBox IDs في README/Issues وتجهيز فرع Phase 2.'
       ],
-      definitionOfDone: 'المستودع والـ Kanban جاهزان، وكارت Phase 1 منقول إلى عمود Done.',
-      verificationCommands: ['git remote -v', 'git branch -a'],
+      definitionOfDone: 'توثيق المعرفات الثلاثة وفتح فرع العمل ونقل بطاقة Phase 1 إلى Done في Kanban.',
+      verificationCommands: ['git remote -v', 'git branch -a', 'git status'],
       commonFailures: [
         'الدفع المباشر إلى main بدون فتح Pull Request.',
         'محاولة كتابة كود المرحلة الثالثة أو الرابعة مبكراً (Scope Creep).'
       ],
+      resources: [
+        { label: 'HiveBox Official Phase 1 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: 'HiveBox GitHub Repo (yossefbelal1/Hivebox)', url: 'https://github.com/yossefbelal1/Hivebox', type: 'Roadmap / Docs' },
+        { label: 'openSenseMap Live Sensors Map', url: 'https://opensensemap.org/', type: 'Roadmap / Docs' }
+      ],
       deliverables: [
-        { id: 'hb1-1', text: 'إنشاء/Fork مستودع عام باسم yossefbelal1/Hivebox على GitHub', done: true },
-        { id: 'hb1-2', text: 'كتابة README.md يوضح الفكرة وخارطة المشروع وإعداد لوحة Kanban', done: true },
-        { id: 'hb1-3', text: 'تحديد 3 senseBox IDs من openSenseMap والعمل عبر Pull Requests فقط', done: true }
+        {
+          id: 'hb1-1',
+          text: 'إنشاء المستودع العام yossefbelal1/Hivebox على GitHub',
+          details: 'التحقق من إتاحة المستودع العام وربطه محلياً بـ Git',
+          estimatedHours: 1,
+          done: true,
+          optional: false
+        },
+        {
+          id: 'hb1-2',
+          text: 'كتابة ملف README.md يوضح فكرة المشروع وخارطة المراحل الست',
+          details: 'توثيق الهدف وروابط openSenseMap والمراحل',
+          estimatedHours: 1,
+          done: true,
+          optional: false
+        },
+        {
+          id: 'hb1-3',
+          text: 'إنشاء لوحة GitHub Project Kanban بأعمدة Todo / In Progress / Done ونقل بطاقة Phase 1',
+          details: 'توزيع المهام على أعمدة اللوحة',
+          estimatedHours: 1,
+          done: true,
+          optional: false
+        },
+        {
+          id: 'hb1-4',
+          text: 'اختيار وتوثيق 3 معرفات senseBox IDs متجاورة من openSenseMap (5eba5fbad46fb8001b799786, 5c21ff8f919bf8001adf2488, 5ade1acf223bd80019a1011c) وتجهيز فرع العمل لفتح Pull Request للمرحلة الثانية',
+          details: 'توثيق المعرفات الثلاثة في README/Issues وفتح branch مثل feat/phase-2-basic-api',
+          estimatedHours: 1,
+          done: false,
+          optional: false
+        }
       ]
     },
     {
@@ -79,6 +120,11 @@ export const HIVEBOX_DATA = {
       dependencies: ['Phase 1 مكتمل', 'إنهاء Python Corey Schafer الـ 6 + لابات Bash'],
       purpose:
         'بناء أصغر نسخة قابلة للتشغيل (MVP v0.0.1) تطبع الإصدار وتخرج، وتغليفها في Docker وتشغيلها محلياً على RHEL VM مع سكريبت Bash للتحقق.',
+      bestPractices: [
+        'الالتزام بأصغر MVP قابل للاختبار: في Phase 2 المطلوب طباعة الإصدار والخروج بنجاح (Exit Code 0) بدون تعقيد مبكر.',
+        'استخدام صورة أساسية خفيفة (python:3.9-slim) وتثبيت الاعتماديات داخل بيئة معزولة.',
+        'حماية سكربت التحقق بـ set -euo pipefail للتحقق الفوري من خروج الحاوية بنجاح.'
+      ],
       requiredTools: ['Git', 'VS Code', 'Python 3.9+', 'Docker 29.9.3 (RHEL VM)', 'Bash'],
       requiredTasks: [
         'تنفيذ دالة Python تطبع الإصدار الحالي (Semantic Versioning v0.0.1) وتخرج بـ Exit code 0.',
@@ -113,14 +159,47 @@ CMD ["python", "app.py"]`,
         'bash scripts/health_check.sh'
       ],
       commonFailures: [
-        'نسيان الخروج بعد الطباعة أو بدء خادم ويب معقد قبل أوانه.',
+        'نسيان الخروج بعد الطباعة أو بدء خادم ويب قبل أوانه.',
         'نسيان توثيق أوامر التشغيل والاختبار في README.'
       ],
+      resources: [
+        { label: 'HiveBox Phase 2 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: 'Ahmed Elfakharany: Docker Arabic', url: 'https://www.youtube.com/watch?v=l_R7rdrurdE', type: 'YouTube' },
+        { label: 'Vishakha Sadhwani: Docker CRASH COURSE', url: 'https://www.youtube.com/watch?v=WEf2X7Ai2bg', type: 'YouTube' }
+      ],
       deliverables: [
-        { id: 'hb2-1', text: 'تنفيذ دالة تطبع الإصدار الحالي (Semantic Versioning v0.0.1) وتخرج', done: false },
-        { id: 'hb2-2', text: 'إنشاء Dockerfile وبناء الصورة وتشغيل الحاوية محلياً على RHEL VM', done: false },
-        { id: 'hb2-3', text: 'كتابة سكريبت Bash للتحقق وتوثيق كيفية الاختبار في المستودع', done: false },
-        { id: 'hb2-4', text: 'رفع الكود عبر Pull Request وتحديث لوحة Kanban', done: false }
+        {
+          id: 'hb2-1',
+          text: 'تنفيذ دالة تطبع الإصدار الحالي (Semantic Versioning v0.0.1) وتخرج',
+          details: 'إنشاء src/app.py يطبع v0.0.1 ويخرج برمز نجاح 0 عند التشغيل المباشر',
+          estimatedHours: 1.5,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb2-2',
+          text: 'إنشاء Dockerfile وبناء الصورة وتشغيل الحاوية محلياً على RHEL VM',
+          details: 'بناء الصورة بـ docker build والتأكد من تشغيلها بدون صلاحيات sudo',
+          estimatedHours: 2,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb2-3',
+          text: 'كتابة سكريبت Bash للتحقق وتوثيق كيفية الاختبار في المستودع',
+          details: 'سكربت health_check.sh يبني ويشغل الحاوية ويتحقق من وجود v0.0.1 في المخرجات',
+          estimatedHours: 1.5,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb2-4',
+          text: 'رفع الكود عبر Pull Request وتحديث لوحة Kanban',
+          details: 'مراجعة التغييرات ودمج PR على GitHub ونقل بطاقة Phase 2 إلى Done',
+          estimatedHours: 1,
+          done: false,
+          optional: false
+        }
       ]
     },
     {
@@ -131,7 +210,12 @@ CMD ["python", "app.py"]`,
       status: 'pending',
       dependencies: ['Phase 2 مدمج في main'],
       purpose:
-        'تحويل التطبيق إلى FastAPI/Flask REST API حقيقي متصل بـ openSenseMap مع اختبارات pytest، جودة الكود، أفضل ممارسات الحاويات، و GitHub Actions CI + OpenSSF Scorecard.',
+        'تحويل التطبيق إلى FastAPI/Flask REST API حقيقي متصل بـ openSenseMap مع اختبارات pytest وجودة الكود و Multi-stage Docker و CI Pipeline مع OpenSSF Scorecard.',
+      bestPractices: [
+        'تطبيق Dependency Injection / Mocking عند اختبار استدعاءات openSenseMap API في pytest.',
+        'تأمين الحاوية بمستخدم Non-root و Multi-stage build واجتياز Hadolint بدون أي تحذيرات.',
+        'تطبيق Conventional Commits لتسهيل تتبع الإصدارات وتكامل CI التلقائي.'
+      ],
       requiredTools: [
         'FastAPI / Flask',
         'pytest',
@@ -141,10 +225,10 @@ CMD ["python", "app.py"]`,
         'OpenSSF Scorecard'
       ],
       requiredTasks: [
-        'الالتزام بـ Conventional Commits وبناء نقاط GET /version و GET /temperature.',
-        'جلب قراءات openSenseMap وحساب متوسط الحرارة مع استبعاد القراءات الأقدم من ساعة.',
-        'كتابة Unit Tests بـ pytest مع Mocking واجتياز Pylint.',
-        'تحسين Dockerfile (Multi-stage + Non-root + Hadolint) وبناء CI Pipeline يختبر /version ويشغل OpenSSF Scorecard.'
+        'بناء REST API بنقطتي /version و /temperature مع استبعاد قراءات openSenseMap الأقدم من ساعة.',
+        'كتابة Unit Tests شاملة بـ pytest (مع Mocking) واجتياز فحص Pylint.',
+        'تطبيق Container Best Practices (Multi-stage + Non-root + .dockerignore) واجتياز Hadolint.',
+        'إعداد GitHub Actions CI لتشغيل الفحوصات واختبار /version حياً + تفعيل OpenSSF Scorecard.'
       ],
       optionalEnhancements: [],
       exampleImplementation: `# Endpoints المطلوبة:
@@ -175,11 +259,44 @@ GET /temperature  -> {"average_temperature": 24.5}
         'نسيان فلترة القراءات الأقدم من ساعة واحدة.',
         'تجاهل تحذيرات OpenSSF Scorecard الأمنية في الـ Workflow.'
       ],
+      resources: [
+        { label: 'HiveBox Phase 3 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: 'Container Best Practices', url: 'https://devopsroadmap.io/projects/container-best-practices/', type: 'Roadmap / Docs' },
+        { label: 'Vishakha Sadhwani: CI/CD CRASH COURSE', url: 'https://www.youtube.com/watch?v=ixNNyLcWXX8', type: 'YouTube' }
+      ],
       deliverables: [
-        { id: 'hb3-1', text: 'تطبيق Conventional Commits وبناء /version و /temperature عبر openSenseMap API', done: false },
-        { id: 'hb3-2', text: 'كتابة Unit Tests باستخدام pytest + اجتياز Pylint', done: false },
-        { id: 'hb3-3', text: 'تطبيق Container Best Practices (Multi-stage + Non-root) واجتياز Hadolint', done: false },
-        { id: 'hb3-4', text: 'بناء GitHub Actions CI + اختبار /version + إعداد OpenSSF Scorecard', done: false }
+        {
+          id: 'hb3-1',
+          text: 'تطبيق Conventional Commits وبناء /version و /temperature عبر openSenseMap API',
+          details: 'حساب متوسط الحرارة مع استبعاد أي قراءة يتجاوز عمرها 60 دقيقة',
+          estimatedHours: 3,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb3-2',
+          text: 'كتابة Unit Tests باستخدام pytest + اجتياز Pylint',
+          details: 'استخدام unittest.mock لعزل اختبارات API وضبط إعدادات .pylintrc',
+          estimatedHours: 2.5,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb3-3',
+          text: 'تطبيق Container Best Practices (Multi-stage + Non-root) واجتياز Hadolint',
+          details: 'تحديث Dockerfile بمراحل بناء منفصلة ومستخدم غير root و .dockerignore',
+          estimatedHours: 2,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb3-4',
+          text: 'بناء GitHub Actions CI + اختبار /version + إعداد OpenSSF Scorecard',
+          details: 'تشغيل الحاوية في الـ CI والتحقق من /version وتفعيل Scorecard Workflow',
+          estimatedHours: 2.5,
+          done: false,
+          optional: false
+        }
       ]
     },
     {
@@ -191,6 +308,11 @@ GET /temperature  -> {"average_temperature": 24.5}
       dependencies: ['Phase 3 مدمج', 'إنهاء Kubernetes Basics & Kind'],
       purpose:
         'تشغيل HiveBox داخل Kubernetes محلياً (Kind + Ingress-Nginx) وتصدير مقاييس Prometheus على /metrics وإضافة حالة الحرارة وفحوصات SonarQube/Terrascan ورفع الصورة لـ GHCR.',
+      bestPractices: [
+        'الالتزام بمبدأ 12-Factor App بتمرير SENSEBOX_IDS عبر Environment Variables / ConfigMap.',
+        'وسم الصور المنشورة على GHCR برقم الإصدار (Semantic Version Tag) وعدم الاعتماد على :latest.',
+        'إضافة بوابات الفحص الساكن (SonarQube/Semgrep + Terrascan) قبل بناء ونشر الصورة.'
+      ],
       requiredTools: [
         'Kind',
         'kubectl',
@@ -232,11 +354,44 @@ else:                  status = "Too Hot"  # > 37
         'نسيان تثبيت Ingress-Nginx Controller داخل كلاستر Kind.',
         'استخدام وسم :latest بدلاً من Version Tag في الـ CD Workflow.'
       ],
+      resources: [
+        { label: 'HiveBox Phase 4 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: '12-Factor App Methodology', url: 'https://12factor.net/', type: 'Roadmap / Docs' },
+        { label: 'Vishakha Sadhwani: The ONLY Kubernetes Course', url: 'https://www.youtube.com/watch?v=H_a5DTKSEjY', type: 'YouTube' }
+      ],
       deliverables: [
-        { id: 'hb4-1', text: 'تهيئة senseBox IDs عبر Env Vars + إضافة /metrics + حقل status في /temperature', done: false },
-        { id: 'hb4-2', text: 'كتابة Integration Tests وإعداد Kind + Ingress-Nginx + K8s Manifests', done: false },
-        { id: 'hb4-3', text: 'تشغيل SonarQube/Semgrep و Terrascan في الـ CI Pipeline', done: false },
-        { id: 'hb4-4', text: 'بناء GitHub Actions CD workflow لنشر صورة موسومة في GHCR', done: false }
+        {
+          id: 'hb4-1',
+          text: 'تهيئة senseBox IDs عبر Env Vars + إضافة /metrics + حقل status في /temperature',
+          details: 'تطبيق تصنيف الحرارة Too Cold / Good / Too Hot وتصدير prometheus_client metrics',
+          estimatedHours: 3,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb4-2',
+          text: 'كتابة Integration Tests وإعداد Kind + Ingress-Nginx + K8s Manifests',
+          details: 'تشغيل Deployment, Service, ConfigMap, Ingress محلياً على Kind cluster',
+          estimatedHours: 4,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb4-3',
+          text: 'تشغيل SonarQube/Semgrep و Terrascan في الـ CI Pipeline',
+          details: 'فحص جودة الكود وملفات Kubernetes IaC لمنع الثغرات قبل الدمج',
+          estimatedHours: 2.5,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb4-4',
+          text: 'بناء GitHub Actions CD workflow لنشر صورة موسومة في GHCR',
+          details: 'بناء ورفع Image بوسم الإصدار تلقائياً إلى GitHub Container Registry',
+          estimatedHours: 2.5,
+          done: false,
+          optional: false
+        }
       ]
     },
     {
@@ -248,6 +403,11 @@ else:                  status = "Too Hot"  # > 37
       dependencies: ['Phase 4 مدمج', 'Terraform + Helm + Kustomize'],
       purpose:
         'إضافة طبقة الكاش Valkey والتخزين MinIO بدورة 5 دقائق، تغليف Helm & Kustomize، بناء البنية بـ Terraform، نشر Grafana Agent، واختبار E2E بأداة Venom.',
+      bestPractices: [
+        'فصل حالة التطبيق (Stateless App) عن طبقة الكاش (Valkey) وطبقة التخزين الكائني (MinIO S3).',
+        'تصميم /readyz ليعكس الجاهزية الحقيقية للخدمات التابعة (50%+1 sensors + cache freshness < 10m).',
+        'اختبار البنية كاملة من البداية للنهاية (End-to-End) داخل Kind عبر Venom في CI.'
+      ],
       requiredTools: [
         'Valkey',
         'MinIO',
@@ -289,11 +449,44 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
         'نسيان شرط الـ 50%+1 أو فحص عمر الدورتين داخل /readyz.',
         'عدم تزامن أسرار MinIO و Valkey في Kubernetes Secrets.'
       ],
+      resources: [
+        { label: 'HiveBox Phase 5 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: 'KodeKloud: Terraform Basics Training', url: 'https://kodekloud.com/', type: 'KodeKloud' },
+        { label: 'KodeKloud: Helm for Beginners', url: 'https://kodekloud.com/', type: 'KodeKloud' }
+      ],
       deliverables: [
-        { id: 'hb5-1', text: 'دمج Valkey (5m cycle) و MinIO (5m cycle) + نقاط /cache و /store و /readyz و /metrics مخصصة', done: false },
-        { id: 'hb5-2', text: 'بناء Helm Chart للتطبيق + Kustomize لـ Valkey/MinIO + ربط /readyz كـ Readiness Probe', done: false },
-        { id: 'hb5-3', text: 'نشر Grafana Agent (Loki/Grafana) + إنشاء الكلاستر بـ Terraform IaC', done: false },
-        { id: 'hb5-4', text: 'كتابة وتشغيل End-to-End Tests بأداة Venom على Kind', done: false }
+        {
+          id: 'hb5-1',
+          text: 'دمج Valkey (5m cycle) و MinIO (5m cycle) + نقاط /cache و /store و /readyz و /metrics مخصصة',
+          details: 'تحديث الخلفية لقراءة الحرارة من الكاش وتخزين اللقطات في MinIO وفحص الجاهزية بدقة',
+          estimatedHours: 4,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb5-2',
+          text: 'بناء Helm Chart للتطبيق + Kustomize لـ Valkey/MinIO + ربط /readyz كـ Readiness Probe',
+          details: 'تغليف القوالب وتفعيل readinessProbe على /readyz وفصل الأسرار في Secrets',
+          estimatedHours: 3.5,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb5-3',
+          text: 'نشر Grafana Agent (Loki/Grafana) + إنشاء الكلاستر بـ Terraform IaC',
+          details: 'تعريف الكلاستر والبنية التحتية بالكود في modules منظمة وإرسال المقاييس والسجلات',
+          estimatedHours: 4,
+          done: false,
+          optional: false
+        },
+        {
+          id: 'hb5-4',
+          text: 'كتابة وتشغيل End-to-End Tests بأداة Venom على Kind',
+          details: 'التحقق التلقائي من عمل /temperature و /cache و /store و /readyz على الكلاستر الحي',
+          estimatedHours: 2.5,
+          done: false,
+          optional: false
+        }
       ]
     },
     {
@@ -305,6 +498,11 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
       dependencies: ['Phase 5 مدمج'],
       purpose:
         'نقل المشروع لمستوى الإنتاج المؤسسي عبر النشر التصريحي بـ Argo CD، وأتمتة الـ DNS/TLS، والأمان الذاتي — مع فصل واضح بين المهام الأساسية الموصى بها والتحسينات الاختيارية.',
+      bestPractices: [
+        'تفعيل Pull-based GitOps عبر Argo CD مع Auto-Sync و Self-Heal بدلاً من الدفع المباشر بالـ kubectl.',
+        'التمييز بوضوح بين المهام الأساسية المطلوبة لإغلاق Phase 6 والتحسينات الاختيارية المتقدمة.',
+        'تفعيل فحص Trivy و Dependabot بشكل مستمر لحماية سلسلة التوريد.'
+      ],
       requiredTools: [
         'Argo CD',
         'ExternalDNS',
@@ -351,28 +549,41 @@ GET  /readyz      -> يعيد HTTP 200 إلا إذا:
         'ترك إعدادات Sync اليدوي في Argo CD بدلاً من Automated Sync & Self-Heal.',
         'الخلط بين التحسينات الاختيارية (Operator/Kyverno/TestKube) كمتطلبات إجبارية تعطل إغلاق Phase 6.'
       ],
+      resources: [
+        { label: 'HiveBox Phase 6 Spec', url: 'https://devopsroadmap.io/projects/hivebox/', type: 'Roadmap / Docs' },
+        { label: 'Ahmed Elfakharany: Argo CD Arabic', url: 'https://www.youtube.com/watch?v=C0xRfrNIRak', type: 'YouTube' },
+        { label: 'KodeKloud: DevSecOps Course', url: 'https://kodekloud.com/courses/devsecops', type: 'KodeKloud' }
+      ],
       deliverables: [
         {
           id: 'hb6-1',
           text: '[Required] نشر التطبيق بنمط Declarative GitOps عبر Argo CD',
+          details: 'إعداد Application manifest مع تفعيل Automated Sync و Prune و Self-Heal',
+          estimatedHours: 3.5,
           done: false,
           optional: false
         },
         {
           id: 'hb6-2',
           text: '[Required] إعداد ExternalDNS و Cert-Manager (TLS) + تفعيل Dependabot',
+          details: 'إصدار شهادات HTTPS تلقائياً وإدارة سجلات DNS وتحديث الاعتماديات عبر PRs آلية',
+          estimatedHours: 3,
           done: false,
           optional: false
         },
         {
           id: 'hb6-3',
           text: '[Required] استبدال الخدمات الخارجية بـ Open-Source داخل الكلاستر (Loki/Grafana) + Trivy',
+          details: 'تشغيل Loki/Grafana/Prometheus محلياً داخل الكلاستر وإلزام CI ببوابة Trivy CVE',
+          estimatedHours: 3.5,
           done: false,
           optional: false
         },
         {
           id: 'hb6-4',
           text: '[Optional] Kyverno Policy-as-Code / Multi-env Dev-Stage-Prod / TestKube / K8s Operator',
+          details: 'تحسينات إضافية اختيارية لا تعطل إغلاق المرحلة الأساسية عند تأجيلها',
+          estimatedHours: 4,
           done: false,
           optional: true
         }
@@ -391,6 +602,51 @@ export const CAPSTONE_PROJECT_DATA = {
   title: 'End-to-End Original Capstone Project (Beyond HiveBox)',
   subtitle:
     'مشروع مستقل تماماً عن HiveBox في مستودع منفصل — تصمم وتنفذ فيه نظاماً أصيلاً من الصفر يطبق كامل دورة SDLC ومكدس DevOps (IaC + CI/CD + Kubernetes + GitOps + Observability + Containerized AI/ML Workload).',
+  purpose:
+    'إثبات القدرة على هندسة وبناء نظام إنتاجي متكامل من الصفر في مستودع مستقل بدون خطوات مسبقة، مع دمج حمل عمل AI/ML محاواة و Observability كاملة.',
+  bestPractices: [
+    'إنشاء مستودع جديد منفصل تماماً عن HiveBox مع توثيق معماري واضح عبر C4 Diagrams.',
+    'دمج كامل المكدس: Terraform IaC + GitHub Actions CI/CD + Trivy + Kubernetes + Argo CD + Loki/Prometheus.',
+    'إضافة خدمة AI/ML Inference أو LLM Proxy محاواة مع مراقبة استهلاك الموارد و HPA.'
+  ],
+  requiredTools: [
+    'Terraform',
+    'GitHub Actions',
+    'Docker',
+    'Kubernetes',
+    'Argo CD',
+    'Prometheus + Grafana + Loki',
+    'Trivy',
+    'Python / AI Inference'
+  ],
+  exampleImplementation: `# هيكل المستودع المستقل للـ Capstone:
+├── infra/terraform/       # Provisioning K8s + Network + Storage
+├── k8s/argocd/            # Declarative GitOps Application manifests
+├── services/api/          # Core Backend / AutoTele Workers
+├── services/ai-inference/ # Containerized AI/ML Inference / LLM Proxy
+└── .github/workflows/     # Lint + Tests + Trivy + Build -> GHCR`,
+  verificationCommands: [
+    'terraform validate && terraform plan',
+    'kubectl get pods,hpa -A',
+    'argocd app list',
+    'curl -f http://localhost/healthz'
+  ],
+  acceptanceCriteria: [
+    'مستودع مستقل بمعمارية C4 واضحة.',
+    'تشغيل CI/CD كامل مع فحوصات الأمان Trivy.',
+    'نشر فعلي على Kubernetes عبر GitOps مع Observability.',
+    'تضمين خدمة AI/ML محاواة تحت HPA.'
+  ],
+  definitionOfDone: 'مستودع عام مستقل وموثق بالكامل مع رسومات معمارية ولقطات تشغيل جاهز لعرضه في المقابلات.',
+  commonFailures: [
+    'بناء المشروع داخل مستودع HiveBox بدلاً من مستودع مستقل.',
+    'تجاهل توثيق القرارات المعمارية والمقاييس في README.'
+  ],
+  resources: [
+    { label: 'AutoTele SaaS Platform (Separate Repo)', url: 'https://github.com/yossefbelal1/AutoTele', type: 'Roadmap / Docs' },
+    { label: 'Vishakha Sadhwani: End-To-End DevOps + AIOps Project', url: 'https://www.youtube.com/watch?v=UBzYwNbFCKs', type: 'YouTube' },
+    { label: 'Tech5ense: DevOps & Cloud Engineering', url: 'https://www.tech5ense.com/', type: 'Roadmap / Docs' }
+  ],
   whySeparate:
     'في Dynamic DevOps Roadmap، المرحلة السابعة تسألك: "What is your next project?" — الهدف هو إثبات قدرتك على هندسة مشروع جديد في مستودع مستقل بدون خطوات جاهزة، مع ترقية AutoTele كبنية SaaS إنتاجية.',
   autoteleBase: {
@@ -404,10 +660,38 @@ export const CAPSTONE_PROJECT_DATA = {
     ]
   },
   deliverables: [
-    { id: 'cap-1', text: 'تحديد فكرة ومعمارية الـ Capstone في مستودع مستقل جديد + تصميم C4 Architecture Diagram' },
-    { id: 'cap-2', text: 'بناء CI/CD Pipeline كامل (Lint + Unit/Integration Tests + Trivy + GHCR)' },
-    { id: 'cap-3', text: 'تشغيل الخدمة على Kubernetes + Terraform IaC + Argo CD GitOps + Loki/Grafana' },
-    { id: 'cap-4', text: 'تضمين Containerized AI/ML Workload (Inference/LLM Proxy) مع HPA ومقاييس الأداء' }
+    {
+      id: 'cap-1',
+      text: 'تحديد فكرة ومعمارية الـ Capstone في مستودع مستقل جديد + تصميم C4 Architecture Diagram',
+      details: 'إنشاء مستودع جديد منفصل ورسم Context & Container Diagrams للنظام',
+      estimatedHours: 4,
+      done: false,
+      optional: false
+    },
+    {
+      id: 'cap-2',
+      text: 'بناء CI/CD Pipeline كامل (Lint + Unit/Integration Tests + Trivy + GHCR)',
+      details: 'أتمتة الاختبارات وفحص الصور ودفع الإصدارات تلقائياً إلى GHCR',
+      estimatedHours: 5,
+      done: false,
+      optional: false
+    },
+    {
+      id: 'cap-3',
+      text: 'تشغيل الخدمة على Kubernetes + Terraform IaC + Argo CD GitOps + Loki/Grafana',
+      details: 'تجهيز البنية بالكود ومزامنة Argo CD مع تجميع السجلات والمقاييس',
+      estimatedHours: 6,
+      done: false,
+      optional: false
+    },
+    {
+      id: 'cap-4',
+      text: 'تضمين Containerized AI/ML Workload (Inference/LLM Proxy) مع HPA ومقاييس الأداء',
+      details: 'تغليف خدمة AI/ML Inference وضبط HorizontalPodAutoscaler ومراقبتها في Grafana',
+      estimatedHours: 5,
+      done: false,
+      optional: false
+    }
   ]
 };
 

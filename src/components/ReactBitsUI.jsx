@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import gsap from 'gsap';
 
 export function SpotlightCard({
   children,
   className = '',
-  spotlightColor = 'rgba(255, 255, 255, 0.16)',
+  spotlightColor = 'rgba(37, 99, 235, 0.08)',
   onClick
 }) {
   const divRef = useRef(null);
@@ -24,13 +23,13 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden transition-all duration-300 ${className}`}
+      className={`relative overflow-hidden transition-colors duration-150 ${className}`}
     >
       <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-150"
         style={{
           opacity,
-          background: `radial-gradient(450px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 65%)`
+          background: `radial-gradient(360px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 65%)`
         }}
       />
       {children}
@@ -38,32 +37,42 @@ export function SpotlightCard({
   );
 }
 
-export function CountUp({ to, suffix = '', duration = 1.1 }) {
-  const spanRef = useRef(null);
+export function CountUp({ to = 0, suffix = '', duration = 0.6 }) {
+  const [displayVal, setDisplayVal] = useState(Math.round(Number(to) || 0));
 
   useEffect(() => {
-    const obj = { val: 0 };
-    const ctx = gsap.context(() => {
-      gsap.to(obj, {
-        val: to,
-        duration,
-        ease: 'power3.out',
-        onUpdate: () => {
-          if (spanRef.current) {
-            spanRef.current.textContent = `${Math.round(obj.val)}${suffix}`;
-          }
-        }
-      });
-    });
-    return () => ctx.revert();
-  }, [to, suffix, duration]);
+    const target = Number(to) || 0;
+    const ms = Math.max(150, duration * 1000);
+    let rafId = null;
+    const start = performance.now();
 
-  return <span ref={spanRef}>0{suffix}</span>;
+    const step = (now) => {
+      const elapsed = now - start;
+      const t = Math.min(1, elapsed / ms);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setDisplayVal(Math.round(target * eased));
+      if (t < 1) {
+        rafId = requestAnimationFrame(step);
+      }
+    };
+
+    rafId = requestAnimationFrame(step);
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [to, duration]);
+
+  return (
+    <span>
+      {displayVal}
+      {suffix}
+    </span>
+  );
 }
 
 export function GlassyCard({ children, className = '' }) {
   return (
-    <div className={`glass-v5 rounded-2xl transition-all duration-200 ${className}`}>
+    <div className={`glass-v5 rounded-2xl transition-colors duration-150 ${className}`}>
       {children}
     </div>
   );
